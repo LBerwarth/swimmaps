@@ -1,18 +1,26 @@
 /**
- * Superposition « statut en direct » pour les piscines de Toulouse.
+ * Superposition « statut en direct » pour les piscines de Toulouse et de son
+ * agglomération.
  *
- * L'application sœur toulouse-piscines analyse le site de la métropole toutes
- * les ~30 min (fermetures estivales et exceptionnelles comprises) et expose
- * /api/status. Quand une piscine d'ici correspond à une piscine de là-bas,
- * son vrai statut du jour prime sur les horaires OSM.
+ * L'application sœur piscines-toulouse.fr relève les pages officielles de
+ * chaque gestionnaire environ tous les quarts d'heure en journée (fermetures
+ * exceptionnelles et saisonnières comprises) et expose /api/status. Quand une
+ * piscine d'ici correspond à une piscine de là-bas, son vrai statut du jour
+ * prime sur les horaires OSM.
  */
 
 const STATUS_URL =
   process.env.NEXT_PUBLIC_TOULOUSE_STATUS_URL ??
   "https://toulouse-piscines.vercel.app/api/status";
 
-/** id Data ES (piscines.json) → slugs toulouse-piscines correspondants. */
+/**
+ * id Data ES (piscines-fr.json) → slugs piscines-toulouse.fr correspondants.
+ * Correspondances vérifiées par la distance entre les deux jeux de
+ * coordonnées (< 310 m, sauf Léguevin dont le point publié est celui du
+ * centre-ville — c'est la seule piscine de la commune).
+ */
 const SLUGS_BY_POOL_ID: Record<string, string[]> = {
+  // Ville de Toulouse
   I315550015: ["piscine-jean-boiteux-espace-job"],
   I315550075: ["piscine-alex-jany"],
   I315550154: ["piscine-yvonne-godard"],
@@ -28,6 +36,25 @@ const SLUGS_BY_POOL_ID: Record<string, string[]> = {
   I315550229: ["piscine-chapou-ete"],
   I315550230: ["piscine-toulouse-lautrec"],
   I315550232: ["piscine-papus"],
+  // Reste de Toulouse Métropole
+  I311490014: ["espace-nautique-jean-vauchere"],
+  I310690007: ["complexe-nautique-des-ramiers"],
+  I312820007: ["piscine-launaguet"],
+  I315570023: ["piscine-oasis-de-la-ramee"],
+  I310440003: ["piscine-balma"],
+  I315610001: ["piscine-lunion"],
+  I315060008: ["piscine-les-tournesols"],
+  I314670005: ["piscine-hersain"],
+  // Aire urbaine hors métropole
+  I314240013: ["piscine-plaisance-du-touch"],
+  I314330010: ["piscine-aquagaronna"],
+  I313950005: ["piscine-aqualudia"],
+  I314990008: ["piscine-aquabella"],
+  I315730003: ["piscine-verfeil"],
+  I312320001: ["piscine-grenade"],
+  I312910003: ["piscine-leguevin"],
+  I314460007: ["piscine-alex-jany-ramonville"],
+  I311130001: ["piscine-georges-vallerey"],
 };
 
 interface ApiPool {

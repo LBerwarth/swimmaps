@@ -3,15 +3,23 @@
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import type { PoolWithDistance } from "@/lib/types";
+import type { Pool } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
+import type { DayState } from "@/lib/pool-state";
+import { poolPagePath } from "@/lib/slug";
+import { useDict, useLocale } from "@/components/locale-provider";
+
+type MapPool = Pool & { distanceKm?: number };
 
 interface Props {
   center: [number, number];
-  radiusKm: number;
-  pools: PoolWithDistance[];
+  /** Rayon du cercle ; absent = vue d'une seule piscine (fiche). */
+  radiusKm?: number;
+  pools: MapPool[];
   /** Clic sur le point d'une piscine : cible sa fiche dans la liste. */
   onSelect?: (poolId: string) => void;
+  isFavorite?: (poolId: string) => boolean;
+  stateOf?: (pool: MapPool) => DayState["kind"];
 }
 
 function escapeHtml(value: string): string {
@@ -22,6 +30,29 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Étoile à cinq branches (repère des piscines ★), rayon 1 centrée sur (0,0). */
+const STAR = Array.from({ length: 10 }, (_, i) => {
+  const angle = (Math.PI / 5) * i - Math.PI / 2;
+  const r = i % 2 === 0 ? 1 : 0.42;
+  return `${(Math.cos(angle) * r).toFixed(3)},${(Math.sin(angle) * r).toFixed(3)}`;
+}).join(" ");
+
+/** Couleur vive = ouverte maintenant ; claire = état inconnu ; grise = fermée / plus tard / terminé. */
+function fillFor(kind: DayState["kind"]): string {
+  if (kind === "open") return "#c026d3";
+  if (kind === "unknown") return "#e879f9";
+  return "#94a3b8";
+}
+
+function poolIcon(kind: DayState["kind"], starred: boolean): L.DivIcon {
+  const fill = fillFor(kind);
+  const size = starred ? 26 : 18;
+  const html = starred
+    ? `<svg width="${size}" height="${size}" viewBox="-1.2 -1.2 2.4 2.4" style="overflow:visible;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))"><polygon points="${STAR}" fill="${fill}" stroke="white" stroke-width="0.14"/></svg>`
+    : `<div style="width:${size}px;height:${size}px;border-radius:9999px;background:${fill};border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,.4)"></div>`;
+  return L.divIcon({ className: "", html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+}
+
 const USER_ICON = () =>
   L.divIcon({
     className: "",
@@ -30,15 +61,9 @@ const USER_ICON = () =>
     iconAnchor: [8, 8],
   });
 
-const POOL_ICON = () =>
-  L.divIcon({
-    className: "",
-    html: '<div style="width:14px;height:14px;border-radius:9999px;background:#d946ef;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,.4)"></div>',
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-  });
-
-export function PoolMap({ center, radiusKm, pools, onSelect }: Props) {
+export function PoolMap({ center, radiusKm, pools, onSelect, isFavorite, stateOf }: Props) {
+  const dict = useDict();
+  const locale = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
@@ -66,39 +91,50 @@ export function PoolMap({ center, radiusKm, pools, onSelect }: Props) {
     if (!map || !layer) return;
     layer.clearLayers();
 
-    // Définit la vue (y compris la toute première : tant que la carte n'a pas
-    // de vue, Leaflet diffère l'ajout réel des couches et circle.getBounds()
-    // planterait). Les limites sont donc calculées sans passer par la couche.
-    map.fitBounds(L.latLng(center).toBounds(radiusKm * 2000), {
-      padding: [16, 16],
-    });
-
-    const circle = L.circle(center, {
-      radius: radiusKm * 1000,
-      color: "#a21caf",
-      weight: 1.5,
-      fillColor: "#e879f9",
-      fillOpacity: 0.08,
-    });
-    layer.addLayer(circle);
-    layer.addLayer(L.marker(center, { icon: USER_ICON() }));
+    if (radiusKm === undefined) {
+      map.setView(center, 15);
+    } else {
+      // Vue définie avant l'ajout des couches : sans vue, Leaflet diffère leur
+      // ajout réel et circle.getBounds() planterait.
+      map.fitBounds(L.latLng(center).toBounds(radiusKm * 2000), { padding: [16, 16] });
+      layer.addLayer(
+        L.circle(center, {
+          radius: radiusKm * 1000,
+          color: "#a21caf",
+          weight: 1.5,
+          fillColor: "#e879f9",
+          fillOpacity: 0.08,
+        }),
+      );
+      layer.addLayer(L.marker(center, { icon: USER_ICON() }));
+    }
 
     for (const pool of pools) {
-      const marker = L.marker([pool.lat, pool.lon], { icon: POOL_ICON() });
+      const kind = stateOf?.(pool) ?? "unknown";
+      const marker = L.marker([pool.lat, pool.lon], {
+        icon: poolIcon(kind, isFavorite?.(pool.id) ?? false),
+        zIndexOffset: kind === "open" ? 200 : 0,
+      });
+      const where = [
+        escapeHtml(pool.city),
+        pool.distanceKm !== undefined ? formatDistance(pool.distanceKm, locale) : null,
+      ]
+        .filter(Boolean)
+        .join(" · ");
       marker.bindPopup(
-        `<strong>${escapeHtml(pool.name)}</strong><br>` +
-          `${escapeHtml(pool.city)} · ${formatDistance(pool.distanceKm)}`,
+        `<strong>${escapeHtml(pool.name)}</strong><br>${where}<br>` +
+          `<a href="${poolPagePath(locale, pool)}" style="color:#a21caf;text-decoration:underline">${escapeHtml(dict.mapPopupDetail)}</a>`,
       );
       if (onSelect) marker.on("click", () => onSelect(pool.id));
       layer.addLayer(marker);
     }
-  }, [center, radiusKm, pools, onSelect]);
+  }, [center, radiusKm, pools, onSelect, isFavorite, stateOf, locale, dict]);
 
   return (
     <div
       ref={containerRef}
-      className="h-72 w-full rounded-2xl border border-fuchsia-200 shadow-sm"
-      aria-label="Carte des piscines"
+      className="h-72 w-full rounded-2xl border border-fuchsia-200 shadow-sm dark:border-white/10"
+      aria-label={dict.mapAria}
     />
   );
 }

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Fiches, sitemap et index agents lisent les jeux de données côté serveur.
+  outputFileTracingIncludes: {
+    "/*": ["./public/data/*.json"],
+  },
   async headers() {
     return [
       {

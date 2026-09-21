@@ -160,17 +160,17 @@ export function LocationSearch({ value, onChange }: Props) {
               if (e.key === "Escape") setOpen(false);
             }}
             placeholder={value ? value.label : dict.searchPlaceholder}
-            className="w-full rounded-xl border border-fuchsia-200 bg-white/90 px-4 py-2.5 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200"
+            className="w-full rounded-xl border border-fuchsia-200 bg-white/90 px-4 py-2.5 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-fuchsia-400 focus:ring-2 focus:ring-fuchsia-200 dark:border-white/15 dark:bg-[#241b32] dark:text-slate-50 dark:placeholder:text-slate-400 dark:focus:border-fuchsia-300 dark:focus:ring-fuchsia-400/40"
             aria-label={dict.searchAria}
           />
           {open && (
-            <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-fuchsia-200 bg-white shadow-lg">
+            <ul className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-fuchsia-200 bg-white shadow-lg dark:border-white/15 dark:bg-[#241b32]">
               {suggestions.map((s) => (
                 <li key={`${s.lat}:${s.lon}`}>
                   <button
                     type="button"
                     onClick={() => pick(s)}
-                    className="block w-full px-4 py-2 text-left text-sm hover:bg-fuchsia-50"
+                    className="block w-full px-4 py-2 text-left text-sm text-slate-800 hover:bg-fuchsia-50 dark:text-slate-100 dark:hover:bg-fuchsia-400/20"
                   >
                     {s.label}
                   </button>
@@ -188,7 +188,7 @@ export function LocationSearch({ value, onChange }: Props) {
           {locating ? dict.locating : dict.locateButton}
         </button>
       </div>
-      {error && <p className="mt-1.5 text-xs text-rose-700">{error}</p>}
+      {error && <p className="mt-1.5 text-xs text-rose-700 dark:text-rose-300">{error}</p>}
     </div>
   );
 }

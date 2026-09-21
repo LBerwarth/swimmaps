@@ -1,6 +1,31 @@
-import { FinderView } from "@/components/finder-view";
-import { getDict, isLocale, LOCALES, type Locale } from "@/lib/i18n";
+import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { formatDate, getDict, isLocale, LOCALES, type Locale } from "@/lib/i18n";
+import { getIndex } from "@/lib/pools-server";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { FinderView } from "@/components/finder-view";
+import { PageHeader } from "@/components/page-header";
+import { SiteFooter } from "@/components/site-footer";
+import { IosBanner } from "@/components/ios-banner";
+import { OfflineBanner } from "@/components/offline-banner";
+import { UpdateInfo } from "@/components/update-info";
+import { FeedbackForm } from "@/components/feedback-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  return {
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { ...Object.fromEntries(LOCALES.map((l) => [l, `/${l}`])), "x-default": "/fr" },
+    },
+  };
+}
 
 export default async function Home({
   params,
@@ -11,81 +36,60 @@ export default async function Home({
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const dict = getDict(locale);
+  const index = getIndex();
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        url: `${SITE_URL}/`,
+        name: SITE_NAME,
+        description: dict.metaDescription,
+        inLanguage: LOCALES,
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${SITE_URL}/${locale}#webpage`,
+        url: `${SITE_URL}/${locale}`,
+        name: dict.metaTitle,
+        description: dict.metaDescription,
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        inLanguage: dict.intlLocale,
+        dateModified: index.updated,
+      },
+    ],
+  };
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-16 pt-6 sm:pt-8">
-      <header className="relative mb-6 overflow-hidden rounded-3xl bg-gradient-to-br from-pink-500 via-fuchsia-600 to-violet-800 px-5 py-6 text-white shadow-lg shadow-pink-200/60 sm:px-7 sm:py-8">
-        <nav
-          className="absolute right-4 top-4 flex gap-1 text-xs font-semibold"
-          aria-label="Langue / Language"
-        >
-          {LOCALES.map((code) => (
-            <a
-              key={code}
-              href={`/${code}`}
-              aria-current={code === locale ? "page" : undefined}
-              className={`rounded-full px-2 py-0.5 uppercase transition ${
-                code === locale
-                  ? "bg-white/90 text-fuchsia-700"
-                  : "bg-white/20 text-white hover:bg-white/40"
-              }`}
-            >
-              {code}
-            </a>
-          ))}
-        </nav>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          Swimspot
-        </h1>
-        <p className="mt-2 text-sm text-white/90 sm:text-base">
-          {dict.subtitle}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+
+      <PageHeader locale={locale} path="" title={SITE_NAME} subtitle={dict.subtitle}>
+        <p className="mt-3 text-xs text-pink-100/80">
+          {dict.dataDate(formatDate(index.updated, locale))} ·{" "}
+          <Link
+            href={`/${locale}/sources`}
+            className="underline decoration-pink-200/60 underline-offset-2 hover:text-white"
+          >
+            {dict.navSources}
+          </Link>{" "}
+          <UpdateInfo />
         </p>
-      </header>
+      </PageHeader>
+
+      <IosBanner />
+      <OfflineBanner />
 
       <FinderView />
 
-      <footer className="mt-12 space-y-1 text-center text-xs text-slate-500">
-        <p>
-          {dict.footerData}{" "}
-          <a
-            className="underline hover:text-fuchsia-700"
-            href="https://equipements.sports.gouv.fr"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Data ES
-          </a>{" "}
-          {dict.footerLicenceFR} ·{" "}
-          <a
-            className="underline hover:text-fuchsia-700"
-            href="https://www.activeplacespower.com"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Active Places
-          </a>{" "}
-          {dict.footerLicenceGB} ·{" "}
-          <a
-            className="underline hover:text-fuchsia-700"
-            href="https://baederleben.de"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Bäderleben
-          </a>{" "}
-          {dict.footerLicenceDE} ·{" "}
-          <a
-            className="underline hover:text-fuchsia-700"
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {dict.footerOsm}
-          </a>{" "}
-          (ODbL)
-        </p>
-        <p>{dict.footerDisclaimer}</p>
-      </footer>
+      <FeedbackForm />
+
+      <SiteFooter locale={locale} withFeedback />
     </main>
   );
 }

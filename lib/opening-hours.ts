@@ -381,3 +381,8 @@ export function prettifyOpeningHours(
     .map((seg) => prettifySegment(seg, locale))
     .filter(Boolean);
 }
+
+/** 570 → « 9h30 » (fr) / « 9:30 » (en, de). */
+export function formatTime(minutes: number, locale: Locale = "fr"): string {
+  return L10N[locale].time(minutes);
+}
