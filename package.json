@@ -9,7 +9,8 @@
     "test": "vitest run",
     "lint": "eslint",
     "build:data": "tsx scripts/build-data.mts",
-    "scrape:hours": "tsx scripts/scrape-website-hours.mts"
+    "scrape:hours": "tsx scripts/scrape-website-hours.mts",
+    "indexnow": "tsx scripts/indexnow.mts"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
