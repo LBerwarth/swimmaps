@@ -2,14 +2,15 @@
 const SITE = "https://www.swimmaps.eu";
 // Clé publique par conception : IndexNow la vérifie sur /<clé>.txt.
 const KEY = "65ff204be8046f07e1c0abfec6df36f1";
-const BATCH = 10000;
+const BATCH = 1000;
 
 const xml = await (await fetch(`${SITE}/sitemap.xml`)).text();
 const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
 
 for (let i = 0; i < urls.length; i += BATCH) {
   const urlList = urls.slice(i, i + BATCH);
-  const res = await fetch("https://api.indexnow.org/indexnow", {
+  // api.indexnow.org coupe la connexion depuis Node ; Bing relaie aux autres moteurs.
+  const res = await fetch("https://www.bing.com/indexnow", {
     method: "POST",
     headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify({ host: new URL(SITE).host, key: KEY, keyLocation: `${SITE}/${KEY}.txt`, urlList }),
