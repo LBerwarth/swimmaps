@@ -497,9 +497,9 @@ const fr: Dict = {
 
   tipTitle: "Offrir un café",
   tipDesc:
-    "Swimmaps est une application personnelle et bénévole, sans publicité. Si elle vous évite un trajet pour rien, vous pouvez m'offrir un café.",
+    "Swimmaps est une application personnelle et indépendante. Si elle vous évite un trajet pour rien, vous pouvez m'offrir un café.",
   tipButton: "Offrir un café",
-  tipNote: "Avec ou sans café, elle reste gratuite, sans publicité, et la même pour tout le monde.",
+  tipNote: "Avec ou sans café, elle reste gratuite et la même pour tout le monde.",
 
   coveredLabel: "Pays couverts :",
   countryNames: { fr: "France", gb: "Angleterre", de: "Allemagne" },
@@ -887,9 +887,9 @@ const en: Dict = {
 
   tipTitle: "Buy me a coffee",
   tipDesc:
-    "Swimmaps is a personal, ad-free side project. If it saves you a wasted trip, you can buy me a coffee.",
+    "Swimmaps is a personal, independent side project. If it saves you a wasted trip, you can buy me a coffee.",
   tipButton: "Buy me a coffee",
-  tipNote: "With or without coffee, the app stays free, ad-free and the same for everyone.",
+  tipNote: "With or without coffee, the app stays free and the same for everyone.",
 
   coveredLabel: "Countries covered:",
   countryNames: { fr: "France", gb: "England", de: "Germany" },
@@ -1277,9 +1277,9 @@ const de: Dict = {
 
   tipTitle: "Spendier mir einen Kaffee",
   tipDesc:
-    "Swimmaps ist ein privates, werbefreies Hobbyprojekt. Wenn es dir einen umsonst gefahrenen Weg erspart, kannst du mir einen Kaffee spendieren.",
+    "Swimmaps ist ein privates, unabhängiges Hobbyprojekt. Wenn es dir einen umsonst gefahrenen Weg erspart, kannst du mir einen Kaffee spendieren.",
   tipButton: "Kaffee spendieren",
-  tipNote: "Mit oder ohne Kaffee: Die App bleibt kostenlos, werbefrei und für alle gleich.",
+  tipNote: "Mit oder ohne Kaffee: Die App bleibt kostenlos und für alle gleich.",
 
   coveredLabel: "Abgedeckte Länder:",
   countryNames: { fr: "Frankreich", gb: "England", de: "Deutschland" },
