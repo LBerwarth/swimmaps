@@ -2342,7 +2342,7 @@ const es: Dict = {
   typeAria: "Tipo de piscina",
   typeAll: "Todas",
   typeIndoor: "Cubierta",
-  typeOutdoor: "Al aire libre",
+  typeOutdoor: "Exterior",
   openLabel: "Abierta",
   openAria: "Apertura",
   openTitle:
