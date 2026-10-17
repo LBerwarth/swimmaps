@@ -87,6 +87,11 @@ self.addEventListener("activate", (event) =>
 const NAV_TIMEOUT_MS = 1200;
 const NAV_LAST_RESORT_MS = 5000;
 
+// Navigation peu après un repli en cache = rechargement demandé : la resservir
+// périmée figerait la page sur des horaires vieux de plusieurs jours.
+const FALLBACK_RETRY_WINDOW_MS = 60000;
+let lastFallbackAt = 0;
+
 function offlineResponse() {
   return new Response(OFFLINE_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } });
 }
@@ -105,7 +110,9 @@ async function networkFirst(request, event, timeoutMs) {
   });
   const timed = (ms) => Promise.race([network.catch(() => null), pause(ms)]);
 
-  const winner = await timed(timeoutMs);
+  const navigate = request.mode === "navigate";
+  const retry = navigate && Date.now() - lastFallbackAt < FALLBACK_RETRY_WINDOW_MS;
+  const winner = await timed(retry ? NAV_LAST_RESORT_MS : timeoutMs);
   if (winner && winner.ok) return winner;
   event.waitUntil(network.catch(() => {}));
 
@@ -114,7 +121,11 @@ async function networkFirst(request, event, timeoutMs) {
     ? (await bounded(cache.match(request))) ||
       (await bounded(cache.match(request, { ignoreSearch: true })))
     : null;
-  if (cached) return cached;
+  if (cached) {
+    if (navigate) lastFallbackAt = Date.now();
+    return cached;
+  }
+  if (retry) return offlineResponse();
 
   const late = await timed(NAV_LAST_RESORT_MS - timeoutMs);
   return late || (request.mode === "navigate" ? offlineResponse() : Response.error());

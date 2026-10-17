@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchToulouseLive, formatSlotTime, isOpenNowLive } from "./toulouse-live";
+import { fetchToulouseLive, formatSlotTime, isOpenNowLive, toulouseUrl } from "./toulouse-live";
 
 const apiPool = (slug: string, extra: Record<string, unknown> = {}) => ({
   slug,
@@ -57,6 +57,17 @@ describe("fetchToulouseLive", () => {
     });
   });
 
+  it("date le statut du relevé le plus ancien, à défaut du rapport", async () => {
+    mockApi([
+      apiPool("piscine-alfred-nakache-ete", { fetchedAt: "2026-09-19T08:00:00.000Z" }),
+      apiPool("piscine-alfred-nakache-hiver", { fetchedAt: "2026-09-21T09:45:00.000Z" }),
+      apiPool("piscine-balma"),
+    ]);
+    const live = await fetchToulouseLive();
+    expect(live.get("I315550226-nakache")?.updatedAt).toBe("2026-09-19T08:00:00.000Z");
+    expect(live.get("I310440003")?.updatedAt).toBe("2026-09-21T10:00:00.000Z");
+  });
+
   it("écarte les piscines non relevées (ok faux, statut inconnu) et les slugs inconnus", async () => {
     mockApi([
       apiPool("piscine-papus", { ok: false }),
@@ -69,6 +80,16 @@ describe("fetchToulouseLive", () => {
   it("propage l'échec HTTP", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 503 })));
     await expect(fetchToulouseLive()).rejects.toThrow("503");
+  });
+});
+
+describe("toulouseUrl", () => {
+  it("pointe vers la fiche piscines-toulouse.fr, sinon null", () => {
+    expect(toulouseUrl("I315820005")).toBe(
+      "https://piscines-toulouse.fr/piscine/villefranche-de-lauragais",
+    );
+    expect(toulouseUrl("I310440003")).toBe("https://piscines-toulouse.fr/piscine/balma");
+    expect(toulouseUrl("I999999999")).toBeNull();
   });
 });
 

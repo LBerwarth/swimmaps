@@ -55,13 +55,23 @@ const SLUGS_BY_POOL_ID: Record<string, string[]> = {
   I312910003: ["piscine-leguevin"],
   I314460007: ["piscine-alex-jany-ramonville"],
   I311130001: ["piscine-georges-vallerey"],
+  I315820005: ["piscine-villefranche-de-lauragais"],
 };
+
+const TOULOUSE_SITE = "https://piscines-toulouse.fr";
+
+/** Fiche piscines-toulouse.fr : semaine, avis et tarifs relevés à la source. */
+export function toulouseUrl(poolId: string): string | null {
+  const slug = SLUGS_BY_POOL_ID[poolId]?.[0];
+  return slug ? `${TOULOUSE_SITE}/piscine/${slug.replace(/^piscine-/, "")}` : null;
+}
 
 interface ApiPool {
   slug: string;
   name: string;
   url: string;
   ok: boolean;
+  fetchedAt?: string;
   openToday: boolean | null;
   slots: Array<{ start: string; end: string }>;
   closureReason: string | null;
@@ -73,6 +83,7 @@ export interface LivePoolStatus {
   slots: Array<{ start: string; end: string }>;
   closureReason: string | null;
   url: string;
+  /** Relevé de la piscine : plus ancien que le rapport si sa source est en panne. */
   updatedAt: string;
 }
 
@@ -104,7 +115,8 @@ export async function fetchToulouseLive(
         ? null
         : (entries.map((p) => p.closureReason).find(Boolean) ?? null),
       url: entries[0].url,
-      updatedAt: data.updatedAt,
+      updatedAt:
+        entries.map((p) => p.fetchedAt ?? data.updatedAt).sort()[0],
     });
   }
   return result;

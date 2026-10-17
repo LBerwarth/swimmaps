@@ -11,7 +11,7 @@ import {
   prettifyOpeningHours,
   type WeekSchedule,
 } from "@/lib/opening-hours";
-import { formatSlotTime, type LivePoolStatus } from "@/lib/toulouse-live";
+import { formatSlotTime, toulouseUrl, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, type DayState } from "@/lib/pool-state";
 import { poolPagePath } from "@/lib/slug";
 import { toggleFavorite, useFavorites } from "@/components/use-favorites";
@@ -95,6 +95,7 @@ export function PoolCard({
   const favorites = useFavorites();
   const now = useNow();
   const isFavorite = favorites.includes(pool.id);
+  const toulouse = toulouseUrl(pool.id);
   const parsed = parsedHours(pool, locale);
   const seasonalClosed = parsed
     ? isInClosedPeriod(parsed.closedPeriods, now ?? new Date())
@@ -263,6 +264,17 @@ export function PoolCard({
       </div>
 
       <div className="mt-3 text-sm">
+        {toulouse && (
+          <a
+            href={toulouse}
+            target="_blank"
+            rel="noopener"
+            className="mb-2 flex items-center justify-between gap-3 rounded-xl bg-violet-50 px-3 py-2 text-xs font-medium text-violet-900 ring-1 ring-violet-200 transition-colors hover:bg-violet-100 dark:bg-violet-400/10 dark:text-violet-100 dark:ring-white/15 dark:hover:bg-violet-400/20"
+          >
+            <span>{dict.toulouseRecommend}</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
         {live && (
           <div className="mb-2">
             {live.openToday && live.slots.length > 0 && (
@@ -274,7 +286,16 @@ export function PoolCard({
             {!live.openToday && live.closureReason && (
               <p className="text-xs text-rose-800/90 dark:text-rose-200">{live.closureReason}</p>
             )}
-            <p className="mt-1 text-[10px] text-slate-400">{dict.liveSource}</p>
+            <p className="mt-1 text-[10px] text-slate-400">
+              {dict.liveSource(
+                new Intl.DateTimeFormat(locale, {
+                  timeZone: "Europe/Paris",
+                  weekday: "short",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(new Date(live.updatedAt)),
+              )}
+            </p>
           </div>
         )}
         {!live &&
