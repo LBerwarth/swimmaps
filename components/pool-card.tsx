@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Pool } from "@/lib/types";
+import type { Locale } from "@/lib/i18n";
 import { formatDistance } from "@/lib/geo";
 import {
   formatClosedPeriodFR,
@@ -75,6 +76,15 @@ function Badge({ state }: { state: DayState }) {
   }
 }
 
+const SEARCH_WORD: Record<Locale, string> = {
+  fr: "piscine",
+  en: "swimming pool",
+  de: "Schwimmbad",
+  es: "piscina",
+  it: "piscina",
+  nl: "zwembad",
+};
+
 const ICON_BTN =
   "inline-flex h-7 w-7 items-center justify-center rounded-lg text-white shadow-sm transition-colors";
 
@@ -113,7 +123,7 @@ export function PoolCard({
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${pool.lat},${pool.lon}`;
   const website = pool.website ?? live?.url;
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(
-    `${locale === "fr" ? "piscine" : locale === "de" ? "Schwimmbad" : "swimming pool"} ${pool.name} ${pool.city}`,
+    `${SEARCH_WORD[locale]} ${pool.name} ${pool.city}`,
   )}`;
   const detailHref = poolPagePath(locale, pool);
   const phone = pool.phone?.replace(/\s/g, "");
@@ -178,7 +188,7 @@ export function PoolCard({
                 key={len}
                 className="rounded-full bg-violet-100 px-2 py-0.5 text-[11px] font-semibold text-violet-800 dark:bg-violet-400/15 dark:text-violet-200"
               >
-                {locale === "fr" || locale === "de" ? String(len).replace(".", ",") : String(len)} m
+                {locale === "en" ? String(len) : String(len).replace(".", ",")} m
               </span>
             ))}
             {pool.env && (

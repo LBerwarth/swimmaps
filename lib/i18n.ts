@@ -4,8 +4,8 @@
  * chaînes paramétrées.
  */
 
-export type Locale = "fr" | "en" | "de";
-export const LOCALES: Locale[] = ["fr", "en", "de"];
+export type Locale = "fr" | "en" | "de" | "es" | "it" | "nl";
+export const LOCALES: Locale[] = ["fr", "en", "de", "es", "it", "nl"];
 export const DEFAULT_LOCALE: Locale = "fr";
 
 export type FeedbackKind = "hours" | "info" | "missing" | "suggestion" | "other";
@@ -275,7 +275,7 @@ const fr: Dict = {
   intlLocale: "fr-FR",
   metaTitle: "Swimmaps — trouvez une piscine près de chez vous",
   metaDescription:
-    "Les piscines publiques autour de vous en France, Angleterre et Allemagne : " +
+    "Les piscines publiques autour de vous en France, Allemagne, Angleterre, Espagne, Italie, Belgique et aux Pays-Bas : " +
     "bassins, horaires et tarifs, avec carte et itinéraires.",
   subtitle:
     "Trouvez les piscines publiques autour de vous : bassins, horaires et tarifs quand ils sont connus.",
@@ -502,7 +502,10 @@ const fr: Dict = {
   tipNote: "Avec ou sans café, elle reste gratuite et la même pour tout le monde.",
 
   coveredLabel: "Pays couverts :",
-  countryNames: { fr: "France", gb: "Angleterre", de: "Allemagne" },
+  countryNames: {
+    fr: "France", gb: "Angleterre", de: "Allemagne",
+    es: "Espagne", it: "Italie", be: "Belgique", nl: "Pays-Bas",
+  },
 
   sources: {
     title: "Sources des données",
@@ -552,6 +555,17 @@ const fr: Dict = {
             detail:
               "Bäder publics avec tarifs d'entrée, longueurs, sites web et téléphones. © BISp ; coordonnées © GeoBasis-DE / BKG 2021.",
             url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Espagne, Italie, Belgique, Pays-Bas",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, seule source : centres et parcs aquatiques nommés, hors hôtels et campings. Horaires et tarifs plus rares qu'ailleurs ; commune déduite de la localité la plus proche quand l'adresse manque.",
+            url: URLS.osm,
           },
         ],
       },
@@ -652,7 +666,7 @@ const en: Dict = {
   intlLocale: "en-GB",
   metaTitle: "Swimmaps — find a swimming pool near you",
   metaDescription:
-    "Public swimming pools near you in France, England and Germany: " +
+    "Public swimming pools near you in France, Germany, England, Spain, Italy, Belgium and the Netherlands: " +
     "pools, opening hours and prices, with a map and directions.",
   subtitle:
     "Find the public swimming pools around you: basins, opening hours and prices where known.",
@@ -892,7 +906,10 @@ const en: Dict = {
   tipNote: "With or without coffee, the app stays free and the same for everyone.",
 
   coveredLabel: "Countries covered:",
-  countryNames: { fr: "France", gb: "England", de: "Germany" },
+  countryNames: {
+    fr: "France", gb: "England", de: "Germany",
+    es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands",
+  },
 
   sources: {
     title: "Data sources",
@@ -942,6 +959,17 @@ const en: Dict = {
             detail:
               "Public pools with entry prices, lengths, websites and phones. © BISp; coordinates © GeoBasis-DE / BKG 2021.",
             url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Spain, Italy, Belgium, Netherlands",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, sole source: named pools and water parks, excluding hotels and campsites. Hours and prices are rarer than elsewhere; the town is the nearest locality when the address is missing.",
+            url: URLS.osm,
           },
         ],
       },
@@ -1041,7 +1069,7 @@ const de: Dict = {
   intlLocale: "de-DE",
   metaTitle: "Swimmaps — finde ein Schwimmbad in deiner Nähe",
   metaDescription:
-    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich und England: " +
+    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich, England, Spanien, Italien, Belgien und den Niederlanden: " +
     "Becken, Öffnungszeiten und Preise, mit Karte und Route.",
   subtitle:
     "Finde die öffentlichen Schwimmbäder um dich herum: Becken, Öffnungszeiten und Preise, soweit bekannt.",
@@ -1282,7 +1310,10 @@ const de: Dict = {
   tipNote: "Mit oder ohne Kaffee: Die App bleibt kostenlos und für alle gleich.",
 
   coveredLabel: "Abgedeckte Länder:",
-  countryNames: { fr: "Frankreich", gb: "England", de: "Deutschland" },
+  countryNames: {
+    fr: "Frankreich", gb: "England", de: "Deutschland",
+    es: "Spanien", it: "Italien", be: "Belgien", nl: "Niederlande",
+  },
 
   sources: {
     title: "Datenquellen",
@@ -1332,6 +1363,17 @@ const de: Dict = {
             detail:
               "Öffentliche Bäder mit Eintrittspreisen, Längen, Websites und Telefonnummern. © BISp; Koordinaten © GeoBasis-DE / BKG 2021.",
             url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Spanien, Italien, Belgien, Niederlande",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, einzige Quelle: benannte Bäder und Freizeitbäder, ohne Hotels und Campingplätze. Öffnungszeiten und Preise seltener als anderswo; der Ort ist die nächste Ortschaft, wenn die Adresse fehlt.",
+            url: URLS.osm,
           },
         ],
       },
@@ -1427,7 +1469,1216 @@ const de: Dict = {
   },
 };
 
-const DICTS: Record<Locale, Dict> = { fr, en, de };
+const it: Dict = {
+  intlLocale: "it-IT",
+  metaTitle: "Swimmaps — trova una piscina vicino a te",
+  metaDescription:
+    "Piscine pubbliche vicino a te in Francia, Germania, Inghilterra, Spagna, Italia, Belgio e Paesi Bassi: " +
+    "vasche, orari e prezzi, con mappa e indicazioni stradali.",
+  subtitle:
+    "Trova le piscine pubbliche intorno a te: vasche, orari e prezzi quando noti.",
+
+  langAria: "Lingua / Language / Taal",
+  navSources: "Fonti",
+  navPrivacy: "Privacy",
+  navFeedback: "Segnala un errore",
+  backHome: "Tutte le piscine",
+  dataDate: (date) => `Dati aggiornati al ${date}`,
+  dataInfoAria: "Come vengono aggiornati i dati",
+  dataInfo:
+    "I dataset (Data ES, Active Places, Bäderleben, OpenStreetMap) vengono ricostruiti da uno script e distribuiti con l'app: la data è quella dell'ultima estrazione. Le piscine di Tolosa ricevono in più il loro stato giornaliero in tempo reale.",
+  themeNames: { system: "automatico", light: "chiaro", dark: "scuro" },
+  themeSwitch: (current, next) => `Tema: ${current} — passa a ${next}`,
+
+  iosInstallLead: "Installa l'app: tocca",
+  iosInstallTail: "poi “Aggiungi alla schermata Home”.",
+  iosHow: "Come?",
+  iosHideSteps: "Nascondi i passaggi",
+  iosDismiss: "Nascondi questo invito",
+  iosShare: "Condividi",
+  iosStep1: "— in Safari, in basso sullo schermo su iPhone, in alto a destra su iPad.",
+  iosStep2a: "Scorri l'elenco delle azioni fino a",
+  iosStep2b: "“Aggiungi alla schermata Home”.",
+  iosCopy: "Copia",
+  iosBookmark: "Aggiungi segnalibro",
+  iosAddHome: "Aggiungi alla schermata Home",
+  iosCancel: "Annulla",
+  iosAdd: "Aggiungi",
+  iosStep3a: "Tocca",
+  iosStep3b: "L'icona compare nella schermata Home: apri l'app da lì.",
+
+  offlineBanner:
+    "Sei offline. Le piscine mostrate provengono dall'ultimo caricamento — la mappa e la ricerca di indirizzi torneranno con la rete.",
+  offlineReload: "Ricarica",
+
+  searchPlaceholder: "Indirizzo, città, CAP…",
+  searchAria: "Cerca un indirizzo",
+  locateButton: "📍 Intorno a me",
+  locating: "Localizzazione…",
+  errNoGeolocation: "La geolocalizzazione non è disponibile su questo dispositivo.",
+  errGeoDenied: "Posizione negata o non disponibile — cerca invece un indirizzo.",
+  errSearchDown: "La ricerca di indirizzi non è disponibile al momento.",
+
+  savedAddressesAria: "Indirizzi salvati",
+  saveAddress: "☆ Salva",
+  removeAddress: (label) => `Rimuovi l'indirizzo ${label}`,
+
+  poolSearchPlaceholder: "Cerca una piscina o una città nel raggio…",
+  poolSearchAria: "Cerca una piscina o una città",
+  poolSearchClear: "Cancella la ricerca",
+  searchCount: (n, total) =>
+    `${n === 0 ? "Nessuna piscina ha questo nome" : `${n} piscin${n > 1 ? "e" : "a"} trovat${n > 1 ? "e" : "a"}`} tra le ${total} nel raggio, filtri esclusi.`,
+  searchNone: (query) => `Nessuna piscina corrisponde a “${query}”.`,
+
+  radiusLabel: "Raggio",
+  radiusAria: "Raggio di ricerca",
+  typeLabel: "Tipo",
+  typeAria: "Tipo di piscina",
+  typeAll: "Tutte",
+  typeIndoor: "Coperta",
+  typeOutdoor: "Scoperta",
+  openLabel: "Aperta",
+  openAria: "Apertura",
+  openTitle:
+    "“Questa settimana”: esclude le chiusure stagionali note. “Oggi”: mantiene le piscine con orari sconosciuti. “Adesso”: solo le piscine con orari noti e aperte in questo momento.",
+  openAll: "Tutte",
+  openWeek: "Questa settimana",
+  openWeekShort: "Settimana",
+  openNow: "Adesso",
+  openNowShort: "Adesso",
+  openToday: "Oggi",
+  openTodayShort: "Oggi",
+  favLabel: "Preferite",
+  favAria: "Preferiti",
+  favAll: "Tutte",
+  favOnly: "★ Preferiti",
+  favTip:
+    "💡 Tocca ☆ accanto al nome di una piscina per seguirla: sale in cima all'elenco e il filtro ★ Preferiti te la ritrova.",
+  favTipOk: "Ok, capito",
+  lenLabel: "Lunghezza",
+  lenAria: "Lunghezza della vasca",
+  lenAll: "Qualsiasi",
+
+  sectionTimeline: "Orari per giorno",
+  sectionMap: "Dove sono le piscine",
+  sectionList: (n) => `Le piscine (${n})`,
+
+  dayShort: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
+  todaySuffix: "(oggi)",
+  legendOpenNow: "aperta ora",
+  legendSlot: "fascia di apertura",
+  legendNow: "adesso",
+  timelineUnknown: (n) =>
+    `${n} piscin${n > 1 ? "e" : "a"} nel raggio con orari sconosciuti non ${n > 1 ? "sono mostrate" : "è mostrata"} qui.`,
+  timelineMore: (n) => `Altre ${n} più lontane — riduci il raggio per vederle.`,
+  timelineSeasonal: "chiusura stagionale",
+  timelineClosed: "chiusa",
+  timelineHolidayNote:
+    "Settimana tipo durante il periodo scolastico; gli orari delle vacanze sono nella pagina di ogni piscina.",
+  timelineGoto: (name) => `Vai a ${name}`,
+
+  loadError: "Impossibile caricare l'elenco delle piscine. Ricarica la pagina.",
+  emptyTitle: "Dove cerchi una piscina?",
+  emptyHint: "Tocca “📍 Intorno a me” o scrivi un indirizzo qui sopra.",
+  referenced: (n) => `${n} piscine pubbliche censite.`,
+  loadingPools: "Caricamento delle piscine…",
+  noneInRadius: "Nessuna piscina in questo raggio — provane uno più ampio.",
+  noneInRadiusNear: (km) => `Nessuna piscina in questo raggio — la più vicina è a ${km}.`,
+  noneFavorite: "Nessuna piscina preferita in questo raggio — tocca ☆ su una piscina per aggiungerla.",
+  noneFilters: "Nessuna piscina corrisponde a questi filtri in questo raggio.",
+  countLine: (n, radiusKm, label) =>
+    `${n} piscin${n > 1 ? "e" : "a"} entro ${radiusKm} km da ${label} (in linea d'aria).`,
+  showMore: (n) => `Mostra altre (ne restano ${n})`,
+  mapAria: "Mappa delle piscine",
+  mapOpenCount: (n) => `${n} piscin${n > 1 ? "e aperte" : "a aperta"} in questo momento.`,
+  mapHint: "Tocca un segnaposto per aprirne la pagina. ★ = piscina preferita, colore acceso = aperta ora.",
+  mapPopupDetail: "Dettagli",
+
+  distanceTitle: "Distanza in linea d'aria",
+  favAdd: (name) => `Aggiungi ${name} ai preferiti`,
+  favRemove: (name) => `Rimuovi ${name} dai preferiti`,
+  envLabels: { int: "Coperta", ext: "Scoperta", mix: "Coperta + scoperta" },
+  basinLabels: {
+    sportif: "vasca sportiva",
+    ludique: "vasca ludica",
+    mixte: "vasca mista",
+    toboggan: "vasca con scivoli",
+    plongeon: "vasca tuffi",
+    plongée: "vasca per immersioni",
+    principal: "vasca principale",
+    apprentissage: "vasca didattica",
+    lido: "vasca all'aperto",
+    pataugeoire: "vasca per bambini",
+    vagues: "piscina a onde",
+    spa: "idromassaggio",
+    kneipp: "vasca Kneipp",
+    naturel: "piscina naturale",
+  },
+  basinFallback: (label) => `vasca ${label}`,
+
+  seasonalClosed: "Chiusa per stagione al momento",
+  badgeOpenNow: "Aperta ora",
+  badgeOpenUntil: (time) => `Aperta · fino alle ${time}`,
+  badgeOpensAt: (time) => `Apre alle ${time}`,
+  badgeDone: "Chiusa per oggi",
+  badgeClosedNow: "Chiusa ora",
+  badgeClosedToday: "Chiusa oggi",
+  todayLabel: "Oggi:",
+  liveSource: (at) => `Stato del giorno verificato ${at} — piscines-toulouse.fr`,
+  toulouseRecommend: "Settimana completa, chiusure e prezzi su Piscines de Toulouse",
+  schoolTerm: "Periodo scolastico",
+  schoolHolidays: "Vacanze scolastiche",
+  specialPeriods: "Periodi speciali",
+  hoursLabel: "Orari:",
+  centreHoursNote:
+    "Orari del centro (fonte: sito ufficiale) — gli orari della vasca possono essere diversi.",
+  noHours: "Orari sconosciuti — controlla il sito ufficiale.",
+  priceLabel: "Prezzo:",
+  paidEntry: "Ingresso a pagamento",
+  freeEntry: "Ingresso gratuito",
+  directions: "Indicazioni",
+  directionsAria: (name) => `Indicazioni per ${name} (Google Maps)`,
+  directionsTitle: "Indicazioni — apre Google Maps",
+  phoneAria: (name, phone) => `Chiama ${name} al ${phone}`,
+  phoneTitle: (phone) => `Chiama la reception — ${phone}`,
+  website: "Sito web",
+  websiteAria: (name) => `Sito ufficiale di ${name} (nuova scheda)`,
+  websiteTitle: "Sito ufficiale — si apre in una nuova scheda",
+  searchWebsite: "Cerca il sito",
+  searchWebsiteTitle: "Sito sconosciuto — cerca sul web",
+  detailLink: "Dettagli",
+  detailLinkTitle: "Pagina di dettaglio — orari settimanali e info pratiche",
+
+  detailMetaTitle: (name, city) => `${name} a ${city} — orari, vasche e accesso`,
+  detailMetaDescription: (name, city) =>
+    `${/piscin|natator|nuoto|acqua|aqua|lido|bagni|pool|swim/i.test(name) ? name : `Piscina ${name}`} a ${city}: orari se noti, vasche, prezzo, indirizzo e indicazioni stradali.`,
+  detailSubtitle: (city) => `Piscina pubblica a ${city} — orari, vasche e accesso.`,
+  detailHoursTitle: "Orari settimanali",
+  detailHoursNote:
+    "Gli orari provengono da fonti aperte (OpenStreetMap, sito ufficiale) — verificali prima di partire.",
+  detailHoursUnknown:
+    "Gli orari non sono nelle nostre fonti: controlla il sito ufficiale o chiama la reception.",
+  detailRawHours: "Orari pubblicati (non interpretati)",
+  detailInfoTitle: "Info pratiche",
+  detailAddress: "Indirizzo",
+  detailBasins: "Vasche",
+  detailLengths: "Lunghezze",
+  detailNearbyTitle: "Altre piscine nei dintorni",
+  detailNearbyAway: (km) => `a ${km}`,
+  detailBack: "← Tutte le piscine intorno a me",
+
+  fbTitle: "💬 Segnala un errore o lascia un commento",
+  fbIntro:
+    "Orari sbagliati, una piscina chiusa o mancante, un'idea? Scrivici — aiuta a correggere l'app e le sue fonti aperte.",
+  fbKinds: {
+    hours: "Orari sbagliati",
+    info: "Info sbagliate",
+    missing: "Piscina mancante o chiusa",
+    suggestion: "Suggerimento",
+    other: "Altro",
+  },
+  fbPool: "Piscina interessata (facoltativo)",
+  fbPoolPlaceholder: "Nome e città",
+  fbMessage: "Il tuo messaggio",
+  fbMessagePlaceholder: "Es. il sabato la piscina chiude alle 19, non alle 20.",
+  fbEmail: "La tua e-mail",
+  fbEmailHint: "(facoltativa, per una risposta)",
+  fbSend: "Invia",
+  fbSending: "Invio in corso…",
+  fbOrEmail: "o via e-mail",
+  fbSent: "✓ Grazie, il tuo messaggio è arrivato.",
+  fbSentHint:
+    "Gli orari si possono correggere anche direttamente su OpenStreetMap — così ne beneficiano tutti.",
+  fbAnother: "Invia un altro messaggio",
+  fbErrorDefault: "L'invio non è possibile al momento.",
+  fbErrorMail: "Puoi anche inviare il messaggio via e-mail.",
+  fbSubject: "Swimmaps — segnalazione",
+
+  footerData: "Dati:",
+  footerLicenceFR: "(licenza aperta)",
+  footerLicenceGB: "(licenza OGL v3)",
+  footerLicenceDE:
+    "(© Bundesinstitut für Sportwissenschaft · coordinate © GeoBasis-DE / BKG 2021)",
+  footerOsm: "© contributori di OpenStreetMap",
+  footerDisclaimer:
+    "Orari e prezzi provengono da fonti aperte e sono disponibili solo per una parte " +
+    "delle piscine — controlla il sito ufficiale prima di partire.",
+  footerIndependent:
+    "App personale e indipendente, non affiliata ai gestori delle piscine né ad alcun ente pubblico.",
+
+  tipTitle: "Offrimi un caffè",
+  tipDesc:
+    "Swimmaps è un progetto personale e indipendente. Se ti ha evitato un viaggio a vuoto, puoi offrirmi un caffè.",
+  tipButton: "Offrimi un caffè",
+  tipNote: "Con o senza caffè, l'app resta gratuita e uguale per tutti.",
+
+  coveredLabel: "Paesi coperti:",
+  countryNames: {
+    fr: "Francia", gb: "Inghilterra", de: "Germania",
+    es: "Spagna", it: "Italia", be: "Belgio", nl: "Paesi Bassi",
+  },
+
+  sources: {
+    title: "Fonti dei dati",
+    subtitle: "Da dove vengono piscine, orari e prezzi",
+    intro:
+      "Swimmaps è un'app personale e indipendente, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Non inventa alcun dato: tutto ciò che mostra proviene dalle fonti aperte qui sotto, e le informazioni mancanti sono indicate come tali anziché indovinate. Verifica sempre le informazioni importanti sul sito ufficiale della piscina.",
+    groups: [
+      {
+        title: "Francia",
+        items: [
+          {
+            label: "Data ES — censimento nazionale degli impianti sportivi",
+            detail:
+              "Ministero dello Sport, licenza aperta: nome, indirizzo, coordinate, vasche e lunghezze. Gli impianti ad accesso riservato (scuole, militari, hotel…) sono esclusi.",
+            url: URLS.dataEs,
+          },
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL: orari (opening_hours), prezzo, sito web e telefono, abbinati per vicinanza geografica (< 300 m).",
+            url: URLS.osm,
+          },
+          {
+            label: "Piscines de Toulouse — stato giornaliero in tempo reale",
+            detail:
+              "L'app gemella legge le pagine ufficiali di Tolosa e dintorni; il suo stato sostituisce gli orari OSM per queste piscine.",
+            url: URLS.toulouse,
+          },
+        ],
+      },
+      {
+        title: "Inghilterra",
+        items: [
+          {
+            label: "Active Places (Sport England)",
+            detail:
+              "Licenza OGL v3: piscine aperte al pubblico (“Pay and Play” e club locali), lunghezze e siti web. Stesso arricchimento OpenStreetMap della Francia.",
+            url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Germania",
+        items: [
+          {
+            label: "Bäderleben (Bundesinstitut für Sportwissenschaft)",
+            detail:
+              "Piscine pubbliche con prezzi d'ingresso, lunghezze, siti web e telefoni. © BISp; coordinate © GeoBasis-DE / BKG 2021.",
+            url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Spagna, Italia, Belgio, Paesi Bassi",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, unica fonte: piscine e acquapark con un nome, esclusi hotel e campeggi. Orari e prezzi sono più rari che altrove; la città è la località più vicina quando manca l'indirizzo.",
+            url: URLS.osm,
+          },
+        ],
+      },
+      {
+        title: "Altri servizi utilizzati",
+        items: [
+          {
+            label: "Siti ufficiali delle piscine",
+            detail:
+              "Orari del centro letti dai loro dati strutturati schema.org quando OpenStreetMap non ne ha (indicati come tali nella pagina).",
+            url: URLS.schema,
+          },
+          {
+            label: "Base Adresse Nationale",
+            detail: "Ricerca di indirizzi in Francia (api-adresse.data.gouv.fr).",
+            url: URLS.ban,
+          },
+          {
+            label: "Photon (komoot)",
+            detail: "Ricerca di indirizzi fuori dalla Francia, su dati OpenStreetMap.",
+            url: URLS.photon,
+          },
+          {
+            label: "Mappa di base OpenStreetMap",
+            detail: "Tessere fornite dalla OpenStreetMap Foundation.",
+            url: URLS.tiles,
+          },
+        ],
+      },
+    ],
+    howTitle: "Come vengono raccolti i dati",
+    how: [
+      "Uno script ricostruisce i dataset paese per paese e li distribuisce con l'app; la data dell'ultima estrazione è indicata in cima alla home page. Niente viene completato a mano.",
+      "La copertura riflette lo stato dei dati aperti: in Francia gli orari sono noti per circa una piscina su dieci e i prezzi per una su cinquanta. L'interfaccia mostra allora “sconosciuto” e un link al sito ufficiale.",
+      "Gli errori si correggono alla fonte — su OpenStreetMap per orari, prezzi e siti web — o tramite il modulo di segnalazione dell'app.",
+    ],
+  },
+  privacy: {
+    title: "Informativa sulla privacy",
+    subtitle: "L'app “Swimmaps”",
+    updated: (date) => `Ultimo aggiornamento: ${date}`,
+    intro:
+      "Swimmaps è un'app personale e volontaria, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Mostra le piscine pubbliche a partire da dati aperti. Questa pagina spiega quali dati tratta — in breve: nulla che ti identifichi, tranne ciò che scegli di scriverci.",
+    sections: [
+      {
+        title: "Dati personali raccolti",
+        paragraphs: [
+          "Nessuno, per impostazione predefinita. L'app non richiede alcun account e non raccoglie dati su di te. Accede alla tua posizione solo se tocchi “Intorno a me”, e questa posizione resta nel tuo browser: serve a calcolare le distanze e non viene mai inviata al nostro server.",
+          "Quando scrivi un indirizzo, il testo viene inviato ai servizi di ricerca di indirizzi (Base Adresse Nationale per la Francia, Photon/komoot altrove) per essere convertito in coordinate. Nient'altro viene loro trasmesso.",
+        ],
+      },
+      {
+        title: "Archiviazione locale sul tuo dispositivo",
+        paragraphs: [
+          "I tuoi preferiti (★), gli indirizzi salvati, l'ultima ricerca, il tema scelto e i blocchi chiusi sono conservati nella memoria locale del tuo browser, solo sul tuo dispositivo. Non vengono mai trasmessi e scompaiono se cancelli i dati del sito.",
+        ],
+      },
+      {
+        title: "Tracciamento, pubblicità e cookie",
+        paragraphs: [
+          "L'app non contiene pubblicità e non imposta cookie.",
+          "Utilizza la misurazione del pubblico di Vercel, fornita dal suo hosting, che conta le visite e le pagine viste. Questa misurazione è aggregata e senza cookie: non crea profili, non ti segue da un sito all'altro e non può identificarti.",
+        ],
+      },
+      {
+        title: "Servizi di terze parti mostrati nella pagina",
+        paragraphs: [
+          "La mappa di base è fornita dalla OpenStreetMap Foundation: come per qualsiasi immagine caricata da un altro sito, il tuo indirizzo IP le è visibile. Lo stato giornaliero delle piscine di Tolosa viene letto dall'app gemella Piscines de Toulouse, senza alcun dato su di te.",
+        ],
+      },
+      {
+        title: "Modulo di segnalazione (facoltativo)",
+        paragraphs: [
+          "Il modulo trasmette solo ciò che scrivi: il tipo di segnalazione, la piscina interessata, il tuo messaggio e — se lo desideri — il tuo indirizzo e-mail. Viene inviato via e-mail all'autrice dell'app (tramite il fornitore Resend), al solo scopo di correggere l'app e, se necessario, risponderti. Nessuna mailing list, nessuna condivisione, nessuna rivendita; scrivici per far cancellare un messaggio inviato.",
+        ],
+      },
+      {
+        title: "Dati tecnici di hosting",
+        paragraphs: [
+          "Il sito è ospitato da Vercel. Come ogni server web, l'hosting può registrare dati tecnici standard (indirizzo IP, tipo di browser) al solo scopo di servire la pagina e mantenere il servizio sicuro. Questi log non vengono né consultati né utilizzati dall'autrice.",
+        ],
+      },
+      {
+        title: "I tuoi diritti",
+        paragraphs: [
+          "Se non hai inviato alcuna segnalazione, non esiste alcun dato su di te. Altrimenti puoi chiedere in qualsiasi momento di accedere, correggere o cancellare ciò che ti riguarda all'indirizzo qui sotto.",
+        ],
+      },
+    ],
+    contactTitle: "Contatti",
+    changesTitle: "Modifiche",
+    changes: "Questa informativa può essere aggiornata. La data dell'ultimo aggiornamento è indicata in cima alla pagina.",
+  },
+};
+
+const nl: Dict = {
+  intlLocale: "nl-NL",
+  metaTitle: "Swimmaps — vind een zwembad bij jou in de buurt",
+  metaDescription:
+    "Openbare zwembaden bij jou in de buurt in Nederland, België, Frankrijk, Duitsland, Engeland, Spanje en Italië: " +
+    "baden, openingstijden en prijzen, met kaart en routebeschrijving.",
+  subtitle:
+    "Vind de openbare zwembaden om je heen: baden, openingstijden en prijzen, voor zover bekend.",
+
+  langAria: "Taal / Language / Lingua",
+  navSources: "Bronnen",
+  navPrivacy: "Privacy",
+  navFeedback: "Fout melden",
+  backHome: "Alle zwembaden",
+  dataDate: (date) => `Gegevens van ${date}`,
+  dataInfoAria: "Hoe de gegevens worden bijgewerkt",
+  dataInfo:
+    "De datasets (Data ES, Active Places, Bäderleben, OpenStreetMap) worden met een script opnieuw opgebouwd en met de app meegeleverd: de datum is die van de laatste extractie. Voor de zwembaden in Toulouse komt daar de dagelijkse live-status bij.",
+  themeNames: { system: "automatisch", light: "licht", dark: "donker" },
+  themeSwitch: (current, next) => `Thema: ${current} — overschakelen naar ${next}`,
+
+  iosInstallLead: "Installeer de app: tik op",
+  iosInstallTail: "en dan op “Zet op beginscherm”.",
+  iosHow: "Hoe?",
+  iosHideSteps: "Stappen verbergen",
+  iosDismiss: "Deze uitnodiging verbergen",
+  iosShare: "Deel",
+  iosStep1: "— in Safari, onderaan het scherm op iPhone, rechtsboven op iPad.",
+  iosStep2a: "Scrol in de lijst met acties omlaag naar",
+  iosStep2b: "“Zet op beginscherm”.",
+  iosCopy: "Kopieer",
+  iosBookmark: "Voeg bladwijzer toe",
+  iosAddHome: "Zet op beginscherm",
+  iosCancel: "Annuleer",
+  iosAdd: "Voeg toe",
+  iosStep3a: "Tik op",
+  iosStep3b: "Het pictogram verschijnt op je beginscherm: open de app vanaf daar.",
+
+  offlineBanner:
+    "Je bent offline. De getoonde zwembaden komen van de laatste keer laden — de kaart en het zoeken naar adressen werken weer zodra je verbinding hebt.",
+  offlineReload: "Opnieuw laden",
+
+  searchPlaceholder: "Adres, plaats, postcode…",
+  searchAria: "Zoek een adres",
+  locateButton: "📍 In mijn buurt",
+  locating: "Locatie bepalen…",
+  errNoGeolocation: "Locatiebepaling is niet beschikbaar op dit apparaat.",
+  errGeoDenied: "Locatie geweigerd of niet beschikbaar — zoek in plaats daarvan een adres.",
+  errSearchDown: "Zoeken naar adressen is momenteel niet beschikbaar.",
+
+  savedAddressesAria: "Opgeslagen adressen",
+  saveAddress: "☆ Opslaan",
+  removeAddress: (label) => `Adres ${label} verwijderen`,
+
+  poolSearchPlaceholder: "Zoek een zwembad of plaats binnen de straal…",
+  poolSearchAria: "Zoek een zwembad of plaats",
+  poolSearchClear: "Zoekopdracht wissen",
+  searchCount: (n, total) =>
+    `${n === 0 ? "Geen zwembad met deze naam" : `${n} zwemba${n > 1 ? "den" : "d"} gevonden`} van de ${total} binnen de straal, los van de filters.`,
+  searchNone: (query) => `Geen zwembad gevonden voor “${query}”.`,
+
+  radiusLabel: "Straal",
+  radiusAria: "Zoekstraal",
+  typeLabel: "Type",
+  typeAria: "Type zwembad",
+  typeAll: "Alle",
+  typeIndoor: "Binnen",
+  typeOutdoor: "Buiten",
+  openLabel: "Open",
+  openAria: "Openingstijden",
+  openTitle:
+    "“Deze week”: laat bekende seizoenssluitingen weg. “Vandaag”: houdt zwembaden met onbekende tijden. “Nu”: alleen zwembaden met bekende tijden die nu open zijn.",
+  openAll: "Alle",
+  openWeek: "Deze week",
+  openWeekShort: "Week",
+  openNow: "Nu",
+  openNowShort: "Nu",
+  openToday: "Vandaag",
+  openTodayShort: "Vandaag",
+  favLabel: "Bewaard",
+  favAria: "Favorieten",
+  favAll: "Alle",
+  favOnly: "★ Favorieten",
+  favTip:
+    "💡 Tik op ☆ naast de naam van een zwembad om het te volgen: het komt bovenaan de lijst te staan, en met het filter ★ Favorieten vind je het terug.",
+  favTipOk: "Begrepen",
+  lenLabel: "Lengte",
+  lenAria: "Lengte van het bad",
+  lenAll: "Alle",
+
+  sectionTimeline: "Openingstijden per dag",
+  sectionMap: "Waar de zwembaden zijn",
+  sectionList: (n) => `De zwembaden (${n})`,
+
+  dayShort: ["ma", "di", "wo", "do", "vr", "za", "zo"],
+  todaySuffix: "(vandaag)",
+  legendOpenNow: "nu open",
+  legendSlot: "openingstijd",
+  legendNow: "nu",
+  timelineUnknown: (n) =>
+    `${n} zwemba${n > 1 ? "den" : "d"} binnen de straal zonder bekende tijden ${n > 1 ? "staan" : "staat"} hier niet.`,
+  timelineMore: (n) => `Nog ${n} verder weg — verklein de straal om ze te zien.`,
+  timelineSeasonal: "seizoenssluiting",
+  timelineClosed: "gesloten",
+  timelineHolidayNote:
+    "Normale schoolweek; de tijden in de schoolvakanties staan op de pagina van elk zwembad.",
+  timelineGoto: (name) => `Ga naar ${name}`,
+
+  loadError: "De lijst met zwembaden kon niet worden geladen. Laad de pagina opnieuw.",
+  emptyTitle: "Waar zoek je een zwembad?",
+  emptyHint: "Tik op “📍 In mijn buurt” of typ hierboven een adres.",
+  referenced: (n) => `${n} openbare zwembaden opgenomen.`,
+  loadingPools: "Zwembaden laden…",
+  noneInRadius: "Geen zwembad binnen deze straal — probeer een grotere.",
+  noneInRadiusNear: (km) => `Geen zwembad binnen deze straal — het dichtstbijzijnde ligt op ${km}.`,
+  noneFavorite: "Geen favoriet zwembad binnen deze straal — tik op ☆ bij een zwembad om het toe te voegen.",
+  noneFilters: "Geen zwembad binnen deze straal past bij deze filters.",
+  countLine: (n, radiusKm, label) =>
+    `${n} zwemba${n > 1 ? "den" : "d"} binnen ${radiusKm} km van ${label} (hemelsbreed).`,
+  showMore: (n) => `Meer tonen (nog ${n})`,
+  mapAria: "Kaart van de zwembaden",
+  mapOpenCount: (n) => `${n} zwemba${n > 1 ? "den" : "d"} nu open.`,
+  mapHint: "Tik op een markering om de pagina te openen. ★ = bewaard zwembad, felle kleur = nu open.",
+  mapPopupDetail: "Details",
+
+  distanceTitle: "Afstand hemelsbreed",
+  favAdd: (name) => `${name} toevoegen aan favorieten`,
+  favRemove: (name) => `${name} verwijderen uit favorieten`,
+  envLabels: { int: "Binnenbad", ext: "Buitenbad", mix: "Binnen- en buitenbad" },
+  basinLabels: {
+    sportif: "wedstrijdbad",
+    ludique: "recreatiebad",
+    mixte: "gecombineerd bad",
+    toboggan: "glijbaanbad",
+    plongeon: "duikbad",
+    plongée: "duiktank",
+    principal: "hoofdbad",
+    apprentissage: "instructiebad",
+    lido: "buitenbad",
+    pataugeoire: "peuterbad",
+    vagues: "golfslagbad",
+    spa: "bubbelbad",
+    kneipp: "kneippbad",
+    naturel: "natuurbad",
+  },
+  basinFallback: (label) => `${label}-bad`,
+
+  seasonalClosed: "Momenteel gesloten buiten het seizoen",
+  badgeOpenNow: "Nu open",
+  badgeOpenUntil: (time) => `Open · tot ${time}`,
+  badgeOpensAt: (time) => `Gaat open om ${time}`,
+  badgeDone: "Gesloten voor vandaag",
+  badgeClosedNow: "Nu gesloten",
+  badgeClosedToday: "Vandaag gesloten",
+  todayLabel: "Vandaag:",
+  liveSource: (at) => `Dagstatus gecontroleerd ${at} — piscines-toulouse.fr`,
+  toulouseRecommend: "Hele week, sluitingen en prijzen op Piscines de Toulouse",
+  schoolTerm: "Schoolperiode",
+  schoolHolidays: "Schoolvakanties",
+  specialPeriods: "Bijzondere periodes",
+  hoursLabel: "Openingstijden:",
+  centreHoursNote:
+    "Openingstijden van het centrum (bron: officiële website) — de zwemtijden kunnen afwijken.",
+  noHours: "Openingstijden onbekend — kijk op de officiële website.",
+  priceLabel: "Prijs:",
+  paidEntry: "Betaalde toegang",
+  freeEntry: "Gratis toegang",
+  directions: "Route",
+  directionsAria: (name) => `Route naar ${name} (Google Maps)`,
+  directionsTitle: "Route — opent Google Maps",
+  phoneAria: (name, phone) => `${name} bellen op ${phone}`,
+  phoneTitle: (phone) => `Bel de receptie — ${phone}`,
+  website: "Website",
+  websiteAria: (name) => `Officiële website van ${name} (nieuw tabblad)`,
+  websiteTitle: "Officiële website — opent een nieuw tabblad",
+  searchWebsite: "Website zoeken",
+  searchWebsiteTitle: "Website onbekend — zoek op het web",
+  detailLink: "Details",
+  detailLinkTitle: "Detailpagina — weektijden en praktische info",
+
+  detailMetaTitle: (name, city) => `${name} in ${city} — openingstijden, baden en bereikbaarheid`,
+  detailMetaDescription: (name, city) =>
+    `${/bad|baden|zwem|aqua|tropi|lido|piscine|pool/i.test(name) ? name : `Zwembad ${name}`} in ${city}: openingstijden voor zover bekend, baden, prijs, adres en route.`,
+  detailSubtitle: (city) => `Openbaar zwembad in ${city} — openingstijden, baden en bereikbaarheid.`,
+  detailHoursTitle: "Openingstijden per week",
+  detailHoursNote:
+    "De tijden komen uit open bronnen (OpenStreetMap, officiële website) — controleer ze voordat je gaat.",
+  detailHoursUnknown:
+    "De openingstijden staan niet in onze bronnen: kijk op de officiële website of bel de receptie.",
+  detailRawHours: "Gepubliceerde tijden (niet geïnterpreteerd)",
+  detailInfoTitle: "Praktische info",
+  detailAddress: "Adres",
+  detailBasins: "Baden",
+  detailLengths: "Lengtes",
+  detailNearbyTitle: "Andere zwembaden in de buurt",
+  detailNearbyAway: (km) => `op ${km}`,
+  detailBack: "← Alle zwembaden in mijn buurt",
+
+  fbTitle: "💬 Meld een fout of geef feedback",
+  fbIntro:
+    "Verkeerde tijden, een gesloten of ontbrekend zwembad, een idee? Laat het ons weten — zo verbeteren we de app en haar open bronnen.",
+  fbKinds: {
+    hours: "Verkeerde tijden",
+    info: "Verkeerde info",
+    missing: "Ontbrekend of gesloten zwembad",
+    suggestion: "Suggestie",
+    other: "Overig",
+  },
+  fbPool: "Betreffend zwembad (optioneel)",
+  fbPoolPlaceholder: "Naam en plaats",
+  fbMessage: "Je bericht",
+  fbMessagePlaceholder: "Bijv. het zwembad sluit op zaterdag om 19.00 uur, niet om 20.00 uur.",
+  fbEmail: "Je e-mailadres",
+  fbEmailHint: "(optioneel, voor een antwoord)",
+  fbSend: "Versturen",
+  fbSending: "Bezig met versturen…",
+  fbOrEmail: "of per e-mail",
+  fbSent: "✓ Bedankt, je bericht is aangekomen.",
+  fbSentHint:
+    "Openingstijden kun je ook rechtstreeks in OpenStreetMap aanpassen — daar heeft iedereen iets aan.",
+  fbAnother: "Nog een bericht versturen",
+  fbErrorDefault: "Versturen is momenteel niet mogelijk.",
+  fbErrorMail: "Je kunt het bericht ook per e-mail sturen.",
+  fbSubject: "Swimmaps — feedback",
+
+  footerData: "Gegevens:",
+  footerLicenceFR: "(open licentie)",
+  footerLicenceGB: "(OGL v3-licentie)",
+  footerLicenceDE:
+    "(© Bundesinstitut für Sportwissenschaft · coördinaten © GeoBasis-DE / BKG 2021)",
+  footerOsm: "© OpenStreetMap-bijdragers",
+  footerDisclaimer:
+    "Openingstijden en prijzen komen uit open bronnen en zijn maar voor een deel " +
+    "van de zwembaden bekend — kijk op de officiële website voordat je gaat.",
+  footerIndependent:
+    "Persoonlijke, onafhankelijke app, niet verbonden aan zwembadexploitanten of overheden.",
+
+  tipTitle: "Trakteer me op een koffie",
+  tipDesc:
+    "Swimmaps is een persoonlijk, onafhankelijk hobbyproject. Bespaart het je een vergeefse rit, dan kun je me op een koffie trakteren.",
+  tipButton: "Trakteer op koffie",
+  tipNote: "Met of zonder koffie: de app blijft gratis en voor iedereen hetzelfde.",
+
+  coveredLabel: "Landen:",
+  countryNames: {
+    fr: "Frankrijk", gb: "Engeland", de: "Duitsland",
+    es: "Spanje", it: "Italië", be: "België", nl: "Nederland",
+  },
+
+  sources: {
+    title: "Gegevensbronnen",
+    subtitle: "Waar de zwembaden, tijden en prijzen vandaan komen",
+    intro:
+      "Swimmaps is een persoonlijke, onafhankelijke app, niet verbonden aan zwembadexploitanten of overheden. De app verzint geen gegevens: alles wat je ziet komt uit de open bronnen hieronder, en ontbrekende informatie wordt als ontbrekend getoond in plaats van geraden. Controleer belangrijke informatie altijd op de officiële website van het zwembad.",
+    groups: [
+      {
+        title: "Frankrijk",
+        items: [
+          {
+            label: "Data ES — nationale inventaris van sportvoorzieningen",
+            detail:
+              "Ministerie van Sport, open licentie: naam, adres, coördinaten, baden en lengtes. Niet-openbare voorzieningen (scholen, defensie, hotels…) worden weggelaten.",
+            url: URLS.dataEs,
+          },
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL: openingstijden (opening_hours), prijs, website en telefoon, gekoppeld op geografische nabijheid (< 300 m).",
+            url: URLS.osm,
+          },
+          {
+            label: "Piscines de Toulouse — dagelijkse live-status",
+            detail:
+              "De zusterapp leest de officiële pagina's van Toulouse en omgeving; haar status gaat voor die zwembaden voor op de OSM-tijden.",
+            url: URLS.toulouse,
+          },
+        ],
+      },
+      {
+        title: "Engeland",
+        items: [
+          {
+            label: "Active Places (Sport England)",
+            detail:
+              "OGL v3-licentie: zwembaden die open zijn voor publiek (“Pay and Play” en verenigingen), lengtes en websites. Zelfde OpenStreetMap-verrijking als in Frankrijk.",
+            url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Duitsland",
+        items: [
+          {
+            label: "Bäderleben (Bundesinstitut für Sportwissenschaft)",
+            detail:
+              "Openbare zwembaden met toegangsprijzen, lengtes, websites en telefoonnummers. © BISp; coördinaten © GeoBasis-DE / BKG 2021.",
+            url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Spanje, Italië, België, Nederland",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, enige bron: zwembaden en waterparken met een naam, zonder hotels en campings. Tijden en prijzen zijn er zeldzamer dan elders; de plaats is de dichtstbijzijnde woonkern als het adres ontbreekt.",
+            url: URLS.osm,
+          },
+        ],
+      },
+      {
+        title: "Andere gebruikte diensten",
+        items: [
+          {
+            label: "Officiële websites van zwembaden",
+            detail:
+              "Openingstijden van het centrum uit hun gestructureerde schema.org-gegevens als OpenStreetMap er geen heeft (op de pagina als zodanig aangegeven).",
+            url: URLS.schema,
+          },
+          {
+            label: "Base Adresse Nationale",
+            detail: "Adres zoeken in Frankrijk (api-adresse.data.gouv.fr).",
+            url: URLS.ban,
+          },
+          {
+            label: "Photon (komoot)",
+            detail: "Adres zoeken buiten Frankrijk, op basis van OpenStreetMap-gegevens.",
+            url: URLS.photon,
+          },
+          {
+            label: "OpenStreetMap-achtergrondkaart",
+            detail: "Kaarttegels geleverd door de OpenStreetMap Foundation.",
+            url: URLS.tiles,
+          },
+        ],
+      },
+    ],
+    howTitle: "Hoe de gegevens worden verzameld",
+    how: [
+      "Een script bouwt de datasets land voor land opnieuw op en levert ze mee met de app; de datum van de laatste extractie staat bovenaan de startpagina. Niets wordt met de hand aangevuld.",
+      "De dekking weerspiegelt de stand van de open data: in Frankrijk zijn de tijden bekend voor ongeveer één op de tien zwembaden en de prijzen voor één op de vijftig. De app toont dan “onbekend” en een link naar de officiële website.",
+      "Fouten worden bij de bron verbeterd — in OpenStreetMap voor tijden, prijzen en websites — of via het feedbackformulier van de app.",
+    ],
+  },
+  privacy: {
+    title: "Privacybeleid",
+    subtitle: "De app “Swimmaps”",
+    updated: (date) => `Laatst bijgewerkt: ${date}`,
+    intro:
+      "Swimmaps is een persoonlijke app, gemaakt door een vrijwilliger, niet verbonden aan zwembadexploitanten of overheden. De app toont openbare zwembaden op basis van open data. Op deze pagina lees je welke gegevens worden verwerkt — kort gezegd: niets wat jou identificeert, behalve wat je ons zelf schrijft.",
+    sections: [
+      {
+        title: "Verzamelde persoonsgegevens",
+        paragraphs: [
+          "Standaard geen. De app vraagt geen account en verzamelt geen gegevens over jou. Je locatie wordt alleen gebruikt als je op “In mijn buurt” tikt, en die blijft in je browser: hij dient om afstanden te berekenen en wordt nooit naar onze server gestuurd.",
+          "Als je een adres typt, wordt de tekst naar adreszoekdiensten gestuurd (Base Adresse Nationale voor Frankrijk, elders Photon/komoot) om er coördinaten van te maken. Verder wordt er niets naar hen verstuurd.",
+        ],
+      },
+      {
+        title: "Lokale opslag op je apparaat",
+        paragraphs: [
+          "Je favorieten (★), opgeslagen adressen, laatste zoekopdracht, gekozen thema en ingeklapte blokken worden bewaard in de lokale opslag van je browser, alleen op je apparaat. Ze worden nooit verstuurd en verdwijnen als je de sitegegevens wist.",
+        ],
+      },
+      {
+        title: "Tracking, advertenties en cookies",
+        paragraphs: [
+          "De app bevat geen advertenties en plaatst geen cookies.",
+          "De app gebruikt de bezoekersmeting van Vercel, de hostingprovider, die bezoeken en bekeken pagina's telt. Deze meting is geaggregeerd en zonder cookies: er wordt geen profiel opgebouwd, je wordt niet over websites heen gevolgd en je kunt er niet mee worden geïdentificeerd.",
+        ],
+      },
+      {
+        title: "Diensten van derden op de pagina",
+        paragraphs: [
+          "De achtergrondkaart wordt geleverd door de OpenStreetMap Foundation: zoals bij elke afbeelding die van een andere site wordt geladen, is je IP-adres voor hen zichtbaar. De dagstatus van de zwembaden in Toulouse wordt gelezen uit de zusterapp Piscines de Toulouse, zonder gegevens over jou.",
+        ],
+      },
+      {
+        title: "Feedbackformulier (optioneel)",
+        paragraphs: [
+          "Het formulier verstuurt alleen wat je invult: het soort melding, het betreffende zwembad, je bericht en — als je dat wilt — je e-mailadres. Het wordt per e-mail naar de maker van de app gestuurd (via de dienst Resend), uitsluitend om de app te verbeteren en je zo nodig te antwoorden. Geen mailinglijst, niet gedeeld, niet verkocht; schrijf ons om een verstuurd bericht te laten verwijderen.",
+        ],
+      },
+      {
+        title: "Technische hostinggegevens",
+        paragraphs: [
+          "De site wordt gehost door Vercel. Zoals elke webserver kan de host standaard technische gegevens (IP-adres, type browser) vastleggen, uitsluitend om de pagina te leveren en de dienst te beveiligen. Deze logs worden door de maker niet bekeken of gebruikt.",
+        ],
+      },
+      {
+        title: "Je rechten",
+        paragraphs: [
+          "Als je geen feedback hebt gestuurd, bestaan er geen gegevens over jou. Anders kun je op elk moment via het adres hieronder vragen om inzage, correctie of verwijdering van wat jou betreft.",
+        ],
+      },
+    ],
+    contactTitle: "Contact",
+    changesTitle: "Wijzigingen",
+    changes: "Dit beleid kan worden bijgewerkt. De datum van de laatste wijziging staat bovenaan de pagina.",
+  },
+};
+
+const es: Dict = {
+  intlLocale: "es-ES",
+  metaTitle: "Swimmaps — encuentra una piscina cerca de ti",
+  metaDescription:
+    "Piscinas públicas cerca de ti en Francia, Alemania, Inglaterra, España, Italia, Bélgica y Países Bajos: " +
+    "vasos, horarios y precios, con mapa y cómo llegar.",
+  subtitle:
+    "Encuentra las piscinas públicas a tu alrededor: vasos, horarios y precios cuando se conocen.",
+
+  langAria: "Idioma / Language / Langue",
+  navSources: "Fuentes",
+  navPrivacy: "Privacidad",
+  navFeedback: "Informar de un error",
+  backHome: "Todas las piscinas",
+  dataDate: (date) => `Datos a ${date}`,
+  dataInfoAria: "Cómo se actualizan los datos",
+  dataInfo:
+    "Los conjuntos de datos (Data ES, Active Places, Bäderleben, OpenStreetMap) se regeneran mediante un script y se incluyen en la app: la fecha es la de la última extracción. Las piscinas de Toulouse reciben además su estado diario en directo.",
+  themeNames: { system: "automático", light: "claro", dark: "oscuro" },
+  themeSwitch: (current, next) => `Tema: ${current} — cambiar a ${next}`,
+
+  iosInstallLead: "Instala la app: toca",
+  iosInstallTail: "y luego «Añadir a pantalla de inicio».",
+  iosHow: "¿Cómo?",
+  iosHideSteps: "Ocultar los pasos",
+  iosDismiss: "Ocultar esta invitación",
+  iosShare: "Compartir",
+  iosStep1: "— en Safari, abajo de la pantalla en iPhone, arriba a la derecha en iPad.",
+  iosStep2a: "Desplaza la lista de acciones hasta",
+  iosStep2b: "«Añadir a pantalla de inicio».",
+  iosCopy: "Copiar",
+  iosBookmark: "Añadir marcador",
+  iosAddHome: "Añadir a pantalla de inicio",
+  iosCancel: "Cancelar",
+  iosAdd: "Añadir",
+  iosStep3a: "Toca",
+  iosStep3b: "El icono aparece en tu pantalla de inicio: abre la app desde ahí.",
+
+  offlineBanner:
+    "Estás sin conexión. Las piscinas mostradas son de la última carga — el mapa y la búsqueda de direcciones volverán con la red.",
+  offlineReload: "Recargar",
+
+  searchPlaceholder: "Dirección, localidad, código postal…",
+  searchAria: "Buscar una dirección",
+  locateButton: "📍 Cerca de mí",
+  locating: "Localizando…",
+  errNoGeolocation: "La geolocalización no está disponible en este dispositivo.",
+  errGeoDenied: "Ubicación denegada o no disponible — busca una dirección.",
+  errSearchDown: "La búsqueda de direcciones no está disponible ahora mismo.",
+
+  savedAddressesAria: "Direcciones guardadas",
+  saveAddress: "☆ Guardar",
+  removeAddress: (label) => `Eliminar la dirección ${label}`,
+
+  poolSearchPlaceholder: "Busca una piscina o una localidad dentro del radio…",
+  poolSearchAria: "Buscar una piscina o una localidad",
+  poolSearchClear: "Borrar la búsqueda",
+  searchCount: (n, total) =>
+    `${n === 0 ? "Ninguna piscina tiene este nombre" : `${n} piscina${n > 1 ? "s encontradas" : " encontrada"}`} entre las ${total} del radio, sin tener en cuenta los filtros.`,
+  searchNone: (query) => `Ninguna piscina coincide con «${query}».`,
+
+  radiusLabel: "Radio",
+  radiusAria: "Radio de búsqueda",
+  typeLabel: "Tipo",
+  typeAria: "Tipo de piscina",
+  typeAll: "Todas",
+  typeIndoor: "Cubierta",
+  typeOutdoor: "Al aire libre",
+  openLabel: "Abierta",
+  openAria: "Apertura",
+  openTitle:
+    "«Esta semana»: descarta los cierres de temporada conocidos. «Hoy»: mantiene las piscinas con horario desconocido. «Ahora»: solo las piscinas con horario conocido y abiertas en este momento.",
+  openAll: "Todas",
+  openWeek: "Esta semana",
+  openWeekShort: "Semana",
+  openNow: "Ahora",
+  openNowShort: "Ahora",
+  openToday: "Hoy",
+  openTodayShort: "Hoy",
+  favLabel: "Favoritas",
+  favAria: "Favoritas",
+  favAll: "Todas",
+  favOnly: "★ Favoritas",
+  favTip:
+    "💡 Toca ☆ junto al nombre de una piscina para seguirla: sube al principio de la lista y el botón ★ Favoritas te la vuelve a mostrar.",
+  favTipOk: "Entendido",
+  lenLabel: "Longitud",
+  lenAria: "Longitud del vaso",
+  lenAll: "Cualquiera",
+
+  sectionTimeline: "Horarios por día",
+  sectionMap: "Dónde están las piscinas",
+  sectionList: (n) => `Las piscinas (${n})`,
+
+  dayShort: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+  todaySuffix: "(hoy)",
+  legendOpenNow: "abierta ahora",
+  legendSlot: "franja de apertura",
+  legendNow: "ahora",
+  timelineUnknown: (n) =>
+    `${n} piscina${n > 1 ? "s" : ""} del radio con horario desconocido no se ${n > 1 ? "muestran" : "muestra"} aquí.`,
+  timelineMore: (n) => `${n} más lejos — reduce el radio para verlas.`,
+  timelineSeasonal: "cierre de temporada",
+  timelineClosed: "cerrada",
+  timelineHolidayNote:
+    "Semana tipo en periodo escolar; los horarios de vacaciones escolares están en la ficha de cada piscina.",
+  timelineGoto: (name) => `Ir a ${name}`,
+
+  loadError: "No se ha podido cargar la lista de piscinas. Recarga la página.",
+  emptyTitle: "¿Dónde buscas una piscina?",
+  emptyHint: "Toca «📍 Cerca de mí» o escribe una dirección arriba.",
+  referenced: (n) => `${n} piscinas públicas registradas.`,
+  loadingPools: "Cargando piscinas…",
+  noneInRadius: "Ninguna piscina en este radio — prueba con uno mayor.",
+  noneInRadiusNear: (km) => `Ninguna piscina en este radio — la más cercana está a ${km}.`,
+  noneFavorite: "Ninguna piscina favorita en este radio — toca ☆ en una piscina para añadirla.",
+  noneFilters: "Ninguna piscina coincide con estos filtros en este radio.",
+  countLine: (n, radiusKm, label) =>
+    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radiusKm} km de ${label} (en línea recta).`,
+  showMore: (n) => `Ver más (quedan ${n})`,
+  mapAria: "Mapa de piscinas",
+  mapOpenCount: (n) => `${n} piscina${n > 1 ? "s abiertas" : " abierta"} ahora mismo.`,
+  mapHint: "Toca un marcador para abrir su ficha. ★ = piscina favorita, color vivo = abierta ahora mismo.",
+  mapPopupDetail: "Ficha",
+
+  distanceTitle: "Distancia en línea recta",
+  favAdd: (name) => `Añadir ${name} a favoritas`,
+  favRemove: (name) => `Quitar ${name} de favoritas`,
+  envLabels: { int: "Cubierta", ext: "Al aire libre", mix: "Cubierta + al aire libre" },
+  basinLabels: {
+    sportif: "vaso deportivo",
+    ludique: "vaso recreativo",
+    mixte: "vaso mixto",
+    toboggan: "vaso de toboganes",
+    plongeon: "foso de saltos",
+    plongée: "foso de buceo",
+    principal: "vaso principal",
+    apprentissage: "vaso de enseñanza",
+    lido: "vaso al aire libre",
+    pataugeoire: "chapoteadero",
+    vagues: "piscina de olas",
+    spa: "jacuzzi",
+    kneipp: "vaso Kneipp",
+    naturel: "piscina natural",
+  },
+  basinFallback: (label) => `vaso ${label}`,
+
+  seasonalClosed: "Cerrada por temporada en este momento",
+  badgeOpenNow: "Abierta ahora",
+  badgeOpenUntil: (time) => `Abierta · hasta las ${time}`,
+  badgeOpensAt: (time) => `Abre a las ${time}`,
+  badgeDone: "Cerrada por hoy",
+  badgeClosedNow: "Cerrada ahora",
+  badgeClosedToday: "Cerrada hoy",
+  todayLabel: "Hoy:",
+  liveSource: (at) => `Estado del día comprobado ${at} — piscines-toulouse.fr`,
+  toulouseRecommend: "Semana completa, cierres y precios en Piscines de Toulouse",
+  schoolTerm: "Periodo escolar",
+  schoolHolidays: "Vacaciones escolares",
+  specialPeriods: "Periodos especiales",
+  hoursLabel: "Horario:",
+  centreHoursNote:
+    "Horario del centro (fuente: web oficial) — los horarios de baño pueden ser distintos.",
+  noHours: "Horario desconocido — consulta la web oficial.",
+  priceLabel: "Precio:",
+  paidEntry: "Entrada de pago",
+  freeEntry: "Entrada gratuita",
+  directions: "Cómo llegar",
+  directionsAria: (name) => `Cómo llegar a ${name} (Google Maps)`,
+  directionsTitle: "Cómo llegar — abre Google Maps",
+  phoneAria: (name, phone) => `Llamar a ${name} al ${phone}`,
+  phoneTitle: (phone) => `Llamar a recepción — ${phone}`,
+  website: "Web",
+  websiteAria: (name) => `Web oficial de ${name} (nueva pestaña)`,
+  websiteTitle: "Web oficial — se abre en una nueva pestaña",
+  searchWebsite: "Buscar la web",
+  searchWebsiteTitle: "Web desconocida — buscar en internet",
+  detailLink: "Ficha",
+  detailLinkTitle: "Ficha detallada — horario semanal e información práctica",
+
+  detailMetaTitle: (name, city) => `${name} en ${city} — horarios, vasos y acceso`,
+  detailMetaDescription: (name, city) =>
+    `${/piscin|natator|acuátic|acuatic|aqua|parque|pool|swim/i.test(name) ? name : `Piscina ${name}`} en ${city}: horarios cuando se conocen, vasos, precio, dirección y cómo llegar.`,
+  detailSubtitle: (city) => `Piscina pública en ${city} — horarios, vasos y acceso.`,
+  detailHoursTitle: "Horario semanal",
+  detailHoursNote:
+    "Los horarios proceden de fuentes abiertas (OpenStreetMap, web oficial) — compruébalos antes de ir.",
+  detailHoursUnknown:
+    "El horario no figura en nuestras fuentes: consulta la web oficial o llama a recepción.",
+  detailRawHours: "Horario publicado (sin interpretar)",
+  detailInfoTitle: "Información práctica",
+  detailAddress: "Dirección",
+  detailBasins: "Vasos",
+  detailLengths: "Longitudes",
+  detailNearbyTitle: "Otras piscinas cercanas",
+  detailNearbyAway: (km) => `a ${km}`,
+  detailBack: "← Todas las piscinas cerca de mí",
+
+  fbTitle: "💬 Informar de un error o dar tu opinión",
+  fbIntro:
+    "¿Horario incorrecto, una piscina cerrada o que falta, una idea? Cuéntanoslo — ayuda a mejorar la app y sus fuentes abiertas.",
+  fbKinds: {
+    hours: "Horario incorrecto",
+    info: "Información incorrecta",
+    missing: "Piscina que falta o cerrada",
+    suggestion: "Sugerencia",
+    other: "Otro",
+  },
+  fbPool: "Piscina en cuestión (opcional)",
+  fbPoolPlaceholder: "Nombre y localidad",
+  fbMessage: "Tu mensaje",
+  fbMessagePlaceholder: "P. ej.: la piscina cierra a las 19:00 los sábados, no a las 20:00.",
+  fbEmail: "Tu correo electrónico",
+  fbEmailHint: "(opcional, para responderte)",
+  fbSend: "Enviar",
+  fbSending: "Enviando…",
+  fbOrEmail: "o por correo electrónico",
+  fbSent: "✓ Gracias, tu mensaje ha llegado.",
+  fbSentHint:
+    "Los horarios también se pueden corregir directamente en OpenStreetMap — así se beneficia todo el mundo.",
+  fbAnother: "Enviar otro mensaje",
+  fbErrorDefault: "No es posible enviar el mensaje ahora mismo.",
+  fbErrorMail: "También puedes enviar el mensaje por correo electrónico.",
+  fbSubject: "Swimmaps — comentarios",
+
+  footerData: "Datos:",
+  footerLicenceFR: "(licencia abierta)",
+  footerLicenceGB: "(licencia OGL v3)",
+  footerLicenceDE:
+    "(© Bundesinstitut für Sportwissenschaft · coordenadas © GeoBasis-DE / BKG 2021)",
+  footerOsm: "© colaboradores de OpenStreetMap",
+  footerDisclaimer:
+    "Los horarios y precios proceden de fuentes abiertas y solo están disponibles para una parte de " +
+    "las piscinas — consulta la web oficial antes de ir.",
+  footerIndependent:
+    "App personal e independiente, sin vínculo con los gestores de las piscinas ni con ninguna administración pública.",
+
+  tipTitle: "Invítame a un café",
+  tipDesc:
+    "Swimmaps es un proyecto personal e independiente. Si te ahorra un viaje en balde, puedes invitarme a un café.",
+  tipButton: "Invítame a un café",
+  tipNote: "Con café o sin él, la app sigue siendo gratuita e igual para todo el mundo.",
+
+  coveredLabel: "Países cubiertos:",
+  countryNames: {
+    fr: "Francia", gb: "Inglaterra", de: "Alemania",
+    es: "España", it: "Italia", be: "Bélgica", nl: "Países Bajos",
+  },
+
+  sources: {
+    title: "Fuentes de datos",
+    subtitle: "De dónde proceden las piscinas, los horarios y los precios",
+    intro:
+      "Swimmaps es una app personal e independiente, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. No inventa ningún dato: todo lo que muestra procede de las fuentes abiertas que figuran abajo, y la información que falta se indica como tal en lugar de suponerse. Comprueba siempre la información importante en la web oficial de la piscina.",
+    groups: [
+      {
+        title: "Francia",
+        items: [
+          {
+            label: "Data ES — censo nacional de instalaciones deportivas",
+            detail:
+              "Ministerio de Deportes, licencia abierta: nombre, dirección, coordenadas, vasos y longitudes. Se descartan las instalaciones de acceso restringido (centros escolares, militares, hoteles…).",
+            url: URLS.dataEs,
+          },
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL: horarios (opening_hours), precio, web y teléfono, asociados por proximidad geográfica (< 300 m).",
+            url: URLS.osm,
+          },
+          {
+            label: "Piscines de Toulouse — estado diario en directo",
+            detail:
+              "La app hermana lee las páginas oficiales de Toulouse y su área metropolitana; su estado prevalece sobre los horarios de OSM para esas piscinas.",
+            url: URLS.toulouse,
+          },
+        ],
+      },
+      {
+        title: "Inglaterra",
+        items: [
+          {
+            label: "Active Places (Sport England)",
+            detail:
+              "Licencia OGL v3: piscinas abiertas al público (“Pay and Play” y clubes comunitarios), longitudes y webs. Mismo enriquecimiento con OpenStreetMap que en Francia.",
+            url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Alemania",
+        items: [
+          {
+            label: "Bäderleben (Bundesinstitut für Sportwissenschaft)",
+            detail:
+              "Piscinas públicas con precios de entrada, longitudes, webs y teléfonos. © BISp; coordenadas © GeoBasis-DE / BKG 2021.",
+            url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "España, Italia, Bélgica, Países Bajos",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, fuente única: piscinas y parques acuáticos con nombre, sin hoteles ni campings. Los horarios y precios son más escasos que en otros países; la localidad es la más cercana cuando falta la dirección.",
+            url: URLS.osm,
+          },
+        ],
+      },
+      {
+        title: "Otros servicios utilizados",
+        items: [
+          {
+            label: "Webs oficiales de las piscinas",
+            detail:
+              "Horario del centro leído de sus datos estructurados schema.org cuando OpenStreetMap no lo tiene (indicado como tal en la ficha).",
+            url: URLS.schema,
+          },
+          {
+            label: "Base Adresse Nationale",
+            detail: "Búsqueda de direcciones en Francia (api-adresse.data.gouv.fr).",
+            url: URLS.ban,
+          },
+          {
+            label: "Photon (komoot)",
+            detail: "Búsqueda de direcciones fuera de Francia, con datos de OpenStreetMap.",
+            url: URLS.photon,
+          },
+          {
+            label: "Mapa base de OpenStreetMap",
+            detail: "Teselas servidas por la OpenStreetMap Foundation.",
+            url: URLS.tiles,
+          },
+        ],
+      },
+    ],
+    howTitle: "Cómo se recopilan los datos",
+    how: [
+      "Un script regenera los conjuntos de datos país por país y los incluye en la app; la fecha de la última extracción aparece en la parte superior de la página de inicio. Nada se completa a mano.",
+      "La cobertura refleja el estado de los datos abiertos: en Francia se conoce el horario de una piscina de cada diez y el precio de una de cada cincuenta. En esos casos la interfaz muestra «desconocido» y un enlace a la web oficial.",
+      "Los errores se corrigen en la fuente — en OpenStreetMap para horarios, precios y webs — o mediante el formulario de comentarios de la app.",
+    ],
+  },
+  privacy: {
+    title: "Política de privacidad",
+    subtitle: "La app «Swimmaps»",
+    updated: (date) => `Última actualización: ${date}`,
+    intro:
+      "Swimmaps es una app personal y voluntaria, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. Muestra las piscinas públicas a partir de datos abiertos. Esta página explica qué datos trata — en resumen: nada que te identifique, salvo lo que decidas escribirnos.",
+    sections: [
+      {
+        title: "Datos personales recogidos",
+        paragraphs: [
+          "Ninguno, por defecto. La app no requiere cuenta y no recoge ningún dato sobre ti. Solo accede a tu ubicación si tocas «Cerca de mí», y esa ubicación se queda en tu navegador: sirve para calcular distancias y nunca se envía a nuestro servidor.",
+          "Cuando escribes una dirección, el texto se envía a servicios de búsqueda de direcciones (Base Adresse Nationale para Francia, Photon/komoot en el resto) para convertirlo en coordenadas. No se les transmite nada más.",
+        ],
+      },
+      {
+        title: "Almacenamiento local en tu dispositivo",
+        paragraphs: [
+          "Tus favoritas (★), direcciones guardadas, última búsqueda, tema elegido y bloques plegados se guardan en el almacenamiento local de tu navegador, solo en tu dispositivo. Nunca se transmiten y desaparecen si borras los datos del sitio.",
+        ],
+      },
+      {
+        title: "Seguimiento, publicidad y cookies",
+        paragraphs: [
+          "La app no contiene publicidad y no instala cookies.",
+          "Utiliza la medición de audiencia de Vercel, proporcionada por su alojamiento, que cuenta las visitas y las páginas vistas. Esta medición es agregada y sin cookies: no crea perfiles, no te sigue de un sitio a otro y no puede identificarte.",
+        ],
+      },
+      {
+        title: "Servicios de terceros mostrados en la página",
+        paragraphs: [
+          "El mapa base lo sirve la OpenStreetMap Foundation: como con cualquier imagen cargada desde otro sitio, tu dirección IP le resulta visible. El estado diario de las piscinas de Toulouse se lee de la app hermana Piscines de Toulouse, sin ningún dato sobre ti.",
+        ],
+      },
+      {
+        title: "Formulario de comentarios (opcional)",
+        paragraphs: [
+          "El formulario solo transmite lo que escribes: el tipo de aviso, la piscina en cuestión, tu mensaje y — si quieres — tu dirección de correo electrónico. Se envía por correo a la autora de la app (a través del proveedor Resend), únicamente para corregir la app y, si procede, responderte. Sin lista de correo, sin cesión, sin reventa; escríbenos para que se elimine un mensaje enviado.",
+        ],
+      },
+      {
+        title: "Datos técnicos de alojamiento",
+        paragraphs: [
+          "El sitio está alojado en Vercel. Como cualquier servidor web, el alojamiento puede registrar datos técnicos estándar (dirección IP, tipo de navegador) únicamente para servir la página y mantener la seguridad del servicio. La autora no consulta ni utiliza estos registros.",
+        ],
+      },
+      {
+        title: "Tus derechos",
+        paragraphs: [
+          "Si no has enviado ningún comentario, no existe ningún dato sobre ti. En caso contrario, puedes solicitar en cualquier momento el acceso, la rectificación o la supresión de lo que te concierne en la dirección indicada abajo.",
+        ],
+      },
+    ],
+    contactTitle: "Contacto",
+    changesTitle: "Cambios",
+    changes: "Esta política puede actualizarse. La fecha de la última actualización aparece en la parte superior de la página.",
+  },
+};
+
+const DICTS: Record<Locale, Dict> = { fr, en, de, es, it, nl };
 
 export function getDict(locale: Locale): Dict {
   return DICTS[locale] ?? DICTS[DEFAULT_LOCALE];

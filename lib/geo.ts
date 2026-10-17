@@ -21,7 +21,7 @@ export function formatDistance(km: number, locale: string = "fr"): string {
   if (km < 1) return `${Math.round(km * 1000 / 10) * 10} m`;
   if (km < 10) {
     const value = km.toFixed(1);
-    return `${locale === "fr" ? value.replace(".", ",") : value} km`;
+    return `${locale === "en" ? value : value.replace(".", ",")} km`;
   }
   return `${Math.round(km)} km`;
 }

@@ -20,6 +20,7 @@ import type { Pool } from "../lib/types";
 import { loadFrance } from "./sources/fr.mts";
 import { loadEngland } from "./sources/gb.mts";
 import { loadGermany } from "./sources/de.mts";
+import { poolsFromOsm, type OsmElement } from "./sources/osm.mts";
 
 // Serveur principal puis miroir : le principal limite parfois par IP.
 const OVERPASS_URLS = [
@@ -32,16 +33,20 @@ const SOURCES: Record<string, { iso: string; load: () => Promise<Pool[]> }> = {
   fr: { iso: "FR", load: () => loadFrance(getArg("dataes")) },
   gb: { iso: "GB", load: loadEngland },
   de: { iso: "DE", load: () => loadGermany(getArg("baederleben")) },
+  ...Object.fromEntries(
+    ["es", "it", "be", "nl"].map((cc) => {
+      const iso = cc.toUpperCase();
+      return [
+        cc,
+        {
+          iso,
+          load: async () =>
+            poolsFromOsm(iso, await loadOsm(iso, getArg(`osm-${cc}`)), await loadOsm(iso, undefined, true)),
+        },
+      ];
+    }),
+  ),
 };
-
-interface OsmElement {
-  type: string;
-  id: number;
-  lat?: number;
-  lon?: number;
-  center?: { lat: number; lon: number };
-  tags?: Record<string, string>;
-}
 
 function getArg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -58,7 +63,15 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return 2 * 6371 * Math.asin(Math.sqrt(a));
 }
 
-function overpassQuery(iso: string): string {
+function overpassQuery(iso: string, places = false): string {
+  if (places) {
+    return `
+[out:json][timeout:300];
+area["ISO3166-1"="${iso}"][admin_level=2]->.c;
+node["place"~"^(city|town|village|suburb)$"]["name"](area.c);
+out;
+`;
+  }
   return `
 [out:json][timeout:300];
 area["ISO3166-1"="${iso}"][admin_level=2]->.c;
@@ -73,7 +86,7 @@ out tags center;
 
 const OSM_CACHE_TTL_MS = 7 * 24 * 3600 * 1000;
 
-async function loadOsm(iso: string, localFile?: string): Promise<OsmElement[]> {
+async function loadOsm(iso: string, localFile?: string, places = false): Promise<OsmElement[]> {
   if (localFile) {
     return (JSON.parse(readFileSync(localFile, "utf-8")) as { elements: OsmElement[] })
       .elements;
@@ -83,7 +96,7 @@ async function loadOsm(iso: string, localFile?: string): Promise<OsmElement[]> {
   const cacheFile = join(
     dirname(fileURLToPath(import.meta.url)),
     "cache",
-    `osm-${iso.toLowerCase()}.json`,
+    `osm-${places ? "places-" : ""}${iso.toLowerCase()}.json`,
   );
   if (existsSync(cacheFile)) {
     const cached = JSON.parse(readFileSync(cacheFile, "utf-8"));
@@ -93,21 +106,33 @@ async function loadOsm(iso: string, localFile?: string): Promise<OsmElement[]> {
     }
   }
   let lastError: unknown;
-  for (const url of OVERPASS_URLS) {
-    console.log(`Téléchargement OpenStreetMap ${iso} (${new URL(url).host}, ~1 min)…`);
-    try {
-      const res = await fetch(url, { method: "POST", body: overpassQuery(iso) });
-      if (!res.ok) throw new Error(`Overpass ${iso} : HTTP ${res.status}`);
-      const raw = await res.json();
-      mkdirSync(dirname(cacheFile), { recursive: true });
-      writeFileSync(
-        cacheFile,
-        JSON.stringify({ fetched: new Date().toISOString(), elements: raw.elements }),
-      );
-      return raw.elements as OsmElement[];
-    } catch (err) {
-      lastError = err;
-      console.warn(`  échec, essai du serveur suivant… (${err})`);
+  // Serveurs saturés (429/5xx) : nouvelle tournée après 30 s, 60 s, 120 s.
+  for (let round = 0; round < 4; round++) {
+    if (round > 0) {
+      console.warn(`  tous les serveurs ont échoué, nouvel essai dans ${30 * 2 ** (round - 1)} s…`);
+      await new Promise((r) => setTimeout(r, 30_000 * 2 ** (round - 1)));
+    }
+    for (const url of OVERPASS_URLS) {
+      console.log(`Téléchargement OpenStreetMap ${iso} (${new URL(url).host}, ~1 min)…`);
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          // overpass-api.de répond 406 sans User-Agent identifiable.
+          headers: { "User-Agent": "swimmaps-build/1.0 (+https://www.swimmaps.eu)" },
+          body: overpassQuery(iso, places),
+        });
+        if (!res.ok) throw new Error(`Overpass ${iso} : HTTP ${res.status}`);
+        const raw = await res.json();
+        mkdirSync(dirname(cacheFile), { recursive: true });
+        writeFileSync(
+          cacheFile,
+          JSON.stringify({ fetched: new Date().toISOString(), elements: raw.elements }),
+        );
+        return raw.elements as OsmElement[];
+      } catch (err) {
+        lastError = err;
+        console.warn(`  échec, essai du serveur suivant… (${err})`);
+      }
     }
   }
   throw lastError;

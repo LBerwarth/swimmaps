@@ -67,6 +67,36 @@ const L10N: Record<
     allDay: "rund um die Uhr",
     time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
   },
+  es: {
+    days: ["lun", "mar", "mié", "jue", "vie", "sáb", "dom"],
+    monthsShort: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"],
+    monthsFull: ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"],
+    closed: "cerrado",
+    publicHolidays: "festivos",
+    schoolHolidays: "vacaciones escolares",
+    allDay: "24 horas",
+    time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
+  },
+  it: {
+    days: ["lun", "mar", "mer", "gio", "ven", "sab", "dom"],
+    monthsShort: ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"],
+    monthsFull: ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"],
+    closed: "chiuso",
+    publicHolidays: "festivi",
+    schoolHolidays: "vacanze scolastiche",
+    allDay: "24 ore su 24",
+    time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
+  },
+  nl: {
+    days: ["ma", "di", "wo", "do", "vr", "za", "zo"],
+    monthsShort: ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"],
+    monthsFull: ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"],
+    closed: "gesloten",
+    publicHolidays: "feestdagen",
+    schoolHolidays: "schoolvakanties",
+    allDay: "24/7",
+    time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
+  },
 };
 
 /** Plages d'ouverture par jour (0 = lundi … 6 = dimanche), en minutes depuis minuit. */
@@ -314,6 +344,30 @@ export function formatClosedPeriodFR(
     }
     return `vom ${period.from.day}. ${months[period.from.month]} bis ${period.to.day}. ${months[period.to.month]} geschlossen`;
   }
+  if (locale === "es") {
+    if (monthsOnly) {
+      return period.from.month === period.to.month
+        ? `cerrado en ${months[period.from.month]}`
+        : `cerrado de ${months[period.from.month]} a ${months[period.to.month]}`;
+    }
+    return `cerrado del ${period.from.day} de ${months[period.from.month]} al ${period.to.day} de ${months[period.to.month]}`;
+  }
+  if (locale === "it") {
+    if (monthsOnly) {
+      return period.from.month === period.to.month
+        ? `chiuso a ${months[period.from.month]}`
+        : `chiuso da ${months[period.from.month]} a ${months[period.to.month]}`;
+    }
+    return `chiuso dal ${period.from.day} ${months[period.from.month]} al ${period.to.day} ${months[period.to.month]}`;
+  }
+  if (locale === "nl") {
+    if (monthsOnly) {
+      return period.from.month === period.to.month
+        ? `gesloten in ${months[period.from.month]}`
+        : `gesloten van ${months[period.from.month]} tot ${months[period.to.month]}`;
+    }
+    return `gesloten van ${period.from.day} ${months[period.from.month]} tot ${period.to.day} ${months[period.to.month]}`;
+  }
   if (monthsOnly) {
     return period.from.month === period.to.month
       ? `fermé en ${months[period.from.month]}`
@@ -348,7 +402,7 @@ function prettifySegment(segment: string, locale: Locale): string {
   MONTH_CODES.forEach((code, i) => {
     out = out.replace(new RegExp(`\\b${code}\\b`, "g"), l10n.monthsShort[i]);
   });
-  if (locale === "fr") {
+  if (locale !== "en" && locale !== "de") {
     const monthAlt = l10n.monthsShort.map((m) => m.replace(".", "\\.")).join("|");
     out = out.replace(new RegExp(`(${monthAlt})\\s?(\\d{1,2})\\b`, "g"), "$2 $1");
   }

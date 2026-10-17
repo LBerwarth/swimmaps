@@ -9,5 +9,8 @@ describe("detailMetaDescription", () => {
     expect(getDict("de").detailMetaDescription("Piscine Municipale", "Balma")).toMatch(/^Schwimmbad Piscine Municipale/);
     expect(getDict("en").detailMetaDescription("Leisure Centre", "Leeds")).toMatch(/^Leisure Centre swimming pool in Leeds:/);
     expect(getDict("en").detailMetaDescription("Piscine Municipale", "Balma")).toMatch(/^Piscine Municipale in Balma:/);
+    expect(getDict("it").detailMetaDescription("Piscina Comunale", "Roma")).toMatch(/^Piscina Comunale/);
+    expect(getDict("es").detailMetaDescription("Piscina Municipal", "Sevilla")).toMatch(/^Piscina Municipal/);
+    expect(getDict("nl").detailMetaDescription("Zwembad De Braak", "Helmond")).toMatch(/^Zwembad De Braak/);
   });
 });

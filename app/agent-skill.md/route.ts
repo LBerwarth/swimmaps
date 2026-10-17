@@ -6,11 +6,12 @@ export const revalidate = 86400;
 function body(): string {
   const index = getIndex();
   const total = index.countries.reduce((n, c) => n + c.count, 0);
-  return `# Swimmaps — finding a public swimming pool in France, England or Germany
+  return `# Swimmaps — finding a public swimming pool in Western Europe
 
 Swimmaps lists ${total.toLocaleString("en-GB")} public swimming pools from open
 data (Data ES and OpenStreetMap for France, Active Places for England,
-Bäderleben for Germany). It is independent and non-official: it represents
+Bäderleben for Germany, OpenStreetMap alone for Spain, Italy, Belgium and the
+Netherlands). It is independent and non-official: it represents
 neither the pool operators nor any public authority.
 
 ## Resources
@@ -18,10 +19,10 @@ neither the pool operators nor any public authority.
 - **${SITE_URL}/llms.txt** — overview and links to the datasets.
 - **${SITE_URL}/data/index.json** — countries covered, counts, bounding boxes.
 - **${SITE_URL}/data/piscines-<cc>.json** — every pool of a country (\`fr\`,
-  \`gb\`, \`de\`), with coordinates. To answer "near X", geocode X yourself and
+  \`gb\`, \`de\`, \`es\`, \`it\`, \`be\`, \`nl\`), with coordinates. To answer "near X", geocode X yourself and
   filter by haversine distance; the app does exactly that in the browser.
 - **${SITE_URL}/<lang>/piscine/<slug>** — the page of one pool (\`<lang>\` =
-  fr, en or de; \`<slug>\` = kebab-case name + \`-\` + lower-case id, e.g.
+  fr, en, de, es, it or nl; \`<slug>\` = kebab-case name + \`-\` + lower-case id, e.g.
   \`piscine-leo-lagrange-i315550227\`). It carries schema.org JSON-LD
   (PublicSwimmingPool with address, geo, telephone, priceRange and
   openingHoursSpecification when the weekly hours are unambiguous).
@@ -42,7 +43,8 @@ Hours are given in the pool's local time.
 ## Limits to respect
 
 - Hours are known for a minority of pools (about 10 % in France, fewer in
-  Germany) and prices for very few outside Germany. A missing field means
+  Germany, rarer still in Spain and Italy) and prices for very few outside
+  Germany. A missing field means
   unknown, never "closed" or "free".
 - Data are rebuilt periodically from open sources (date in
   \`index.json\`), not live — except the Toulouse pools, whose daily status

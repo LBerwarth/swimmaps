@@ -3,7 +3,10 @@ import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 86400;
 
-const COUNTRY = { fr: "France", gb: "England", de: "Germany" } as const;
+const COUNTRY = {
+  fr: "France", gb: "England", de: "Germany",
+  es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands",
+} as const;
 
 function body(): string {
   const index = getIndex();
@@ -18,9 +21,9 @@ function body(): string {
   return [
     "# Swimmaps",
     "",
-    `> ${total.toLocaleString("en-GB")} public swimming pools in France, England and Germany, from open data: location, pool types and lengths, opening hours and prices where known. Independent, non-official site; the operator's website linked on each page is authoritative.`,
+    `> ${total.toLocaleString("en-GB")} public swimming pools in France, Germany, England, Spain, Italy, Belgium and the Netherlands, from open data: location, pool types and lengths, opening hours and prices where known. Independent, non-official site; the operator's website linked on each page is authoritative.`,
     "",
-    `Data as of ${index.updated.slice(0, 10)}. Interface in French, English and German; every page exists under /fr, /en and /de.`,
+    `Data as of ${index.updated.slice(0, 10)}. Interface in French, English, German, Spanish, Italian and Dutch; every page exists under /fr, /en, /de, /es, /it and /nl.`,
     "",
     "## Finding pools",
     "",
@@ -37,7 +40,7 @@ function body(): string {
     "## About",
     "",
     `- [Agent skill](${SITE_URL}/agent-skill.md): how to answer questions with these data and their limits.`,
-    `- [Sources](${SITE_URL}/en/sources): Data ES + OpenStreetMap (France), Active Places (England), Bäderleben (Germany), official websites; licences.`,
+    `- [Sources](${SITE_URL}/en/sources): Data ES + OpenStreetMap (France), Active Places (England), Bäderleben (Germany), OpenStreetMap (Spain, Italy, Belgium, Netherlands), official websites; licences.`,
     `- [Privacy](${SITE_URL}/en/privacy): no cookies, aggregated analytics only.`,
     "",
   ].join("\n");

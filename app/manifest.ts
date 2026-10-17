@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Swimmaps",
     short_name: "Swimmaps",
     description:
-      "Les piscines publiques autour de vous — France, Angleterre, Allemagne. Public swimming pools around you.",
+      "Les piscines publiques autour de vous — France, Allemagne, Angleterre, Espagne, Italie, Belgique, Pays-Bas. Public swimming pools around you.",
     start_url: "/",
     scope: "/",
     display: "standalone",
