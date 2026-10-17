@@ -435,7 +435,7 @@ const fr: Dict = {
 
   detailMetaTitle: (name, city) => `${name} à ${city} — horaires, bassins et accès`,
   detailMetaDescription: (name, city) =>
-    `Piscine ${name} à ${city} : horaires si connus, bassins, tarif, adresse et itinéraire.`,
+    `${/piscine|aquatique|nautique|bassin|baignade/i.test(name) ? name : `Piscine ${name}`} à ${city} : horaires si connus, bassins, tarif, adresse et itinéraire.`,
   detailSubtitle: (city) => `Piscine publique à ${city} — horaires, bassins et accès.`,
   detailHoursTitle: "Horaires de la semaine",
   detailHoursNote:
@@ -819,7 +819,7 @@ const en: Dict = {
 
   detailMetaTitle: (name, city) => `${name} in ${city} — hours, pools and access`,
   detailMetaDescription: (name, city) =>
-    `${name} swimming pool in ${city}: opening hours where known, pools, price, address and directions.`,
+    `${/pool|swim|baths|lido|aquatic|piscine/i.test(name) ? name : `${name} swimming pool`} in ${city}: opening hours where known, pools, price, address and directions.`,
   detailSubtitle: (city) => `Public swimming pool in ${city} — hours, pools and access.`,
   detailHoursTitle: "Weekly hours",
   detailHoursNote:
@@ -1203,7 +1203,7 @@ const de: Dict = {
 
   detailMetaTitle: (name, city) => `${name} in ${city} — Öffnungszeiten, Becken und Anfahrt`,
   detailMetaDescription: (name, city) =>
-    `Schwimmbad ${name} in ${city}: Öffnungszeiten soweit bekannt, Becken, Eintritt, Adresse und Route.`,
+    `${/bad|schwimm|therme/i.test(name) ? name : `Schwimmbad ${name}`} in ${city}: Öffnungszeiten soweit bekannt, Becken, Eintritt, Adresse und Route.`,
   detailSubtitle: (city) => `Öffentliches Schwimmbad in ${city} — Öffnungszeiten, Becken und Anfahrt.`,
   detailHoursTitle: "Öffnungszeiten der Woche",
   detailHoursNote:
