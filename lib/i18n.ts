@@ -2280,9 +2280,9 @@ const es: Dict = {
   metaTitle: "Swimmaps — encuentra una piscina cerca de ti",
   metaDescription:
     "Piscinas públicas cerca de ti en Francia, Alemania, Inglaterra, España, Italia, Bélgica y Países Bajos: " +
-    "vasos, horarios y precios, con mapa y cómo llegar.",
+    "tipos de piscina, horarios y precios, con mapa y cómo llegar.",
   subtitle:
-    "Encuentra las piscinas públicas a tu alrededor: vasos, horarios y precios cuando se conocen.",
+    "Encuentra las piscinas públicas a tu alrededor: tipos de piscina, horarios y precios cuando se conocen.",
 
   langAria: "Idioma / Language / Langue",
   navSources: "Fuentes",
@@ -2362,7 +2362,7 @@ const es: Dict = {
     "💡 Toca ☆ junto al nombre de una piscina para seguirla: sube al principio de la lista y el botón ★ Favoritas te la vuelve a mostrar.",
   favTipOk: "Entendido",
   lenLabel: "Longitud",
-  lenAria: "Longitud del vaso",
+  lenAria: "Longitud de la piscina",
   lenAll: "Cualquiera",
 
   sectionTimeline: "Horarios por día",
@@ -2405,22 +2405,22 @@ const es: Dict = {
   favRemove: (name) => `Quitar ${name} de favoritas`,
   envLabels: { int: "Cubierta", ext: "Al aire libre", mix: "Cubierta + al aire libre" },
   basinLabels: {
-    sportif: "vaso deportivo",
-    ludique: "vaso recreativo",
-    mixte: "vaso mixto",
-    toboggan: "vaso de toboganes",
+    sportif: "piscina deportiva",
+    ludique: "piscina recreativa",
+    mixte: "piscina mixta",
+    toboggan: "piscina con toboganes",
     plongeon: "foso de saltos",
     plongée: "foso de buceo",
-    principal: "vaso principal",
-    apprentissage: "vaso de enseñanza",
-    lido: "vaso al aire libre",
-    pataugeoire: "chapoteadero",
+    principal: "piscina principal",
+    apprentissage: "piscina de enseñanza",
+    lido: "piscina al aire libre",
+    pataugeoire: "piscina infantil",
     vagues: "piscina de olas",
     spa: "jacuzzi",
-    kneipp: "vaso Kneipp",
+    kneipp: "piscina Kneipp",
     naturel: "piscina natural",
   },
-  basinFallback: (label) => `vaso ${label}`,
+  basinFallback: (label) => `piscina ${label}`,
 
   seasonalClosed: "Cerrada por temporada en este momento",
   badgeOpenNow: "Abierta ahora",
@@ -2455,10 +2455,10 @@ const es: Dict = {
   detailLink: "Ficha",
   detailLinkTitle: "Ficha detallada — horario semanal e información práctica",
 
-  detailMetaTitle: (name, city) => `${name} en ${city} — horarios, vasos y acceso`,
+  detailMetaTitle: (name, city) => `${name} en ${city} — horarios, piscinas y acceso`,
   detailMetaDescription: (name, city) =>
-    `${/piscin|natator|acuátic|acuatic|aqua|parque|pool|swim/i.test(name) ? name : `Piscina ${name}`} en ${city}: horarios cuando se conocen, vasos, precio, dirección y cómo llegar.`,
-  detailSubtitle: (city) => `Piscina pública en ${city} — horarios, vasos y acceso.`,
+    `${/piscin|natator|acuátic|acuatic|aqua|parque|pool|swim/i.test(name) ? name : `Piscina ${name}`} en ${city}: horarios cuando se conocen, piscinas, precio, dirección y cómo llegar.`,
+  detailSubtitle: (city) => `Piscina pública en ${city} — horarios, piscinas y acceso.`,
   detailHoursTitle: "Horario semanal",
   detailHoursNote:
     "Los horarios proceden de fuentes abiertas (OpenStreetMap, web oficial) — compruébalos antes de ir.",
@@ -2467,7 +2467,7 @@ const es: Dict = {
   detailRawHours: "Horario publicado (sin interpretar)",
   detailInfoTitle: "Información práctica",
   detailAddress: "Dirección",
-  detailBasins: "Vasos",
+  detailBasins: "Piscinas",
   detailLengths: "Longitudes",
   detailNearbyTitle: "Otras piscinas cercanas",
   detailNearbyAway: (km) => `a ${km}`,
@@ -2536,7 +2536,7 @@ const es: Dict = {
           {
             label: "Data ES — censo nacional de instalaciones deportivas",
             detail:
-              "Ministerio de Deportes, licencia abierta: nombre, dirección, coordenadas, vasos y longitudes. Se descartan las instalaciones de acceso restringido (centros escolares, militares, hoteles…).",
+              "Ministerio de Deportes, licencia abierta: nombre, dirección, coordenadas, piscinas y longitudes. Se descartan las instalaciones de acceso restringido (centros escolares, militares, hoteles…).",
             url: URLS.dataEs,
           },
           {
