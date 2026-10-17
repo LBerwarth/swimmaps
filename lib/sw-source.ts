@@ -32,7 +32,7 @@ self.addEventListener("install", (event) =>
           (async () => {
             const cache = await caches.open(CACHE);
             const res = await fetch("/", { cache: "no-store" });
-            if (res && res.ok) await cache.put("/", res);
+            if (res && res.ok && !res.redirected) await cache.put("/", res);
           })(),
           pause(INSTALL_BUDGET_MS),
         ]);
@@ -113,7 +113,8 @@ async function networkFirst(request, event, timeoutMs) {
   const navigate = request.mode === "navigate";
   const retry = navigate && Date.now() - lastFallbackAt < FALLBACK_RETRY_WINDOW_MS;
   const winner = await timed(retry ? NAV_LAST_RESORT_MS : timeoutMs);
-  if (winner && winner.ok) return winner;
+  // « / » redirige vers /fr|/en|/de : la redirection est une réponse valide.
+  if (winner && (winner.ok || winner.type === "opaqueredirect")) return winner;
   event.waitUntil(network.catch(() => {}));
 
   const cache = await cacheReady;
@@ -121,7 +122,8 @@ async function networkFirst(request, event, timeoutMs) {
     ? (await bounded(cache.match(request))) ||
       (await bounded(cache.match(request, { ignoreSearch: true })))
     : null;
-  if (cached) {
+  // Chrome refuse une réponse redirigée pour une navigation (ERR_FAILED).
+  if (cached && !cached.redirected) {
     if (navigate) lastFallbackAt = Date.now();
     return cached;
   }
