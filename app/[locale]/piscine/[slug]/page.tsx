@@ -18,6 +18,7 @@ import { PageHeader } from "@/components/page-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PoolDetail } from "@/components/pool-detail";
 import { FeedbackForm } from "@/components/feedback-form";
+import { TipJar } from "@/components/tip-jar";
 
 // Fiches rendues à la demande (10 000 piscines × 3 langues) et gardées un jour.
 export const dynamicParams = true;
@@ -274,6 +275,8 @@ export default async function PoolPage({
           )}
         </dl>
       </section>
+
+      <TipJar locale={locale} className="mt-8" />
 
       <nav aria-label={dict.detailNearbyTitle} className="mt-8">
         <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-200">{dict.detailNearbyTitle}</h2>

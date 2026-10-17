@@ -11,6 +11,7 @@ import { IosBanner } from "@/components/ios-banner";
 import { OfflineBanner } from "@/components/offline-banner";
 import { UpdateInfo } from "@/components/update-info";
 import { FeedbackForm } from "@/components/feedback-form";
+import { TipJar } from "@/components/tip-jar";
 
 export async function generateMetadata({
   params,
@@ -88,6 +89,8 @@ export default async function Home({
       <FinderView />
 
       <FeedbackForm />
+
+      <TipJar locale={locale} />
 
       <SiteFooter locale={locale} withFeedback />
     </main>

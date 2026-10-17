@@ -212,6 +212,11 @@ export interface Dict {
   footerDisclaimer: string;
   footerIndependent: string;
 
+  tipTitle: string;
+  tipDesc: string;
+  tipButton: string;
+  tipNote: string;
+
   coveredLabel: string;
   countryNames: Record<string, string>;
 
@@ -489,6 +494,12 @@ const fr: Dict = {
     "seulement — vérifiez sur le site officiel avant de vous déplacer.",
   footerIndependent:
     "Application personnelle et indépendante, non affiliée aux gestionnaires des piscines ni à aucune administration.",
+
+  tipTitle: "Offrir un café",
+  tipDesc:
+    "Swimmaps est une application personnelle et bénévole, sans publicité. Si elle vous évite un trajet pour rien, vous pouvez m'offrir un café.",
+  tipButton: "Offrir un café",
+  tipNote: "Avec ou sans café, elle reste gratuite, sans publicité, et la même pour tout le monde.",
 
   coveredLabel: "Pays couverts :",
   countryNames: { fr: "France", gb: "Angleterre", de: "Allemagne" },
@@ -874,6 +885,12 @@ const en: Dict = {
   footerIndependent:
     "Personal, independent app, not affiliated with pool operators or any public authority.",
 
+  tipTitle: "Buy me a coffee",
+  tipDesc:
+    "Swimmaps is a personal, ad-free side project. If it saves you a wasted trip, you can buy me a coffee.",
+  tipButton: "Buy me a coffee",
+  tipNote: "With or without coffee, the app stays free, ad-free and the same for everyone.",
+
   coveredLabel: "Countries covered:",
   countryNames: { fr: "France", gb: "England", de: "Germany" },
 
@@ -1257,6 +1274,12 @@ const de: Dict = {
     "der Bäder vor — vor dem Besuch bitte auf der offiziellen Website prüfen.",
   footerIndependent:
     "Private, unabhängige App, ohne Verbindung zu den Betreibern der Bäder oder zu Behörden.",
+
+  tipTitle: "Spendier mir einen Kaffee",
+  tipDesc:
+    "Swimmaps ist ein privates, werbefreies Hobbyprojekt. Wenn es dir einen umsonst gefahrenen Weg erspart, kannst du mir einen Kaffee spendieren.",
+  tipButton: "Kaffee spendieren",
+  tipNote: "Mit oder ohne Kaffee: Die App bleibt kostenlos, werbefrei und für alle gleich.",
 
   coveredLabel: "Abgedeckte Länder:",
   countryNames: { fr: "Frankreich", gb: "England", de: "Deutschland" },
