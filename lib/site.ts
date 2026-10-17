@@ -6,6 +6,6 @@ export const SITE_URL = (
     : "http://localhost:3002")
 ).replace(/\/$/, "");
 
-export const SITE_NAME = "Swimspot";
+export const SITE_NAME = "Swimmaps";
 
 export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "lena.berw@gmail.com";

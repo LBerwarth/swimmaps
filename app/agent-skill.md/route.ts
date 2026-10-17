@@ -6,9 +6,9 @@ export const revalidate = 86400;
 function body(): string {
   const index = getIndex();
   const total = index.countries.reduce((n, c) => n + c.count, 0);
-  return `# Swimspot — finding a public swimming pool in France, England or Germany
+  return `# Swimmaps — finding a public swimming pool in France, England or Germany
 
-Swimspot lists ${total.toLocaleString("en-GB")} public swimming pools from open
+Swimmaps lists ${total.toLocaleString("en-GB")} public swimming pools from open
 data (Data ES and OpenStreetMap for France, Active Places for England,
 Bäderleben for Germany). It is independent and non-official: it represents
 neither the pool operators nor any public authority.

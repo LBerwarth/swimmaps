@@ -8,12 +8,12 @@ export function GET() {
   const catalog = {
     specVersion: "1.0",
     host: {
-      displayName: "Swimspot",
+      displayName: "Swimmaps",
       documentationUrl: `${SITE_URL}/fr/sources`,
     },
     entries: [
       {
-        identifier: "urn:air:swimspot:piscines-publiques-europe",
+        identifier: "urn:air:swimmaps:piscines-publiques-europe",
         displayName: "Piscines publiques de France, d'Angleterre et d'Allemagne",
         type: 'text/markdown; profile="urn:air:agent-skills"',
         url: `${SITE_URL}/agent-skill.md`,

@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 
 const MAIL_TO = process.env.FEEDBACK_EMAIL_TO ?? CONTACT_EMAIL;
 // Expéditeur partagé de Resend : sans domaine vérifié, ne délivre qu'au titulaire du compte.
-const MAIL_FROM = process.env.FEEDBACK_EMAIL_FROM ?? "Swimspot <onboarding@resend.dev>";
+const MAIL_FROM = process.env.FEEDBACK_EMAIL_FROM ?? "Swimmaps <onboarding@resend.dev>";
 
 /**
  * Garde-fou anti-abus en mémoire seulement : rien n'est persisté, une instance
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       from: MAIL_FROM,
       to: MAIL_TO,
       ...(parsed.value.email ? { reply_to: parsed.value.email } : {}),
-      subject: `Swimspot — ${parsed.value.kind}`,
+      subject: `Swimmaps — ${parsed.value.kind}`,
       text: feedbackText(parsed.value),
     }),
   }).catch(() => null);

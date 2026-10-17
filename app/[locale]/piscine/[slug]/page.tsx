@@ -34,7 +34,7 @@ export async function generateMetadata({
   if (!pool) return {};
   const dict = getDict(locale);
   return {
-    title: `${dict.detailMetaTitle(pool.name, pool.city)} — Swimspot`,
+    title: `${dict.detailMetaTitle(pool.name, pool.city)} — Swimmaps`,
     description: dict.detailMetaDescription(pool.name, pool.city),
     alternates: {
       canonical: poolPagePath(locale, pool),

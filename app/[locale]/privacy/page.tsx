@@ -15,7 +15,7 @@ export async function generateMetadata({
   if (!isLocale(locale)) return {};
   const dict = getDict(locale);
   return {
-    title: `${dict.privacy.title} — Swimspot`,
+    title: `${dict.privacy.title} — Swimmaps`,
     description: dict.privacy.intro,
     alternates: {
       canonical: `/${locale}/privacy`,

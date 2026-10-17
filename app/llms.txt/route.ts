@@ -16,7 +16,7 @@ function body(): string {
     .join("\n");
 
   return [
-    "# Swimspot",
+    "# Swimmaps",
     "",
     `> ${total.toLocaleString("en-GB")} public swimming pools in France, England and Germany, from open data: location, pool types and lengths, opening hours and prices where known. Independent, non-official site; the operator's website linked on each page is authoritative.`,
     "",

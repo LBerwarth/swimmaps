@@ -100,7 +100,7 @@ export function IosInstallSteps() {
           </div>
           <div className="mt-2 flex items-center gap-1.5">
             <Image src="/icon-192.png" alt="" width={20} height={20} className="rounded-md" />
-            <span className="text-slate-700 dark:text-slate-200">Swimspot</span>
+            <span className="text-slate-700 dark:text-slate-200">Swimmaps</span>
           </div>
         </div>
         <div className="flex gap-2">

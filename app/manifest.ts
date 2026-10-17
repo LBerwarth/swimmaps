@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "Swimspot",
-    short_name: "Swimspot",
+    name: "Swimmaps",
+    short_name: "Swimmaps",
     description:
       "Les piscines publiques autour de vous — France, Angleterre, Allemagne. Public swimming pools around you.",
     start_url: "/",

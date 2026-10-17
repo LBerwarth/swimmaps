@@ -2,7 +2,7 @@
 // build en préfixe (SW_BUILD) : chaque déploiement produit un script différent,
 // donc détecté comme une mise à jour par le navigateur.
 export const SW_SOURCE = String.raw`
-const CACHE = "swimspot-" + SW_BUILD;
+const CACHE = "swimmaps-" + SW_BUILD;
 
 // CacheStorage peut se bloquer sans fin (profil corrompu) : chaque accès est
 // borné, à défaut on fait comme s'il n'y avait pas de cache.
@@ -13,10 +13,10 @@ const bounded = (promise) =>
 
 const OFFLINE_HTML =
   "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>" +
-  "<title>Swimspot</title>" +
+  "<title>Swimmaps</title>" +
   "<div style=\"font-family:system-ui;padding:2rem;text-align:center;color:#6d28d9\">" +
-  "<h1>Hors ligne · Offline</h1><p>Ouvrez Swimspot au moins une fois en ligne pour " +
-  "consulter ensuite les dernières données enregistrées.<br>Open Swimspot online once to browse the last saved data offline.</p>" +
+  "<h1>Hors ligne · Offline</h1><p>Ouvrez Swimmaps au moins une fois en ligne pour " +
+  "consulter ensuite les dernières données enregistrées.<br>Open Swimmaps online once to browse the last saved data offline.</p>" +
   "<button onclick=\"location.reload()\" style=\"margin-top:1rem;padding:.6rem 1.6rem;" +
   "border:0;border-radius:9999px;background:#6d28d9;color:#fff;font-size:1rem\">" +
   "Réessayer · Retry</button></div>" +

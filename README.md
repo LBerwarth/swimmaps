@@ -1,4 +1,4 @@
-# Swimspot
+# Swimmaps
 
 Trouvez les piscines publiques autour de vous — France, Angleterre et
 Allemagne, d'autres pays européens à venir : choisissez un rayon (1 à 50 km),
@@ -113,7 +113,7 @@ le tester).
 | `NEXT_PUBLIC_TOULOUSE_STATUS_URL` | API statut du jour de Piscines de Toulouse. | `https://toulouse-piscines.vercel.app/api/status` |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Adresse de contact (confidentialité, repli mailto). | adresse de l'auteure |
 | `RESEND_API_KEY` | Envoi des signalements par e-mail. Absente = repli `mailto:` seul. | — |
-| `FEEDBACK_EMAIL_TO` / `FEEDBACK_EMAIL_FROM` | Destinataire / expéditeur des signalements. | contact / `Swimspot <onboarding@resend.dev>` |
+| `FEEDBACK_EMAIL_TO` / `FEEDBACK_EMAIL_FROM` | Destinataire / expéditeur des signalements. | contact / `Swimmaps <onboarding@resend.dev>` |
 
 ## Stack
 

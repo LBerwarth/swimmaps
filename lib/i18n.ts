@@ -1,5 +1,5 @@
 /**
- * Internationalisation de Swimspot : français, anglais, allemand — une langue
+ * Internationalisation de Swimmaps : français, anglais, allemand — une langue
  * par pays couvert. Dictionnaires plats, quelques entrées fonctions pour les
  * chaînes paramétrées.
  */
@@ -267,7 +267,7 @@ const BASINS_FR = {
 
 const fr: Dict = {
   intlLocale: "fr-FR",
-  metaTitle: "Swimspot — trouvez une piscine près de chez vous",
+  metaTitle: "Swimmaps — trouvez une piscine près de chez vous",
   metaDescription:
     "Toutes les piscines publiques autour de vous, en France, en Angleterre et en Allemagne : " +
     "choisissez un rayon, voyez les bassins, horaires et tarifs disponibles, avec carte et itinéraires.",
@@ -474,7 +474,7 @@ const fr: Dict = {
   fbAnother: "Envoyer un autre message",
   fbErrorDefault: "Envoi impossible pour le moment.",
   fbErrorMail: "Vous pouvez aussi envoyer le message par e-mail.",
-  fbSubject: "Swimspot — signalement",
+  fbSubject: "Swimmaps — signalement",
 
   footerData: "Données :",
   footerLicenceFR: "(licence ouverte)",
@@ -495,7 +495,7 @@ const fr: Dict = {
     title: "Sources des données",
     subtitle: "D'où viennent les piscines, horaires et tarifs affichés",
     intro:
-      "Swimspot est une application personnelle et indépendante, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle n'invente aucune donnée : tout ce qu'elle affiche vient des sources ouvertes ci-dessous, et une information absente est dite absente plutôt que devinée. Vérifiez toujours une information critique sur le site officiel de la piscine.",
+      "Swimmaps est une application personnelle et indépendante, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle n'invente aucune donnée : tout ce qu'elle affiche vient des sources ouvertes ci-dessous, et une information absente est dite absente plutôt que devinée. Vérifiez toujours une information critique sur le site officiel de la piscine.",
     groups: [
       {
         title: "France",
@@ -578,10 +578,10 @@ const fr: Dict = {
   },
   privacy: {
     title: "Politique de confidentialité",
-    subtitle: "Application « Swimspot »",
+    subtitle: "Application « Swimmaps »",
     updated: (date) => `Dernière mise à jour : ${date}`,
     intro:
-      "Swimspot est une application personnelle et bénévole, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle affiche les piscines publiques à partir de données ouvertes. Cette page explique quelles données elle traite — en résumé : rien qui vous identifie, sauf ce que vous choisissez vous-même de nous écrire.",
+      "Swimmaps est une application personnelle et bénévole, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle affiche les piscines publiques à partir de données ouvertes. Cette page explique quelles données elle traite — en résumé : rien qui vous identifie, sauf ce que vous choisissez vous-même de nous écrire.",
     sections: [
       {
         title: "Données personnelles collectées",
@@ -637,7 +637,7 @@ const fr: Dict = {
 
 const en: Dict = {
   intlLocale: "en-GB",
-  metaTitle: "Swimspot — find a swimming pool near you",
+  metaTitle: "Swimmaps — find a swimming pool near you",
   metaDescription:
     "Every public swimming pool around you, in France, England and Germany: pick a radius, " +
     "see pools, opening hours and prices where known, with a map and directions.",
@@ -857,7 +857,7 @@ const en: Dict = {
   fbAnother: "Send another message",
   fbErrorDefault: "Sending is not possible right now.",
   fbErrorMail: "You can also send the message by e-mail.",
-  fbSubject: "Swimspot — feedback",
+  fbSubject: "Swimmaps — feedback",
 
   footerData: "Data:",
   footerLicenceFR: "(open licence)",
@@ -878,7 +878,7 @@ const en: Dict = {
     title: "Data sources",
     subtitle: "Where the pools, hours and prices come from",
     intro:
-      "Swimspot is a personal, independent app, not affiliated with pool operators or any public authority. It invents no data: everything shown comes from the open sources below, and missing information is shown as missing rather than guessed. Always check critical information on the pool's official website.",
+      "Swimmaps is a personal, independent app, not affiliated with pool operators or any public authority. It invents no data: everything shown comes from the open sources below, and missing information is shown as missing rather than guessed. Always check critical information on the pool's official website.",
     groups: [
       {
         title: "France",
@@ -961,10 +961,10 @@ const en: Dict = {
   },
   privacy: {
     title: "Privacy policy",
-    subtitle: "The “Swimspot” app",
+    subtitle: "The “Swimmaps” app",
     updated: (date) => `Last updated: ${date}`,
     intro:
-      "Swimspot is a personal, volunteer-run app, not affiliated with pool operators or any public authority. It shows public swimming pools from open data. This page explains which data it processes — in short: nothing that identifies you, except what you choose to write to us.",
+      "Swimmaps is a personal, volunteer-run app, not affiliated with pool operators or any public authority. It shows public swimming pools from open data. This page explains which data it processes — in short: nothing that identifies you, except what you choose to write to us.",
     sections: [
       {
         title: "Personal data collected",
@@ -1019,7 +1019,7 @@ const en: Dict = {
 
 const de: Dict = {
   intlLocale: "de-DE",
-  metaTitle: "Swimspot — finde ein Schwimmbad in deiner Nähe",
+  metaTitle: "Swimmaps — finde ein Schwimmbad in deiner Nähe",
   metaDescription:
     "Alle öffentlichen Schwimmbäder um dich herum, in Deutschland, Frankreich und England: " +
     "Umkreis wählen, Becken, Öffnungszeiten und Preise sehen — mit Karte und Wegbeschreibung.",
@@ -1240,7 +1240,7 @@ const de: Dict = {
   fbAnother: "Weitere Nachricht senden",
   fbErrorDefault: "Senden ist derzeit nicht möglich.",
   fbErrorMail: "Du kannst die Nachricht auch per E-Mail senden.",
-  fbSubject: "Swimspot — Meldung",
+  fbSubject: "Swimmaps — Meldung",
 
   footerData: "Daten:",
   footerLicenceFR: "(offene Lizenz)",
@@ -1261,7 +1261,7 @@ const de: Dict = {
     title: "Datenquellen",
     subtitle: "Woher Bäder, Öffnungszeiten und Preise stammen",
     intro:
-      "Swimspot ist eine private, unabhängige App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie erfindet keine Daten: alles Angezeigte stammt aus den offenen Quellen unten, und fehlende Angaben werden als fehlend gezeigt statt geraten. Prüfe wichtige Angaben immer auf der offiziellen Website des Bades.",
+      "Swimmaps ist eine private, unabhängige App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie erfindet keine Daten: alles Angezeigte stammt aus den offenen Quellen unten, und fehlende Angaben werden als fehlend gezeigt statt geraten. Prüfe wichtige Angaben immer auf der offiziellen Website des Bades.",
     groups: [
       {
         title: "Frankreich",
@@ -1344,10 +1344,10 @@ const de: Dict = {
   },
   privacy: {
     title: "Datenschutzerklärung",
-    subtitle: "App „Swimspot“",
+    subtitle: "App „Swimmaps“",
     updated: (date) => `Zuletzt aktualisiert: ${date}`,
     intro:
-      "Swimspot ist eine private, ehrenamtliche App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie zeigt öffentliche Schwimmbäder aus offenen Daten. Diese Seite erklärt, welche Daten sie verarbeitet — kurz: nichts, was dich identifiziert, außer dem, was du uns selbst schreibst.",
+      "Swimmaps ist eine private, ehrenamtliche App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie zeigt öffentliche Schwimmbäder aus offenen Daten. Diese Seite erklärt, welche Daten sie verarbeitet — kurz: nichts, was dich identifiziert, außer dem, was du uns selbst schreibst.",
     sections: [
       {
         title: "Erhobene personenbezogene Daten",
