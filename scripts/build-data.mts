@@ -20,6 +20,7 @@ import type { Pool } from "../lib/types";
 import { loadFrance } from "./sources/fr.mts";
 import { loadEngland } from "./sources/gb.mts";
 import { loadGermany } from "./sources/de.mts";
+import { loadNorthernIreland } from "./sources/nir.mts";
 import { poolsFromOsm, type OsmElement } from "./sources/osm.mts";
 
 // Serveur principal puis miroir : le principal limite parfois par IP.
@@ -37,6 +38,23 @@ const SOURCES: Record<string, { iso: string; country?: string; load: () => Promi
   fr: { iso: "FR", load: () => loadFrance(getArg("dataes")) },
   gb: { iso: "GB", load: loadEngland },
   de: { iso: "DE", load: () => loadGermany(getArg("baederleben")) },
+  nir: {
+    iso: "GB-NIR",
+    country: "GB",
+    // Active Places NI date de 2017 : OSM ajoute les piscines ouvertes depuis (Bangor Aurora…).
+    load: async () => {
+      const official = await loadNorthernIreland();
+      const sites = await loadOsm("GB-NIR");
+      const osm = poolsFromOsm("GB", sites, await loadOsm("GB-NIR", undefined, "places"), await loadBasins("GB-NIR", sites));
+      const extra = osm.filter(
+        (o) =>
+          !/david lloyd|academy|school|college|grammar/i.test(o.name) &&
+          !official.some((p) => haversineKm(p.lat, p.lon, o.lat, o.lon) < 0.3),
+      );
+      console.log(`  + ${extra.length} piscines OpenStreetMap absentes d'Active Places NI`);
+      return [...official, ...extra];
+    },
+  },
   ...Object.fromEntries(
     (
       [
@@ -48,10 +66,9 @@ const SOURCES: Record<string, { iso: string; country?: string; load: () => Promi
         ["pt", "PT"],
         ["at", "AT"],
         ["ie", "IE"],
-        // Écosse, pays de Galles, Irlande du Nord : Active Places ne couvre que l'Angleterre.
+        // Écosse, pays de Galles : pas de base ouverte, OSM seul.
         ["sct", "GB-SCT", "GB"],
         ["wls", "GB-WLS", "GB"],
-        ["nir", "GB-NIR", "GB"],
       ] as Array<[string, string, string?]>
     ).map(([cc, iso, country = iso]) => [
       cc,

@@ -70,8 +70,11 @@ les lit une fois depuis `public/data` (`lib/pools-server.ts`).
   Sportwissenschaft) : ~4 850 bäder publics avec **tarifs d'entrée (83 %)**,
   longueurs, sites web et téléphones. Attribution obligatoire (affichée dans
   le pied de page) : © BISp, coordonnées © GeoBasis-DE / BKG 2021.
+- **Irlande du Nord** — [Active Places NI](https://admin.opendatani.gov.uk/dataset/active-places-ni-sports-facilities-database)
+  (Sport NI, OGL v3, extrait 2017) : piscines des conseils de district, plus les
+  piscines OSM absentes de l'extrait.
 - **Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas, Irlande, Écosse,
-  pays de Galles, Irlande du Nord** — OpenStreetMap seul
+  pays de Galles** — OpenStreetMap seul
   (`scripts/sources/osm.mts`) : centres et parcs aquatiques nommés, hôtels et
   campings écartés d'après le nom, éléments à moins de 200 m fusionnés en un
   site ; commune = `addr:city`, sinon localité OSM la plus proche. Les bases

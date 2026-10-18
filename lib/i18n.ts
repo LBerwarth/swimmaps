@@ -324,6 +324,7 @@ const URLS = {
   dataEs: "https://equipements.sports.gouv.fr",
   osm: "https://www.openstreetmap.org/copyright",
   activePlaces: "https://www.activeplacespower.com",
+  activePlacesNi: "https://admin.opendatani.gov.uk/dataset/active-places-ni-sports-facilities-database",
   baederleben: "https://baederleben.de",
   toulouse: "https://piscines-toulouse.fr/sources",
   schema: "https://schema.org/openingHoursSpecification",
@@ -698,6 +699,16 @@ const fr: Dict = {
             detail:
               "Licence OGL v3 : piscines ouvertes au public (« Pay and Play » et clubs communautaires), longueurs et sites web. Enrichissement OpenStreetMap identique à la France.",
             url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Irlande du Nord",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "Licence OGL v3 (extrait 2017) : piscines des conseils de district, complétées par OpenStreetMap pour celles ouvertes depuis.",
+            url: URLS.activePlacesNi,
           },
         ],
       },
@@ -1189,6 +1200,16 @@ const en: Dict = {
         ],
       },
       {
+        title: "Northern Ireland",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "OGL v3 licence (2017 extract): district council pools, completed with OpenStreetMap for those opened since.",
+            url: URLS.activePlacesNi,
+          },
+        ],
+      },
+      {
         title: "Germany",
         items: [
           {
@@ -1672,6 +1693,16 @@ const de: Dict = {
             detail:
               "OGL-v3-Lizenz: öffentlich zugängliche Bäder („Pay and Play“ und Vereinsbäder), Längen und Websites. Gleiche OpenStreetMap-Anreicherung wie in Frankreich.",
             url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Nordirland",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "OGL-v3-Lizenz (Stand 2017): kommunale Bäder, ergänzt um OpenStreetMap für seither eröffnete.",
+            url: URLS.activePlacesNi,
           },
         ],
       },
@@ -2162,6 +2193,16 @@ const it: Dict = {
         ],
       },
       {
+        title: "Irlanda del Nord",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "Licenza OGL v3 (estratto 2017): piscine comunali, completate con OpenStreetMap per quelle aperte in seguito.",
+            url: URLS.activePlacesNi,
+          },
+        ],
+      },
+      {
         title: "Germania",
         items: [
           {
@@ -2644,6 +2685,16 @@ const nl: Dict = {
             detail:
               "OGL v3-licentie: zwembaden die open zijn voor publiek (“Pay and Play” en verenigingen), lengtes en websites. Zelfde OpenStreetMap-verrijking als in Frankrijk.",
             url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Noord-Ierland",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "OGL-v3-licentie (stand 2017): gemeentelijke zwembaden, aangevuld met OpenStreetMap voor later geopende.",
+            url: URLS.activePlacesNi,
           },
         ],
       },
@@ -3134,6 +3185,16 @@ const es: Dict = {
         ],
       },
       {
+        title: "Irlanda del Norte",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "Licencia OGL v3 (extracto de 2017): piscinas municipales, completadas con OpenStreetMap para las abiertas después.",
+            url: URLS.activePlacesNi,
+          },
+        ],
+      },
+      {
         title: "Alemania",
         items: [
           {
@@ -3616,6 +3677,16 @@ const pt: Dict = {
             detail:
               "Licença OGL v3: piscinas abertas ao público (“Pay and Play” e clubes comunitários), comprimentos e sites. O mesmo enriquecimento com OpenStreetMap que em França.",
             url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Irlanda do Norte",
+        items: [
+          {
+            label: "Active Places NI (Sport Northern Ireland)",
+            detail: "Licença OGL v3 (extrato de 2017): piscinas municipais, completadas com o OpenStreetMap para as abertas depois.",
+            url: URLS.activePlacesNi,
           },
         ],
       },

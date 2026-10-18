@@ -24,6 +24,15 @@ export function SiteFooter({
           Active Places
         </a>{" "}
         {dict.footerLicenceGB} ·{" "}
+        <a
+          className={LINK}
+          href="https://admin.opendatani.gov.uk/dataset/active-places-ni-sports-facilities-database"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Active Places NI
+        </a>{" "}
+        {dict.footerLicenceGB} ·{" "}
         <a className={LINK} href="https://baederleben.de" target="_blank" rel="noreferrer">
           Bäderleben
         </a>{" "}
