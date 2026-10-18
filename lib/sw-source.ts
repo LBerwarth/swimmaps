@@ -158,10 +158,15 @@ self.addEventListener("fetch", (event) => {
   if (
     url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/icon-") ||
-    url.pathname.startsWith("/manifest") ||
     url.pathname === "/eau.jpg"
   ) {
     event.respondWith(cacheFirst(request));
+    return;
+  }
+
+  // Manifeste : réseau d'abord, sinon l'installation reprend un ancien nom d'appli.
+  if (url.pathname.startsWith("/manifest")) {
+    event.respondWith(networkFirst(request, event, 3000));
     return;
   }
 
