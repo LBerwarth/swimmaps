@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { Pool } from "@/lib/types";
 import { fetchToulouseLive, type LivePoolStatus } from "@/lib/toulouse-live";
+import { applyContrib } from "@/lib/contrib";
 import { PoolCard } from "@/components/pool-card";
+import { PoolContrib } from "@/components/pool-contrib";
+import { useContributions } from "@/components/use-contributions";
 
 const PoolMap = dynamic(() => import("@/components/pool-map"), {
   ssr: false,
@@ -14,7 +17,8 @@ const PoolMap = dynamic(() => import("@/components/pool-map"), {
 });
 
 /** Fiche seule (page dédiée) : carte de la piscine + plan centré, statut live si Toulouse. */
-export function PoolDetail({ pool }: { pool: Pool }) {
+export function PoolDetail({ pool: source }: { pool: Pool }) {
+  const pool = applyContrib(source, useContributions()[source.id]);
   const [live, setLive] = useState<LivePoolStatus | null>(null);
 
   useEffect(() => {
@@ -31,6 +35,7 @@ export function PoolDetail({ pool }: { pool: Pool }) {
     <div className="space-y-4">
       <PoolCard pool={pool} live={live} showDetails={false} />
       <PoolMap center={[pool.lat, pool.lon]} pools={[pool]} />
+      <PoolContrib pool={pool} />
     </div>
   );
 }

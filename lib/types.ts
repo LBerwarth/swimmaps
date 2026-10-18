@@ -35,6 +35,8 @@ export interface Pool {
   charge?: string;
   website?: string;
   phone?: string;
+  /** Champs complétés par des visiteurs (fusionnés au chargement, jamais dans les fichiers). */
+  contributed?: Array<"env" | "lens">;
 }
 
 export interface PoolDataset {

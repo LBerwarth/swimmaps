@@ -41,7 +41,12 @@ const SOURCES: Record<string, { iso: string; load: () => Promise<Pool[]> }> = {
         {
           iso,
           load: async () =>
-            poolsFromOsm(iso, await loadOsm(iso, getArg(`osm-${cc}`)), await loadOsm(iso, undefined, true)),
+            poolsFromOsm(
+              iso,
+              await loadOsm(iso, getArg(`osm-${cc}`)),
+              await loadOsm(iso, undefined, "places"),
+              await loadOsm(iso, undefined, "basins"),
+            ),
         },
       ];
     }),
@@ -63,8 +68,22 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return 2 * 6371 * Math.asin(Math.sqrt(a));
 }
 
-function overpassQuery(iso: string, places = false): string {
-  if (places) {
+type OsmKind = "pools" | "places" | "basins";
+
+function overpassQuery(iso: string, kind: OsmKind): string {
+  if (kind === "basins") {
+    return `
+[out:json][timeout:300];
+area["ISO3166-1"="${iso}"][admin_level=2]->.c;
+(
+  nwr["leisure"="sports_centre"]["sport"~"swimming"](area.c);
+  nwr["leisure"="water_park"](area.c);
+)->.s;
+way["leisure"="swimming_pool"]["access"!~"^(private|no)$"](around.s:150);
+out tags geom;
+`;
+  }
+  if (kind === "places") {
     return `
 [out:json][timeout:300];
 area["ISO3166-1"="${iso}"][admin_level=2]->.c;
@@ -86,7 +105,7 @@ out tags center;
 
 const OSM_CACHE_TTL_MS = 7 * 24 * 3600 * 1000;
 
-async function loadOsm(iso: string, localFile?: string, places = false): Promise<OsmElement[]> {
+async function loadOsm(iso: string, localFile?: string, kind: OsmKind = "pools"): Promise<OsmElement[]> {
   if (localFile) {
     return (JSON.parse(readFileSync(localFile, "utf-8")) as { elements: OsmElement[] })
       .elements;
@@ -96,7 +115,7 @@ async function loadOsm(iso: string, localFile?: string, places = false): Promise
   const cacheFile = join(
     dirname(fileURLToPath(import.meta.url)),
     "cache",
-    `osm-${places ? "places-" : ""}${iso.toLowerCase()}.json`,
+    `osm-${kind === "pools" ? "" : `${kind}-`}${iso.toLowerCase()}.json`,
   );
   if (existsSync(cacheFile)) {
     const cached = JSON.parse(readFileSync(cacheFile, "utf-8"));
@@ -119,10 +138,12 @@ async function loadOsm(iso: string, localFile?: string, places = false): Promise
           method: "POST",
           // overpass-api.de répond 406 sans User-Agent identifiable.
           headers: { "User-Agent": "swimmaps-build/1.0 (+https://www.swimmaps.eu)" },
-          body: overpassQuery(iso, places),
+          body: overpassQuery(iso, kind),
         });
         if (!res.ok) throw new Error(`Overpass ${iso} : HTTP ${res.status}`);
         const raw = await res.json();
+        // Délai dépassé côté serveur : HTTP 200, liste vide et « remark ».
+        if (raw.remark?.includes("error")) throw new Error(`Overpass ${iso} : ${raw.remark}`);
         mkdirSync(dirname(cacheFile), { recursive: true });
         writeFileSync(
           cacheFile,

@@ -42,6 +42,12 @@ moment de la mise en ligne, et fixer `NEXT_PUBLIC_SITE_URL`.)
 - **SEO / agents** : canoniques et `hreflang` par page, `sitemap.xml`
   (~30 000 URL), `robots.txt`, `/llms.txt`, `/agent-skill.md`,
   `/ai-catalog.json`.
+- **Compléments des visiteurs** : sur une fiche sans type ou sans longueur,
+  le visiteur répond (couverte / plein air / mixte, 25 m, 50 m ou autre) ;
+  `/api/contrib` enregistre dans Upstash Redis (hash `contrib`, 20 envois/h
+  par IP), affiche aussitôt (« complété par un nageur ») et prévient
+  l'auteure par e-mail. Premier arrivé ; jamais par-dessus la source.
+  Retirer une saisie : `HDEL contrib <id>` dans la console Upstash.
 - **Pages** Sources et Confidentialité (trois langues), formulaire de
   signalement (`/api/feedback` → Resend, repli `mailto:` sans clé),
   mesure d'audience Vercel (agrégée, sans cookie).
@@ -118,6 +124,7 @@ le tester).
 | `NEXT_PUBLIC_SITE_URL` | Domaine canonique (métadonnées, sitemap, JSON-LD). | URL de production Vercel, sinon `http://localhost:3002` |
 | `NEXT_PUBLIC_TOULOUSE_STATUS_URL` | API statut du jour de Piscines de Toulouse. | `https://toulouse-piscines.vercel.app/api/status` |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Adresse de contact (confidentialité, repli mailto). | adresse de l'auteure |
+| `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Upstash Redis des compléments (posées par l'intégration Vercel). Absentes = compléments désactivés. | — |
 | `RESEND_API_KEY` | Envoi des signalements par e-mail. Absente = repli `mailto:` seul. | — |
 | `FEEDBACK_EMAIL_TO` / `FEEDBACK_EMAIL_FROM` | Destinataire / expéditeur des signalements. | contact / `Swimmaps <onboarding@resend.dev>` |
 

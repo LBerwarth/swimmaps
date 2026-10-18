@@ -1,11 +1,7 @@
 import { feedbackText, parseFeedback } from "@/lib/feedback";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { sendMail } from "@/lib/mail";
 
 export const runtime = "nodejs";
-
-const MAIL_TO = process.env.FEEDBACK_EMAIL_TO ?? CONTACT_EMAIL;
-// Expéditeur partagé de Resend : sans domaine vérifié, ne délivre qu'au titulaire du compte.
-const MAIL_FROM = process.env.FEEDBACK_EMAIL_FROM ?? "Swimmaps <onboarding@resend.dev>";
 
 /**
  * Garde-fou anti-abus en mémoire seulement : rien n'est persisté, une instance
@@ -41,25 +37,13 @@ export async function POST(req: Request) {
   const parsed = parseFeedback(body);
   if (!parsed.ok) return Response.json({ error: parsed.error }, { status: 400 });
 
+  const sent = await sendMail(
+    `Swimmaps — ${parsed.value.kind}`,
+    feedbackText(parsed.value),
+    parsed.value.email,
+  );
   // Sans clé Resend, le formulaire renvoie l'auteur vers le repli mailto.
-  const key = process.env.RESEND_API_KEY;
-  if (!key) return Response.json({ error: "unavailable" }, { status: 503 });
-
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: MAIL_FROM,
-      to: MAIL_TO,
-      ...(parsed.value.email ? { reply_to: parsed.value.email } : {}),
-      subject: `Swimmaps — ${parsed.value.kind}`,
-      text: feedbackText(parsed.value),
-    }),
-  }).catch(() => null);
-
-  if (!res || !res.ok) {
-    console.error("feedback email:", res ? `Resend HTTP ${res.status}` : "network error");
-    return Response.json({ error: "unavailable" }, { status: 502 });
-  }
+  if (sent === "no_key") return Response.json({ error: "unavailable" }, { status: 503 });
+  if (sent === "failed") return Response.json({ error: "unavailable" }, { status: 502 });
   return Response.json({ ok: true });
 }

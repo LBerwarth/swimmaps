@@ -135,6 +135,16 @@ export interface Dict {
   favAdd: (name: string) => string;
   favRemove: (name: string) => string;
   envLabels: Record<string, string>;
+  contribTitle: string;
+  contribIntro: string;
+  contribEnvQ: string;
+  contribLenQ: string;
+  contribOtherLen: string;
+  contribSend: string;
+  contribThanks: string;
+  contribTooMany: string;
+  contribError: string;
+  contribBadge: string;
   basinLabels: Record<string, string>;
   basinFallback: (label: string) => string;
 
@@ -240,7 +250,7 @@ export interface Dict {
   };
 }
 
-export const PRIVACY_UPDATED = "2026-09-21";
+export const PRIVACY_UPDATED = "2026-10-18";
 
 const URLS = {
   dataEs: "https://equipements.sports.gouv.fr",
@@ -402,6 +412,16 @@ const fr: Dict = {
   favAdd: (name) => `Ajouter ${name} aux favoris`,
   favRemove: (name) => `Retirer ${name} des favoris`,
   envLabels: { int: "Couverte", ext: "Plein air", mix: "Couverte + plein air" },
+  contribTitle: "Il manque une info ?",
+  contribIntro: "Vous nagez ici ? Complétez la fiche : votre réponse s'affiche tout de suite pour tout le monde.",
+  contribEnvQ: "Couverte ou plein air ?",
+  contribLenQ: "Longueur du grand bassin ?",
+  contribOtherLen: "Autre (m)",
+  contribSend: "OK",
+  contribThanks: "Merci, c'est ajouté !",
+  contribTooMany: "Trop d'envois, réessayez dans une heure.",
+  contribError: "Envoi impossible, réessayez plus tard.",
+  contribBadge: "complété par un nageur",
   basinLabels: BASINS_FR,
   basinFallback: (label) => `bassin ${label}`,
 
@@ -637,6 +657,12 @@ const fr: Dict = {
         ],
       },
       {
+        title: "Compléments de fiche (facultatif)",
+        paragraphs: [
+          "Quand vous complétez une fiche (type de bassin, longueur), seule la réponse est enregistrée, avec la date, dans une base Upstash (hébergée via Vercel) ; elle s'affiche pour tous et l'auteure en est avertie par e-mail. Votre adresse IP est conservée une heure au plus, uniquement pour limiter les envois en rafale.",
+        ],
+      },
+      {
         title: "Formulaire de signalement (facultatif)",
         paragraphs: [
           "Le formulaire ne transmet que ce que vous saisissez : le type de signalement, la piscine concernée, votre message et — si vous le souhaitez — votre adresse e-mail. Il est envoyé par e-mail à l'auteure de l'application (via le prestataire Resend), à la seule fin de corriger l'application et, le cas échéant, de vous répondre. Aucune liste de diffusion, aucun partage, aucune revente ; écrivez-nous pour faire supprimer un message envoyé.",
@@ -791,6 +817,16 @@ const en: Dict = {
   favAdd: (name) => `Add ${name} to favourites`,
   favRemove: (name) => `Remove ${name} from favourites`,
   envLabels: { int: "Indoor", ext: "Outdoor", mix: "Indoor + outdoor" },
+  contribTitle: "Missing information?",
+  contribIntro: "Swim here? Fill in the gaps: your answer shows up for everyone right away.",
+  contribEnvQ: "Indoor or outdoor?",
+  contribLenQ: "Length of the main pool?",
+  contribOtherLen: "Other (m)",
+  contribSend: "OK",
+  contribThanks: "Thanks, it's added!",
+  contribTooMany: "Too many submissions, try again in an hour.",
+  contribError: "Couldn't send, please try again later.",
+  contribBadge: "added by a swimmer",
   basinLabels: {
     sportif: "lap pool",
     ludique: "leisure pool",
@@ -1041,6 +1077,12 @@ const en: Dict = {
         ],
       },
       {
+        title: "Filling in pool details (optional)",
+        paragraphs: [
+          "When you fill in a pool detail (pool type, length), only your answer and the date are stored, in an Upstash database (hosted through Vercel); it is shown to everyone and the author is notified by email. Your IP address is kept for at most one hour, only to limit bursts of submissions.",
+        ],
+      },
+      {
         title: "Feedback form (optional)",
         paragraphs: [
           "The form only transmits what you type: the kind of report, the pool concerned, your message and — if you wish — your e-mail address. It is e-mailed to the app's author (through the provider Resend), solely to fix the app and, where relevant, reply to you. No mailing list, no sharing, no resale; write to us to have a sent message deleted.",
@@ -1195,6 +1237,16 @@ const de: Dict = {
   favAdd: (name) => `${name} zu Favoriten hinzufügen`,
   favRemove: (name) => `${name} aus Favoriten entfernen`,
   envLabels: { int: "Hallenbad", ext: "Freibad", mix: "Kombibad" },
+  contribTitle: "Fehlt eine Angabe?",
+  contribIntro: "Du schwimmst hier? Ergänze die Seite: deine Antwort ist sofort für alle sichtbar.",
+  contribEnvQ: "Hallen- oder Freibad?",
+  contribLenQ: "Länge des großen Beckens?",
+  contribOtherLen: "Andere (m)",
+  contribSend: "OK",
+  contribThanks: "Danke, ist eingetragen!",
+  contribTooMany: "Zu viele Einträge, versuch es in einer Stunde wieder.",
+  contribError: "Senden fehlgeschlagen, versuch es später noch einmal.",
+  contribBadge: "von Badegästen ergänzt",
   basinLabels: {
     sportif: "Schwimmerbecken",
     ludique: "Nichtschwimmerbecken",
@@ -1445,6 +1497,12 @@ const de: Dict = {
         ],
       },
       {
+        title: "Ergänzungen zu Bädern (optional)",
+        paragraphs: [
+          "Wenn du eine Angabe ergänzt (Hallen-/Freibad, Länge), wird nur deine Antwort mit Datum in einer Upstash-Datenbank (über Vercel gehostet) gespeichert; sie ist für alle sichtbar, und die Autorin erhält eine E-Mail. Deine IP-Adresse wird höchstens eine Stunde lang gespeichert, nur um Massen-Einträge zu begrenzen.",
+        ],
+      },
+      {
         title: "Meldeformular (optional)",
         paragraphs: [
           "Das Formular übermittelt nur, was du eingibst: die Art der Meldung, das betroffene Bad, deine Nachricht und — wenn du möchtest — deine E-Mail-Adresse. Es wird per E-Mail (über den Dienst Resend) an die Autorin der App gesendet, allein um die App zu korrigieren und dir gegebenenfalls zu antworten. Kein Verteiler, keine Weitergabe, kein Verkauf; schreib uns, um eine gesendete Nachricht löschen zu lassen.",
@@ -1598,6 +1656,16 @@ const it: Dict = {
   favAdd: (name) => `Aggiungi ${name} ai preferiti`,
   favRemove: (name) => `Rimuovi ${name} dai preferiti`,
   envLabels: { int: "Coperta", ext: "Scoperta", mix: "Coperta + scoperta" },
+  contribTitle: "Manca un'informazione?",
+  contribIntro: "Nuoti qui? Completa la scheda: la tua risposta è subito visibile a tutti.",
+  contribEnvQ: "Coperta o scoperta?",
+  contribLenQ: "Lunghezza della vasca principale?",
+  contribOtherLen: "Altra (m)",
+  contribSend: "OK",
+  contribThanks: "Grazie, aggiunto!",
+  contribTooMany: "Troppi invii, riprova tra un'ora.",
+  contribError: "Invio non riuscito, riprova più tardi.",
+  contribBadge: "aggiunto dai nuotatori",
   basinLabels: {
     sportif: "vasca sportiva",
     ludique: "vasca ludica",
@@ -1848,6 +1916,12 @@ const it: Dict = {
         ],
       },
       {
+        title: "Completamento delle schede (facoltativo)",
+        paragraphs: [
+          "Quando completi una scheda (tipo di vasca, lunghezza), viene salvata solo la tua risposta con la data, in un database Upstash (ospitato tramite Vercel); è visibile a tutti e l'autrice ne riceve notifica via e-mail. Il tuo indirizzo IP è conservato al massimo un'ora, solo per limitare gli invii in serie.",
+        ],
+      },
+      {
         title: "Modulo di segnalazione (facoltativo)",
         paragraphs: [
           "Il modulo trasmette solo ciò che scrivi: il tipo di segnalazione, la piscina interessata, il tuo messaggio e — se lo desideri — il tuo indirizzo e-mail. Viene inviato via e-mail all'autrice dell'app (tramite il fornitore Resend), al solo scopo di correggere l'app e, se necessario, risponderti. Nessuna mailing list, nessuna condivisione, nessuna rivendita; scrivici per far cancellare un messaggio inviato.",
@@ -2001,6 +2075,16 @@ const nl: Dict = {
   favAdd: (name) => `${name} toevoegen aan favorieten`,
   favRemove: (name) => `${name} verwijderen uit favorieten`,
   envLabels: { int: "Binnenbad", ext: "Buitenbad", mix: "Binnen- en buitenbad" },
+  contribTitle: "Ontbreekt er informatie?",
+  contribIntro: "Zwem je hier? Vul de pagina aan: je antwoord is meteen voor iedereen zichtbaar.",
+  contribEnvQ: "Binnen- of buitenbad?",
+  contribLenQ: "Lengte van het grote bad?",
+  contribOtherLen: "Anders (m)",
+  contribSend: "OK",
+  contribThanks: "Bedankt, toegevoegd!",
+  contribTooMany: "Te veel inzendingen, probeer het over een uur opnieuw.",
+  contribError: "Versturen mislukt, probeer het later opnieuw.",
+  contribBadge: "aangevuld door zwemmers",
   basinLabels: {
     sportif: "wedstrijdbad",
     ludique: "recreatiebad",
@@ -2251,6 +2335,12 @@ const nl: Dict = {
         ],
       },
       {
+        title: "Zwembadgegevens aanvullen (optioneel)",
+        paragraphs: [
+          "Als je een gegeven aanvult (binnen/buiten, lengte), wordt alleen je antwoord met de datum opgeslagen in een Upstash-database (gehost via Vercel); het is voor iedereen zichtbaar en de maker krijgt een e-mail. Je IP-adres wordt hoogstens een uur bewaard, alleen om massale inzendingen te beperken.",
+        ],
+      },
+      {
         title: "Feedbackformulier (optioneel)",
         paragraphs: [
           "Het formulier verstuurt alleen wat je invult: het soort melding, het betreffende zwembad, je bericht en — als je dat wilt — je e-mailadres. Het wordt per e-mail naar de maker van de app gestuurd (via de dienst Resend), uitsluitend om de app te verbeteren en je zo nodig te antwoorden. Geen mailinglijst, niet gedeeld, niet verkocht; schrijf ons om een verstuurd bericht te laten verwijderen.",
@@ -2404,6 +2494,16 @@ const es: Dict = {
   favAdd: (name) => `Añadir ${name} a favoritas`,
   favRemove: (name) => `Quitar ${name} de favoritas`,
   envLabels: { int: "Cubierta", ext: "Al aire libre", mix: "Cubierta + al aire libre" },
+  contribTitle: "¿Falta información?",
+  contribIntro: "¿Nadas aquí? Completa la ficha: tu respuesta se muestra al momento para todos.",
+  contribEnvQ: "¿Cubierta o al aire libre?",
+  contribLenQ: "¿Longitud de la piscina principal?",
+  contribOtherLen: "Otra (m)",
+  contribSend: "OK",
+  contribThanks: "¡Gracias, añadido!",
+  contribTooMany: "Demasiados envíos, inténtalo dentro de una hora.",
+  contribError: "No se pudo enviar, inténtalo más tarde.",
+  contribBadge: "añadido por bañistas",
   basinLabels: {
     sportif: "piscina deportiva",
     ludique: "piscina recreativa",
@@ -2651,6 +2751,12 @@ const es: Dict = {
         title: "Servicios de terceros mostrados en la página",
         paragraphs: [
           "El mapa base lo sirve la OpenStreetMap Foundation: como con cualquier imagen cargada desde otro sitio, tu dirección IP le resulta visible. El estado diario de las piscinas de Toulouse se lee de la app hermana Piscines de Toulouse, sin ningún dato sobre ti.",
+        ],
+      },
+      {
+        title: "Completar fichas (opcional)",
+        paragraphs: [
+          "Cuando completas una ficha (tipo de piscina, longitud), solo se guarda tu respuesta con la fecha, en una base de datos Upstash (alojada a través de Vercel); se muestra a todos y la autora recibe un aviso por correo. Tu dirección IP se conserva como máximo una hora, solo para limitar envíos masivos.",
         ],
       },
       {

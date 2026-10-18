@@ -10,6 +10,7 @@ export interface OsmElement {
   lat?: number;
   lon?: number;
   center?: { lat: number; lon: number };
+  geometry?: Array<{ lat: number; lon: number }>;
   tags?: Record<string, string>;
 }
 
@@ -30,10 +31,33 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return 2 * 6371 * Math.asin(Math.sqrt(a));
 }
 
+const OUTDOOR_NAME =
+  /openlucht|buitenbad|freibad|strandbad|lido|descubierta|de verano|scopert|estiva|plein air|en plein/i;
+const INDOOR_NAME = /binnenbad|overdekt|hallenbad|cubierta|climatizada|copert|couverte|indoor/i;
+
 function envOf(tags: Record<string, string>): PoolEnv | undefined {
   if (tags.indoor === "yes" || tags.covered === "yes" || tags.location === "indoor") return "int";
   if (tags.indoor === "no" || tags.covered === "no" || tags.location === "outdoor") return "ext";
+  if (tags.name && OUTDOOR_NAME.test(tags.name)) return "ext";
+  if (tags.name && INDOOR_NAME.test(tags.name)) return "int";
+  // Un centre dessiné comme bâtiment (BAG aux Pays-Bas…) abrite un bassin couvert.
+  if (tags.leisure === "sports_centre" && tags.building && tags.building !== "no") return "int";
   return undefined;
+}
+
+/**
+ * Longueur d'un bassin rectangulaire tracé sur photo aérienne : plus grand
+ * côté, retenu seulement s'il tombe à ±2,5 m de 25 ou 50 m.
+ */
+function snappedLength(geometry: OsmElement["geometry"]): number | undefined {
+  if (!geometry || geometry.length < 4 || geometry.length > 6) return undefined;
+  let longest = 0;
+  for (let i = 1; i < geometry.length; i++) {
+    const a = geometry[i - 1];
+    const b = geometry[i];
+    longest = Math.max(longest, haversineKm(a.lat, a.lon, b.lat, b.lon) * 1000);
+  }
+  return [25, 50].find((l) => Math.abs(longest - l) <= 2.5);
 }
 
 /** Centres et parcs aquatiques d'abord : ils portent le nom du site. */
@@ -54,7 +78,12 @@ function nearestPlace(places: OsmElement[], lat: number, lon: number): string {
   return best;
 }
 
-export function poolsFromOsm(iso: string, elements: OsmElement[], places: OsmElement[]): Pool[] {
+export function poolsFromOsm(
+  iso: string,
+  elements: OsmElement[],
+  places: OsmElement[],
+  basins: OsmElement[],
+): Pool[] {
   const candidates = elements
     .map((el) => ({ el, c: el.lat !== undefined ? { lat: el.lat, lon: el.lon! } : el.center }))
     .filter(
@@ -95,11 +124,34 @@ export function poolsFromOsm(iso: string, elements: OsmElement[], places: OsmEle
     });
   }
 
+  // Bassins anonymes autour des centres : seuls porteurs de longueur et d'abri.
+  for (const b of basins) {
+    const c = b.center ?? b.geometry?.[0];
+    if (!c || !b.tags) continue;
+    let site: (typeof pools)[number] | undefined;
+    let bestKm = 0.15;
+    for (const p of pools) {
+      if (Math.abs(p.lat - c.lat) > 0.01) continue;
+      const km = haversineKm(p.lat, p.lon, c.lat, c.lon);
+      if (km < bestKm) [site, bestKm] = [p, km];
+    }
+    if (!site) continue;
+    const env = envOf(b.tags);
+    if (env) site.envs.add(env);
+    const tagged = Number.parseFloat(b.tags.length ?? "");
+    const len = tagged > 0 ? tagged : snappedLength(b.geometry);
+    if (len && !site.lens!.includes(len)) site.lens!.push(len);
+  }
+
   const out = pools.map(({ envs, lens, ...p }): Pool => ({
     ...p,
     ...(envs.size === 1 ? { env: [...envs][0] } : envs.size > 1 ? { env: "mix" as const } : {}),
     ...(lens?.length ? { lens: lens.sort((a, b) => b - a) } : {}),
   }));
-  console.log(`${iso} (OSM) : ${out.length} piscines sur ${elements.length} éléments`);
+  console.log(
+    `${iso} (OSM) : ${out.length} piscines sur ${elements.length} éléments, ` +
+    `${basins.length} bassins — abri connu : ${out.filter((p) => p.env).length}, ` +
+    `longueur : ${out.filter((p) => p.lens).length}`,
+  );
   return out;
 }

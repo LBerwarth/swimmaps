@@ -9,6 +9,7 @@ import { isInClosedPeriod, isOpenAt } from "@/lib/opening-hours";
 import { fetchToulouseLive, isOpenNowLive, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
 import { matchesQuery } from "@/lib/search";
+import { applyContrib } from "@/lib/contrib";
 import {
   RADIUS_OPTIONS_KM,
   readFilterPreset,
@@ -20,6 +21,7 @@ import {
 import { FAV_TIP_KEY, clearFlag } from "@/lib/client-flags";
 import { LocationSearch, type UserLocation } from "@/components/location-search";
 import { PoolCard } from "@/components/pool-card";
+import { useContributions } from "@/components/use-contributions";
 import { Chip, ChipLabel } from "@/components/chip";
 import { CollapsibleSection } from "@/components/collapsible-section";
 import { WeekTimeline } from "@/components/week-timeline";
@@ -247,7 +249,11 @@ export function FinderView() {
     };
   }, [index, location, poolsByCountry]);
 
-  const allPools = useMemo(() => [...poolsByCountry.values()].flat(), [poolsByCountry]);
+  const contributions = useContributions();
+  const allPools = useMemo(
+    () => [...poolsByCountry.values()].flat().map((p) => applyContrib(p, contributions[p.id])),
+    [poolsByCountry, contributions],
+  );
 
   const loadingPools =
     index !== null &&

@@ -196,6 +196,11 @@ export function PoolCard({
                 {dict.envLabels[pool.env]}
               </span>
             )}
+            {pool.contributed && (
+              <span className="px-1 py-0.5 text-[11px] italic text-slate-400 dark:text-slate-400">
+                {dict.contribBadge}
+              </span>
+            )}
             {pool.basins.map((b) => (
               <span
                 key={b}
