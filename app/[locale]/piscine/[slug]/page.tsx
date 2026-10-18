@@ -215,7 +215,7 @@ export default async function PoolPage({
                 href={poolPagePath(locale, p)}
                 className="block py-1.5 text-slate-500 underline underline-offset-2 hover:text-fuchsia-700 dark:text-slate-300 dark:hover:text-fuchsia-300"
               >
-                {p.name} ({p.city}) — {dict.detailNearbyAway(formatDistance(p.distanceKm, locale))}
+                {p.name} ({p.city}) — {dict.detailNearbyAway(formatDistance(p.distanceKm, locale, p.country))}
               </Link>
             </li>
           ))}

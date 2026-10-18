@@ -140,7 +140,7 @@ export interface Dict {
   noneInRadiusNear: (km: string) => string;
   noneFavorite: string;
   noneFilters: string;
-  countLine: (n: number, radiusKm: number, label: string) => string;
+  countLine: (n: number, radius: string, label: string) => string;
   showMore: (n: number) => string;
   mapAria: string;
   mapOpenCount: (n: number) => string;
@@ -201,6 +201,10 @@ export interface Dict {
   contribFrom: string;
   contribTo: string;
   corrClosure: string;
+  corrPhoneAdd: string;
+  corrPhoneEdit: string;
+  corrWebsiteAdd: string;
+  corrWebsiteEdit: string;
   closedUntil: (date: string) => string;
   closureNotice: (from: string, to: string) => string;
   corrTitle: string;
@@ -349,7 +353,7 @@ const fr: Dict = {
   intlLocale: "fr-FR",
   metaTitle: "SwimMaps — trouvez une piscine près de chez vous",
   metaDescription:
-    "Les piscines publiques autour de vous en France, Allemagne, Angleterre, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et aux Pays-Bas : " +
+    "Les piscines publiques autour de vous en France, Allemagne, Royaume-Uni, Irlande, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et aux Pays-Bas : " +
     "bassins, horaires et tarifs, avec carte et itinéraires.",
   subtitle:
     "Trouvez les piscines publiques autour de vous : bassins, horaires et tarifs quand ils sont connus.",
@@ -467,8 +471,8 @@ const fr: Dict = {
   noneFavorite:
     "Aucune piscine favorite dans ce rayon — touchez ☆ sur une piscine pour l'ajouter.",
   noneFilters: "Aucune piscine ne correspond à ces filtres dans ce rayon.",
-  countLine: (n, radiusKm, label) =>
-    `${n} piscine${n > 1 ? "s" : ""} à moins de ${radiusKm} km à vol d'oiseau de ${label}.`,
+  countLine: (n, radius, label) =>
+    `${n} piscine${n > 1 ? "s" : ""} à moins de ${radius} à vol d'oiseau de ${label}.`,
   showMore: (n) => `Afficher plus (${n} restantes)`,
   mapAria: "Carte des piscines",
   mapOpenCount: (n) => `${n} piscine${n > 1 ? "s" : ""} ouverte${n > 1 ? "s" : ""} en ce moment.`,
@@ -539,6 +543,10 @@ const fr: Dict = {
   contribFrom: "du",
   contribTo: "au",
   corrClosure: "Fermeture temporaire",
+  corrPhoneAdd: "Ajouter le téléphone",
+  corrPhoneEdit: "Corriger le téléphone",
+  corrWebsiteAdd: "Ajouter le site web",
+  corrWebsiteEdit: "Corriger le site web",
   closedUntil: (d) => `Fermée temporairement jusqu'au ${d}`,
   closureNotice: (a, b) => `Fermeture du ${a} au ${b}`,
   corrTitle: "Une info est fausse ?",
@@ -650,6 +658,7 @@ const fr: Dict = {
   countryNames: {
     fr: "France", gb: "Angleterre", de: "Allemagne",
     es: "Espagne", it: "Italie", be: "Belgique", nl: "Pays-Bas", ch: "Suisse", pt: "Portugal", at: "Autriche",
+    sct: "Écosse", wls: "Pays de Galles", nir: "Irlande du Nord", ie: "Irlande",
   },
 
   sources: {
@@ -704,7 +713,7 @@ const fr: Dict = {
         ],
       },
       {
-        title: "Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas",
+        title: "Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas, Irlande, Écosse, pays de Galles, Irlande du Nord",
         items: [
           {
             label: "OpenStreetMap",
@@ -818,7 +827,7 @@ const en: Dict = {
   intlLocale: "en-GB",
   metaTitle: "SwimMaps — find a swimming pool near you",
   metaDescription:
-    "Public swimming pools near you in France, Germany, England, Spain, Portugal, Italy, Switzerland, Austria, Belgium and the Netherlands: " +
+    "Public swimming pools near you in France, Germany, the United Kingdom, Ireland, Spain, Portugal, Italy, Switzerland, Austria, Belgium and the Netherlands: " +
     "pools, opening hours and prices, with a map and directions.",
   subtitle:
     "Find the public swimming pools around you: basins, opening hours and prices where known.",
@@ -935,8 +944,8 @@ const en: Dict = {
   noneInRadiusNear: (km) => `No pool within this radius — the nearest one is ${km} away.`,
   noneFavorite: "No favourite pool within this radius — tap ☆ on a pool to add it.",
   noneFilters: "No pool matches these filters within this radius.",
-  countLine: (n, radiusKm, label) =>
-    `${n} pool${n > 1 ? "s" : ""} within ${radiusKm} km of ${label} (straight line).`,
+  countLine: (n, radius, label) =>
+    `${n} pool${n > 1 ? "s" : ""} within ${radius} of ${label} (straight line).`,
   showMore: (n) => `Show more (${n} left)`,
   mapAria: "Pool map",
   mapOpenCount: (n) => `${n} pool${n > 1 ? "s" : ""} open right now.`,
@@ -1006,6 +1015,10 @@ const en: Dict = {
   contribFrom: "from",
   contribTo: "to",
   corrClosure: "Temporary closure",
+  corrPhoneAdd: "Add phone number",
+  corrPhoneEdit: "Correct phone number",
+  corrWebsiteAdd: "Add website",
+  corrWebsiteEdit: "Correct website",
   closedUntil: (d) => `Temporarily closed until ${d}`,
   closureNotice: (a, b) => `Closed from ${a} to ${b}`,
   corrTitle: "Something wrong?",
@@ -1132,6 +1145,7 @@ const en: Dict = {
   countryNames: {
     fr: "France", gb: "England", de: "Germany",
     es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands", ch: "Switzerland", pt: "Portugal", at: "Austria",
+    sct: "Scotland", wls: "Wales", nir: "Northern Ireland", ie: "Ireland",
   },
 
   sources: {
@@ -1186,7 +1200,7 @@ const en: Dict = {
         ],
       },
       {
-        title: "Spain, Portugal, Italy, Switzerland, Austria, Belgium, Netherlands",
+        title: "Spain, Portugal, Italy, Switzerland, Austria, Belgium, Netherlands, Ireland, Scotland, Wales, Northern Ireland",
         items: [
           {
             label: "OpenStreetMap",
@@ -1299,7 +1313,7 @@ const de: Dict = {
   intlLocale: "de-DE",
   metaTitle: "SwimMaps — finde ein Schwimmbad in deiner Nähe",
   metaDescription:
-    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich, England, Österreich, der Schweiz, Spanien, Portugal, Italien, Belgien und den Niederlanden: " +
+    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich, dem Vereinigten Königreich, Irland, Österreich, der Schweiz, Spanien, Portugal, Italien, Belgien und den Niederlanden: " +
     "Becken, Öffnungszeiten und Preise, mit Karte und Route.",
   subtitle:
     "Finde die öffentlichen Schwimmbäder um dich herum: Becken, Öffnungszeiten und Preise, soweit bekannt.",
@@ -1417,8 +1431,8 @@ const de: Dict = {
   noneFavorite:
     "Kein Favorit in diesem Umkreis — tippe auf ☆ bei einem Schwimmbad, um es hinzuzufügen.",
   noneFilters: "Kein Schwimmbad in diesem Umkreis passt zu diesen Filtern.",
-  countLine: (n, radiusKm, label) =>
-    `${n} Schwimmb${n > 1 ? "äder" : "ad"} im Umkreis von ${radiusKm} km (Luftlinie) um ${label}.`,
+  countLine: (n, radius, label) =>
+    `${n} Schwimmb${n > 1 ? "äder" : "ad"} im Umkreis von ${radius} (Luftlinie) um ${label}.`,
   showMore: (n) => `Mehr anzeigen (${n} weitere)`,
   mapAria: "Schwimmbad-Karte",
   mapOpenCount: (n) => `${n} Schwimmb${n > 1 ? "äder" : "ad"} jetzt geöffnet.`,
@@ -1488,6 +1502,10 @@ const de: Dict = {
   contribFrom: "von",
   contribTo: "bis",
   corrClosure: "Vorübergehend geschlossen",
+  corrPhoneAdd: "Telefon hinzufügen",
+  corrPhoneEdit: "Telefon korrigieren",
+  corrWebsiteAdd: "Website hinzufügen",
+  corrWebsiteEdit: "Website korrigieren",
   closedUntil: (d) => `Vorübergehend geschlossen bis ${d}`,
   closureNotice: (a, b) => `Geschlossen vom ${a} bis ${b}`,
   corrTitle: "Stimmt etwas nicht?",
@@ -1614,6 +1632,7 @@ const de: Dict = {
   countryNames: {
     fr: "Frankreich", gb: "England", de: "Deutschland",
     es: "Spanien", it: "Italien", be: "Belgien", nl: "Niederlande", ch: "Schweiz", pt: "Portugal", at: "Österreich",
+    sct: "Schottland", wls: "Wales", nir: "Nordirland", ie: "Irland",
   },
 
   sources: {
@@ -1668,7 +1687,7 @@ const de: Dict = {
         ],
       },
       {
-        title: "Österreich, Schweiz, Spanien, Portugal, Italien, Belgien, Niederlande",
+        title: "Österreich, Schweiz, Spanien, Portugal, Italien, Belgien, Niederlande, Irland, Schottland, Wales, Nordirland",
         items: [
           {
             label: "OpenStreetMap",
@@ -1781,7 +1800,7 @@ const it: Dict = {
   intlLocale: "it-IT",
   metaTitle: "SwimMaps — trova una piscina vicino a te",
   metaDescription:
-    "Piscine pubbliche vicino a te in Francia, Germania, Inghilterra, Spagna, Portogallo, Italia, Svizzera, Austria, Belgio e Paesi Bassi: " +
+    "Piscine pubbliche vicino a te in Francia, Germania, Regno Unito, Irlanda, Spagna, Portogallo, Italia, Svizzera, Austria, Belgio e Paesi Bassi: " +
     "vasche, orari e prezzi, con mappa e indicazioni stradali.",
   subtitle:
     "Trova le piscine pubbliche intorno a te: vasche, orari e prezzi quando noti.",
@@ -1898,8 +1917,8 @@ const it: Dict = {
   noneInRadiusNear: (km) => `Nessuna piscina in questo raggio — la più vicina è a ${km}.`,
   noneFavorite: "Nessuna piscina preferita in questo raggio — tocca ☆ su una piscina per aggiungerla.",
   noneFilters: "Nessuna piscina corrisponde a questi filtri in questo raggio.",
-  countLine: (n, radiusKm, label) =>
-    `${n} piscin${n > 1 ? "e" : "a"} entro ${radiusKm} km da ${label} (in linea d'aria).`,
+  countLine: (n, radius, label) =>
+    `${n} piscin${n > 1 ? "e" : "a"} entro ${radius} da ${label} (in linea d'aria).`,
   showMore: (n) => `Mostra altre (ne restano ${n})`,
   mapAria: "Mappa delle piscine",
   mapOpenCount: (n) => `${n} piscin${n > 1 ? "e aperte" : "a aperta"} in questo momento.`,
@@ -1969,6 +1988,10 @@ const it: Dict = {
   contribFrom: "dal",
   contribTo: "al",
   corrClosure: "Chiusura temporanea",
+  corrPhoneAdd: "Aggiungi telefono",
+  corrPhoneEdit: "Correggi telefono",
+  corrWebsiteAdd: "Aggiungi sito web",
+  corrWebsiteEdit: "Correggi sito web",
   closedUntil: (d) => `Chiusa temporaneamente fino al ${d}`,
   closureNotice: (a, b) => `Chiusa dal ${a} al ${b}`,
   corrTitle: "Qualcosa non va?",
@@ -2095,6 +2118,7 @@ const it: Dict = {
   countryNames: {
     fr: "Francia", gb: "Inghilterra", de: "Germania",
     es: "Spagna", it: "Italia", be: "Belgio", nl: "Paesi Bassi", ch: "Svizzera", pt: "Portogallo", at: "Austria",
+    sct: "Scozia", wls: "Galles", nir: "Irlanda del Nord", ie: "Irlanda",
   },
 
   sources: {
@@ -2149,7 +2173,7 @@ const it: Dict = {
         ],
       },
       {
-        title: "Spagna, Portogallo, Italia, Svizzera, Austria, Belgio, Paesi Bassi",
+        title: "Spagna, Portogallo, Italia, Svizzera, Austria, Belgio, Paesi Bassi, Irlanda, Scozia, Galles, Irlanda del Nord",
         items: [
           {
             label: "OpenStreetMap",
@@ -2262,7 +2286,7 @@ const nl: Dict = {
   intlLocale: "nl-NL",
   metaTitle: "SwimMaps — vind een zwembad bij jou in de buurt",
   metaDescription:
-    "Openbare zwembaden bij jou in de buurt in Nederland, België, Frankrijk, Duitsland, Engeland, Spanje, Portugal, Italië, Zwitserland en Oostenrijk: " +
+    "Openbare zwembaden bij jou in de buurt in Nederland, België, Frankrijk, Duitsland, het Verenigd Koninkrijk, Ierland, Spanje, Portugal, Italië, Zwitserland en Oostenrijk: " +
     "baden, openingstijden en prijzen, met kaart en routebeschrijving.",
   subtitle:
     "Vind de openbare zwembaden om je heen: baden, openingstijden en prijzen, voor zover bekend.",
@@ -2379,8 +2403,8 @@ const nl: Dict = {
   noneInRadiusNear: (km) => `Geen zwembad binnen deze straal — het dichtstbijzijnde ligt op ${km}.`,
   noneFavorite: "Geen favoriet zwembad binnen deze straal — tik op ☆ bij een zwembad om het toe te voegen.",
   noneFilters: "Geen zwembad binnen deze straal past bij deze filters.",
-  countLine: (n, radiusKm, label) =>
-    `${n} zwemba${n > 1 ? "den" : "d"} binnen ${radiusKm} km van ${label} (hemelsbreed).`,
+  countLine: (n, radius, label) =>
+    `${n} zwemba${n > 1 ? "den" : "d"} binnen ${radius} van ${label} (hemelsbreed).`,
   showMore: (n) => `Meer tonen (nog ${n})`,
   mapAria: "Kaart van de zwembaden",
   mapOpenCount: (n) => `${n} zwemba${n > 1 ? "den" : "d"} nu open.`,
@@ -2450,6 +2474,10 @@ const nl: Dict = {
   contribFrom: "van",
   contribTo: "tot",
   corrClosure: "Tijdelijk gesloten",
+  corrPhoneAdd: "Telefoon toevoegen",
+  corrPhoneEdit: "Telefoon corrigeren",
+  corrWebsiteAdd: "Website toevoegen",
+  corrWebsiteEdit: "Website corrigeren",
   closedUntil: (d) => `Tijdelijk gesloten tot ${d}`,
   closureNotice: (a, b) => `Gesloten van ${a} tot ${b}`,
   corrTitle: "Klopt er iets niet?",
@@ -2576,6 +2604,7 @@ const nl: Dict = {
   countryNames: {
     fr: "Frankrijk", gb: "Engeland", de: "Duitsland",
     es: "Spanje", it: "Italië", be: "België", nl: "Nederland", ch: "Zwitserland", pt: "Portugal", at: "Oostenrijk",
+    sct: "Schotland", wls: "Wales", nir: "Noord-Ierland", ie: "Ierland",
   },
 
   sources: {
@@ -2630,7 +2659,7 @@ const nl: Dict = {
         ],
       },
       {
-        title: "Spanje, Portugal, Italië, Zwitserland, Oostenrijk, België, Nederland",
+        title: "Spanje, Portugal, Italië, Zwitserland, Oostenrijk, België, Nederland, Ierland, Schotland, Wales, Noord-Ierland",
         items: [
           {
             label: "OpenStreetMap",
@@ -2743,7 +2772,7 @@ const es: Dict = {
   intlLocale: "es-ES",
   metaTitle: "SwimMaps — encuentra una piscina cerca de ti",
   metaDescription:
-    "Piscinas públicas cerca de ti en Francia, Alemania, Inglaterra, España, Portugal, Italia, Suiza, Austria, Bélgica y Países Bajos: " +
+    "Piscinas públicas cerca de ti en Francia, Alemania, Reino Unido, Irlanda, España, Portugal, Italia, Suiza, Austria, Bélgica y Países Bajos: " +
     "tipos de piscina, horarios y precios, con mapa y cómo llegar.",
   subtitle:
     "Encuentra las piscinas públicas a tu alrededor: tipos de piscina, horarios y precios cuando se conocen.",
@@ -2860,8 +2889,8 @@ const es: Dict = {
   noneInRadiusNear: (km) => `Ninguna piscina en este radio — la más cercana está a ${km}.`,
   noneFavorite: "Ninguna piscina favorita en este radio — toca ☆ en una piscina para añadirla.",
   noneFilters: "Ninguna piscina coincide con estos filtros en este radio.",
-  countLine: (n, radiusKm, label) =>
-    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radiusKm} km de ${label} (en línea recta).`,
+  countLine: (n, radius, label) =>
+    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radius} de ${label} (en línea recta).`,
   showMore: (n) => `Ver más (quedan ${n})`,
   mapAria: "Mapa de piscinas",
   mapOpenCount: (n) => `${n} piscina${n > 1 ? "s abiertas" : " abierta"} ahora mismo.`,
@@ -2931,6 +2960,10 @@ const es: Dict = {
   contribFrom: "del",
   contribTo: "al",
   corrClosure: "Cierre temporal",
+  corrPhoneAdd: "Añadir teléfono",
+  corrPhoneEdit: "Corregir teléfono",
+  corrWebsiteAdd: "Añadir web",
+  corrWebsiteEdit: "Corregir web",
   closedUntil: (d) => `Cerrada temporalmente hasta el ${d}`,
   closureNotice: (a, b) => `Cerrada del ${a} al ${b}`,
   corrTitle: "¿Algo está mal?",
@@ -3057,6 +3090,7 @@ const es: Dict = {
   countryNames: {
     fr: "Francia", gb: "Inglaterra", de: "Alemania",
     es: "España", it: "Italia", be: "Bélgica", nl: "Países Bajos", ch: "Suiza", pt: "Portugal", at: "Austria",
+    sct: "Escocia", wls: "Gales", nir: "Irlanda del Norte", ie: "Irlanda",
   },
 
   sources: {
@@ -3111,7 +3145,7 @@ const es: Dict = {
         ],
       },
       {
-        title: "España, Portugal, Italia, Suiza, Austria, Bélgica, Países Bajos",
+        title: "España, Portugal, Italia, Suiza, Austria, Bélgica, Países Bajos, Irlanda, Escocia, Gales, Irlanda del Norte",
         items: [
           {
             label: "OpenStreetMap",
@@ -3224,7 +3258,7 @@ const pt: Dict = {
   intlLocale: "pt-PT",
   metaTitle: "SwimMaps — encontra uma piscina perto de ti",
   metaDescription:
-    "Piscinas públicas perto de ti em Portugal, Espanha, França, Alemanha, Inglaterra, Itália, Suíça, Áustria, Bélgica e Países Baixos: " +
+    "Piscinas públicas perto de ti em Portugal, Espanha, França, Alemanha, Reino Unido, Irlanda, Itália, Suíça, Áustria, Bélgica e Países Baixos: " +
     "tipos de piscina, horários e preços, com mapa e indicações.",
   subtitle:
     "Encontra as piscinas públicas à tua volta: tipos de piscina, horários e preços quando conhecidos.",
@@ -3341,8 +3375,8 @@ const pt: Dict = {
   noneInRadiusNear: (km) => `Nenhuma piscina dentro deste raio — a mais próxima fica a ${km}.`,
   noneFavorite: "Nenhuma piscina favorita dentro deste raio — toca em ☆ numa piscina para a adicionar.",
   noneFilters: "Nenhuma piscina corresponde a estes filtros dentro deste raio.",
-  countLine: (n, radiusKm, label) =>
-    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radiusKm} km de ${label} (em linha reta).`,
+  countLine: (n, radius, label) =>
+    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radius} de ${label} (em linha reta).`,
   showMore: (n) => `Ver mais (faltam ${n})`,
   mapAria: "Mapa das piscinas",
   mapOpenCount: (n) => `${n} piscina${n > 1 ? "s" : ""} aberta${n > 1 ? "s" : ""} neste momento.`,
@@ -3412,6 +3446,10 @@ const pt: Dict = {
   contribFrom: "de",
   contribTo: "a",
   corrClosure: "Encerramento temporário",
+  corrPhoneAdd: "Adicionar telefone",
+  corrPhoneEdit: "Corrigir telefone",
+  corrWebsiteAdd: "Adicionar site",
+  corrWebsiteEdit: "Corrigir site",
   closedUntil: (d) => `Fechada temporariamente até ${d}`,
   closureNotice: (a, b) => `Fechada de ${a} a ${b}`,
   corrTitle: "Algo está errado?",
@@ -3538,6 +3576,7 @@ const pt: Dict = {
   countryNames: {
     fr: "França", gb: "Inglaterra", de: "Alemanha",
     es: "Espanha", it: "Itália", be: "Bélgica", nl: "Países Baixos", ch: "Suíça", pt: "Portugal", at: "Áustria",
+    sct: "Escócia", wls: "País de Gales", nir: "Irlanda do Norte", ie: "Irlanda",
   },
 
   sources: {
@@ -3592,7 +3631,7 @@ const pt: Dict = {
         ],
       },
       {
-        title: "Portugal, Espanha, Itália, Suíça, Áustria, Bélgica, Países Baixos",
+        title: "Portugal, Espanha, Itália, Suíça, Áustria, Bélgica, Países Baixos, Irlanda, Escócia, País de Gales, Irlanda do Norte",
         items: [
           {
             label: "OpenStreetMap",

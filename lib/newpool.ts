@@ -2,9 +2,11 @@ import {
   ENV_CHOICES,
   LEN_MAX,
   LEN_MIN,
+  parsePhone,
   parsePrices,
   parseSeason,
   parseWeek,
+  parseWebsite,
   type EnvChoice,
   type SeasonInput,
   type WeekInput,
@@ -44,19 +46,10 @@ export function parseNewPool(body: unknown): NewPoolInput | null {
   const env = b.env as EnvChoice;
   const len =
     typeof b.len === "number" && b.len >= LEN_MIN && b.len <= LEN_MAX ? Math.round(b.len * 10) / 10 : undefined;
-  const site = clean(b.website, 200);
-  let website: string | undefined;
-  if (site) {
-    try {
-      const url = new URL(/^https?:\/\//i.test(site) ? site : `https://${site}`);
-      if (url.protocol !== "https:" && url.protocol !== "http:") return null;
-      website = url.toString();
-    } catch {
-      return null;
-    }
-  }
-  const phone = clean(b.phone, 30);
-  if (phone && !/^\+?[\d\s().\/-]{6,30}$/.test(phone)) return null;
+  const website = b.website ? parseWebsite(b.website) : undefined;
+  if (b.website && !website) return null;
+  const phone = b.phone ? parsePhone(b.phone) : undefined;
+  if (b.phone && !phone) return null;
   const week = parseWeek(b.week);
   const holiday = week ? parseWeek(b.holiday) : undefined;
   const season = week ? parseSeason(b.season) : undefined;

@@ -245,7 +245,7 @@ export function PoolCard({
               className="rounded-full bg-fuchsia-100 px-2.5 py-1 text-xs font-semibold text-fuchsia-900 dark:bg-fuchsia-400/15 dark:text-fuchsia-100"
               title={dict.distanceTitle}
             >
-              {formatDistance(pool.distanceKm, locale)}
+              {formatDistance(pool.distanceKm, locale, pool.country)}
             </span>
           )}
           <Badge state={state} />

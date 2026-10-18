@@ -1,3 +1,5 @@
+import { KM_PER_MILE } from "./geo";
+
 export type EnvFilter = "all" | "int" | "ext";
 /** Classe de longueur de bassin : 25 = 25 à <50 m, 50 = 50 m et plus. */
 export type LenFilter = "all" | 25 | 50;
@@ -8,6 +10,17 @@ export type LenFilter = "all" | 25 | 50;
 export type OpenFilter = "all" | "week" | "today" | "now";
 
 export const RADIUS_OPTIONS_KM = [1, 2, 5, 10, 20, 50];
+export const RADIUS_OPTIONS_MI = [1, 2, 3, 5, 10, 20, 30];
+
+/** Rayon en km d'une pastille en miles. */
+export const milesToKm = (mi: number) => mi * KM_PER_MILE;
+
+/** Rayon proposé par l'une ou l'autre grille (km ou miles convertis). */
+export function isRadiusOption(km: number): boolean {
+  return (
+    RADIUS_OPTIONS_KM.includes(km) || RADIUS_OPTIONS_MI.some((mi) => Math.abs(milesToKm(mi) - km) < 0.01)
+  );
+}
 
 export interface FilterPreset {
   env: EnvFilter;
@@ -39,7 +52,7 @@ export function readFilterPreset(params: URLSearchParams): FilterPreset {
     len: length === "25" ? 25 : length === "50" ? 50 : "all",
     open: open === "now" || open === "today" || open === "week" ? open : "all",
     fav: params.get("fav") === "1",
-    radiusKm: RADIUS_OPTIONS_KM.includes(radius) ? radius : null,
+    radiusKm: isRadiusOption(radius) ? radius : null,
   };
 }
 

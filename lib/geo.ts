@@ -16,8 +16,18 @@ export function haversineKm(
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a));
 }
 
-/** « 850 m », « 3,2 km » (fr) / « 3.2 km » (en), « 12 km ». */
-export function formatDistance(km: number, locale: string = "fr"): string {
+export const KM_PER_MILE = 1.609344;
+
+/** Au Royaume-Uni, les distances se lisent en miles. */
+export const usesMiles = (country?: string) => country === "GB";
+
+/** « 850 m », « 3,2 km » (fr) / « 3.2 km » (en), « 12 km » ; « 0.8 mi » pour une piscine britannique. */
+export function formatDistance(km: number, locale: string = "fr", country?: string): string {
+  if (usesMiles(country)) {
+    const mi = km / KM_PER_MILE;
+    const value = mi.toFixed(1);
+    return mi < 10 ? `${locale === "en" ? value : value.replace(".", ",")} mi` : `${Math.round(mi)} mi`;
+  }
   if (km < 1) return `${Math.round(km * 1000 / 10) * 10} m`;
   if (km < 10) {
     const value = km.toFixed(1);

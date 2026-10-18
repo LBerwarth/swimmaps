@@ -39,6 +39,8 @@ export async function GET(req: Request) {
     );
   }
   if (entry.closure) rows.push(["Fermeture temporaire", `du ${entry.closure.from} au ${entry.closure.to}`]);
+  if (entry.phone) rows.push(["Téléphone actuel", pool.phone ?? "—"], ["Téléphone proposé", entry.phone]);
+  if (entry.website) rows.push(["Site actuel", pool.website ?? "—"], ["Site proposé", entry.website]);
   return reviewForm(
     "Correction proposée",
     rows,
@@ -78,6 +80,14 @@ export async function POST(req: Request) {
     // Les fermetures passées tombent ; trois au plus restent connues.
     const today = todayIso();
     next.closures = [...(prev.closures ?? []).filter((c) => c.to >= today), entry.closure].slice(-3);
+  }
+  if (entry.phone) {
+    next.phone = entry.phone;
+    corrected.add("phone");
+  }
+  if (entry.website) {
+    next.website = entry.website;
+    corrected.add("website");
   }
   next.corrected = [...corrected];
   await db.hset(CONTRIB_KEY, { [source.id]: next });

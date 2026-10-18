@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   if (await tooMany(db, req)) return Response.json({ error: "too_many" }, { status: 429 });
 
   const input = parseContribution(await req.json().catch(() => null));
-  if (!input || (!input.week && !input.prices && !input.free && !input.closure)) {
+  if (!input || (!input.week && !input.prices && !input.free && !input.closure && !input.phone && !input.website)) {
     return Response.json({ error: "invalid" }, { status: 400 });
   }
   const source = await findPool(input.id);
@@ -36,6 +36,8 @@ export async function POST(req: Request) {
     ...(input.prices && { prices: input.prices }),
     ...(input.free && { free: true as const }),
     ...(input.closure && { closure: input.closure }),
+    ...(input.phone && { phone: input.phone }),
+    ...(input.website && { website: input.website }),
     token,
     at: new Date().toISOString(),
   };
@@ -54,6 +56,8 @@ export async function POST(req: Request) {
         ? [`Tarifs : ${oldPrice}  →  ${entry.prices ? pricesText(entry.prices, pool.country) : "gratuit"}`]
         : []),
       ...(entry.closure ? [`Fermeture temporaire : du ${entry.closure.from} au ${entry.closure.to}`] : []),
+      ...(entry.phone ? [`Téléphone : ${pool.phone ?? "—"}  →  ${entry.phone}`] : []),
+      ...(entry.website ? [`Site : ${pool.website ?? "—"}  →  ${entry.website}`] : []),
       "",
       `Valider ou refuser : ${SITE_URL}/api/correction/review?id=${id}&token=${token}`,
     ].join("\n"),

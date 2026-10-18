@@ -91,6 +91,16 @@ describe("contributions", () => {
     expect(["24", "16:75", "abc", "", "123456"].map(normalizeTime)).toEqual(["", "", "", "", ""]);
   });
 
+  it("téléphone et site : validés, appliqués seulement après correction validée", () => {
+    expect(parseContribution({ id: "NLN1", phone: "+31 70 123 45 67", website: "denhaag.nl/zwemmen" })).toEqual({
+      id: "NLN1", phone: "+31 70 123 45 67", website: "https://denhaag.nl/zwemmen",
+    });
+    expect(parseContribution({ id: "NLN1", phone: "ring me", website: "javascript:alert(1)" })).toBeNull();
+    const c = { phone: "+31 70 000 00 00", website: "https://example.org/", at: "" };
+    expect(applyContrib({ ...pool, phone: "+31 70 111 11 11" }, c).phone).toBe("+31 70 111 11 11");
+    expect(applyContrib(pool, { ...c, corrected: ["phone", "website"] })).toMatchObject({ phone: "+31 70 000 00 00", website: "https://example.org/" });
+  });
+
   it("compte chaque information saisie et chaque piscine ajoutée", () => {
     expect(contributionCount({ A: { lens: [50], at: "" }, B: { env: "int", hours: "24/7", free: true, at: "" } }, 2)).toBe(6);
     expect(contributionCount({}, 0)).toBe(0);

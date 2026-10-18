@@ -6,6 +6,7 @@ export const revalidate = 86400;
 const COUNTRY = {
   fr: "France", gb: "England", de: "Germany",
   es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands", ch: "Switzerland", pt: "Portugal", at: "Austria",
+  ie: "Ireland", sct: "Scotland", wls: "Wales", nir: "Northern Ireland",
 } as const;
 
 function body(): string {
@@ -21,7 +22,7 @@ function body(): string {
   return [
     "# SwimMaps",
     "",
-    `> ${total.toLocaleString("en-GB")} public swimming pools in France, Germany, England, Spain, Portugal, Italy, Switzerland, Austria, Belgium and the Netherlands, from open data: location, pool types and lengths, opening hours and prices where known. Independent, non-official site; the operator's website linked on each page is authoritative.`,
+    `> ${total.toLocaleString("en-GB")} public swimming pools in France, Germany, the United Kingdom, Ireland, Spain, Portugal, Italy, Switzerland, Austria, Belgium and the Netherlands, from open data: location, pool types and lengths, opening hours and prices where known. Independent, non-official site; the operator's website linked on each page is authoritative.`,
     "",
     `Data as of ${index.updated.slice(0, 10)}. Interface in French, English, German, Spanish, Italian, Dutch and Portuguese; every page exists under /fr, /en, /de, /es, /it, /nl and /pt.`,
     "",
@@ -40,7 +41,7 @@ function body(): string {
     "## About",
     "",
     `- [Agent skill](${SITE_URL}/agent-skill.md): how to answer questions with these data and their limits.`,
-    `- [Sources](${SITE_URL}/en/sources): Data ES + OpenStreetMap (France), Active Places (England), Bäderleben (Germany), OpenStreetMap (Spain, Portugal, Italy, Switzerland, Austria, Belgium, Netherlands), official websites; licences.`,
+    `- [Sources](${SITE_URL}/en/sources): Data ES + OpenStreetMap (France), Active Places (England), Bäderleben (Germany), OpenStreetMap (Spain, Portugal, Italy, Switzerland, Austria, Belgium, Netherlands, Ireland, Scotland, Wales, Northern Ireland), official websites; licences.`,
     `- [Privacy](${SITE_URL}/en/privacy): no cookies, aggregated analytics only.`,
     "",
   ].join("\n");

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import type { CountryIndex, Pool, PoolDataset, PoolWithDistance } from "@/lib/types";
 import type { Locale } from "@/lib/i18n";
-import { formatDistance, haversineKm } from "@/lib/geo";
+import { formatDistance, haversineKm, usesMiles } from "@/lib/geo";
 import { isInClosedPeriod, isOpenAt, weekAt } from "@/lib/opening-hours";
 import { fetchToulouseLive, isOpenNowLive, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
@@ -13,6 +13,9 @@ import { matchesQuery } from "@/lib/search";
 import { applyContrib, closureAt, contributionCount } from "@/lib/contrib";
 import {
   RADIUS_OPTIONS_KM,
+  RADIUS_OPTIONS_MI,
+  isRadiusOption,
+  milesToKm,
   readFilterPreset,
   retoggle,
   type EnvFilter,
@@ -211,7 +214,7 @@ export function FinderView() {
         setSavedAddresses(addresses);
         if (saved?.location) setLocation(saved.location);
         const radius = urlRadius ?? saved?.radiusKm;
-        if (radius && RADIUS_OPTIONS_KM.includes(radius)) setRadiusKm(radius);
+        if (radius && isRadiusOption(radius)) setRadiusKm(radius);
       })
       .catch(() => setLoadError(true));
   }, []);
@@ -278,6 +281,26 @@ export function FinderView() {
   }, [hasFavorites]);
 
   /** Piscines dans le rayon (à vol d'oiseau), triées par distance. */
+  const nearest = useMemo(() => {
+    if (!location || allPools.length === 0) return null;
+    let best: { km: number; pool: Pool } | null = null;
+    for (const pool of allPools) {
+      const d = haversineKm(location.lat, location.lon, pool.lat, pool.lon);
+      if (!best || d < best.km) best = { km: d, pool };
+    }
+    return best;
+  }, [allPools, location]);
+  const nearestKm = nearest?.km ?? null;
+  // Rayon en miles quand la piscine la plus proche est britannique.
+  const imperial = usesMiles(nearest?.pool.country);
+  const radiusChoices = imperial
+    ? RADIUS_OPTIONS_MI.map((mi) => ({ km: milesToKm(mi), label: `${mi} mi` }))
+    : RADIUS_OPTIONS_KM.map((km) => ({ km, label: `${km} km` }));
+
+  // Passage km ↔ miles : le rayon retenu devient la pastille la plus proche.
+  const radius = radiusChoices.reduce((a, b) => (Math.abs(b.km - radiusKm) < Math.abs(a.km - radiusKm) ? b : a));
+  const radiusLimitKm = radius.km;
+
   const inRadius: PoolWithDistance[] = useMemo(() => {
     if (!location) return [];
     return allPools
@@ -285,9 +308,9 @@ export function FinderView() {
         ...pool,
         distanceKm: haversineKm(location.lat, location.lon, pool.lat, pool.lon),
       }))
-      .filter((pool) => pool.distanceKm <= radiusKm)
+      .filter((pool) => pool.distanceKm <= radiusLimitKm)
       .sort((a, b) => a.distanceKm - b.distanceKm);
-  }, [allPools, location, radiusKm]);
+  }, [allPools, location, radiusLimitKm]);
 
   const filters: Filters = useMemo(
     () => ({
@@ -318,15 +341,6 @@ export function FinderView() {
   );
 
   /** Distance de la piscine la plus proche, pour guider quand le rayon est vide. */
-  const nearestKm = useMemo(() => {
-    if (!location || allPools.length === 0) return null;
-    let best = Infinity;
-    for (const pool of allPools) {
-      const d = haversineKm(location.lat, location.lon, pool.lat, pool.lon);
-      if (d < best) best = d;
-    }
-    return Number.isFinite(best) ? best : null;
-  }, [allPools, location]);
 
   const resetList = () => {
     setListLimit(LIST_STEP);
@@ -543,16 +557,16 @@ export function FinderView() {
           <div className="flex flex-wrap items-center gap-2" role="group" aria-label={dict.radiusAria}>
             <ChipLabel>{dict.radiusLabel}</ChipLabel>
             <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
-              {RADIUS_OPTIONS_KM.map((km) => (
+              {radiusChoices.map(({ km, label }) => (
                 <Chip
-                  key={km}
-                  selected={radiusKm === km}
+                  key={label}
+                  selected={km === radius.km}
                   onClick={() => {
                     setRadiusKm(km);
                     resetList();
                   }}
                 >
-                  {km} km
+                  {label}
                 </Chip>
               ))}
             </div>
@@ -698,10 +712,10 @@ export function FinderView() {
                     ? dict.noneFavorite
                     : inRadius.length > 0
                       ? dict.noneFilters
-                      : nearestKm !== null && nearestKm > radiusKm
-                        ? dict.noneInRadiusNear(formatDistance(nearestKm, locale))
+                      : nearestKm !== null && nearestKm > radius.km
+                        ? dict.noneInRadiusNear(formatDistance(nearestKm, locale, nearest?.pool.country))
                         : dict.noneInRadius
-                : dict.countLine(displayed.length, radiusKm, location.label)}
+                : dict.countLine(displayed.length, radius.label, location.label)}
           </p>
 
           {displayed.length > 0 && (
@@ -718,7 +732,7 @@ export function FinderView() {
             )}
             <PoolMap
               center={center}
-              radiusKm={radiusKm}
+              radiusKm={radius.km}
               pools={displayed}
               onSelect={selectPool}
               isFavorite={isFavorite}

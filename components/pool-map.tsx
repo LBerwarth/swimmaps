@@ -117,7 +117,7 @@ export function PoolMap({ center, radiusKm, pools, onSelect, isFavorite, stateOf
       });
       const where = [
         escapeHtml(pool.city),
-        pool.distanceKm !== undefined ? formatDistance(pool.distanceKm, locale) : null,
+        pool.distanceKm !== undefined ? formatDistance(pool.distanceKm, locale, pool.country) : null,
       ]
         .filter(Boolean)
         .join(" · ");

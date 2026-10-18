@@ -1,7 +1,7 @@
 # SwimMaps
 
-Trouvez les piscines publiques autour de vous — France, Angleterre,
-Allemagne, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et Pays-Bas : choisissez un rayon (1 à 50 km),
+Trouvez les piscines publiques autour de vous — France, Royaume-Uni,
+Irlande, Allemagne, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et Pays-Bas : choisissez un rayon (1 à 50 km),
 voyez les bassins, les horaires et tarifs quand ils sont connus, sur carte, en
 frise horaire et en liste. Interface en français, anglais, allemand, espagnol, italien, néerlandais et portugais
 (`/fr`, `/en`, `/de`, `/es`, `/it`, `/nl`, `/pt`, redirection selon la langue du navigateur via `proxy.ts`).
@@ -70,7 +70,8 @@ les lit une fois depuis `public/data` (`lib/pools-server.ts`).
   Sportwissenschaft) : ~4 850 bäder publics avec **tarifs d'entrée (83 %)**,
   longueurs, sites web et téléphones. Attribution obligatoire (affichée dans
   le pied de page) : © BISp, coordonnées © GeoBasis-DE / BKG 2021.
-- **Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas** — OpenStreetMap seul
+- **Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas, Irlande, Écosse,
+  pays de Galles, Irlande du Nord** — OpenStreetMap seul
   (`scripts/sources/osm.mts`) : centres et parcs aquatiques nommés, hôtels et
   campings écartés d'après le nom, éléments à moins de 200 m fusionnés en un
   site ; commune = `addr:city`, sinon localité OSM la plus proche. Les bases

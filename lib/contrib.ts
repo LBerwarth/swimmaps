@@ -11,8 +11,10 @@ export interface Contribution {
   prices?: Prices;
   free?: boolean;
   /** Corrections validées par l'auteure : ces champs priment sur la source. */
-  corrected?: Array<"hours" | "price">;
+  corrected?: Array<"hours" | "price" | "phone" | "website">;
   closures?: Closure[];
+  phone?: string;
+  website?: string;
   at: string;
 }
 
@@ -25,6 +27,8 @@ export interface PendingCorrection {
   prices?: Prices;
   free?: true;
   closure?: Closure;
+  phone?: string;
+  website?: string;
   token: string;
   at: string;
 }
@@ -87,7 +91,30 @@ export type ContribInput = {
   prices?: Prices;
   free?: true;
   closure?: Closure;
+  phone?: string;
+  website?: string;
 };
+
+const clean = (v: unknown, max: number) =>
+  typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max) : "";
+
+/** Numéro plausible (chiffres, espaces, + ( ) . / -), sinon undefined. */
+export function parsePhone(value: unknown): string | undefined {
+  const phone = clean(value, 30);
+  return phone && /^\+?[\d\s().\/-]{6,30}$/.test(phone) ? phone : undefined;
+}
+
+/** URL http(s), « https:// » ajouté au besoin ; undefined si invalide. */
+export function parseWebsite(value: unknown): string | undefined {
+  const site = clean(value, 200);
+  if (!site) return undefined;
+  try {
+    const url = new URL(/^https?:\/\//i.test(site) ? site : `https://${site}`);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 const ISO_DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 /** Au-delà, ce n'est plus une fermeture temporaire. */
@@ -182,7 +209,7 @@ export function parseWeek(value: unknown): WeekInput | undefined {
 
 export function parseContribution(body: unknown): ContribInput | null {
   if (typeof body !== "object" || body === null) return null;
-  const { id, env, len, week, holiday, season, prices, free, closure } = body as Record<string, unknown>;
+  const { id, env, len, week, holiday, season, prices, free, closure, phone, website } = body as Record<string, unknown>;
   if (typeof id !== "string" || !/^[A-Za-z0-9]{2,40}$/.test(id)) return null;
   const okEnv = typeof env === "string" && (ENV_CHOICES as string[]).includes(env) ? (env as EnvChoice) : undefined;
   const okLen =
@@ -195,7 +222,9 @@ export function parseContribution(body: unknown): ContribInput | null {
   const okPrices = parsePrices(prices);
   const okFree = free === true && okPrices === undefined ? true : undefined;
   const okClosure = parseClosure(closure);
-  if (!okEnv && !okLen && !okWeek && !okPrices && !okFree && !okClosure) return null;
+  const okPhone = parsePhone(phone);
+  const okWebsite = parseWebsite(website);
+  if (!okEnv && !okLen && !okWeek && !okPrices && !okFree && !okClosure && !okPhone && !okWebsite) return null;
   return {
     id,
     ...(okEnv && { env: okEnv }),
@@ -206,6 +235,8 @@ export function parseContribution(body: unknown): ContribInput | null {
     ...(okPrices && { prices: okPrices }),
     ...(okFree && { free: okFree }),
     ...(okClosure && { closure: okClosure }),
+    ...(okPhone && { phone: okPhone }),
+    ...(okWebsite && { website: okWebsite }),
   };
 }
 
@@ -284,7 +315,16 @@ export function applyContrib(pool: Pool, c: Contribution | undefined): Pool {
     out.lens = c.lens;
     contributed.push("lens");
   }
-  const corrects = (f: "hours" | "price") => c.corrected?.includes(f) ?? false;
+  const corrects = (f: "hours" | "price" | "phone" | "website") => c.corrected?.includes(f) ?? false;
+  let touched = false;
+  if (corrects("phone") && c.phone) {
+    out.phone = c.phone;
+    touched = true;
+  }
+  if (corrects("website") && c.website) {
+    out.website = c.website;
+    touched = true;
+  }
   if ((missing.includes("hours") || corrects("hours")) && c.hours) {
     out.hours = c.hours;
     out.hoursFrom = "user";
@@ -309,5 +349,5 @@ export function applyContrib(pool: Pool, c: Contribution | undefined): Pool {
     setPrices(c.prices);
     contributed.push("price");
   }
-  return contributed.length ? { ...out, contributed } : pool;
+  return contributed.length ? { ...out, contributed } : touched ? out : pool;
 }

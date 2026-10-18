@@ -11,7 +11,7 @@ function body(): string {
 SwimMaps lists ${total.toLocaleString("en-GB")} public swimming pools from open
 data (Data ES and OpenStreetMap for France, Active Places for England,
 Bäderleben for Germany, OpenStreetMap alone for Spain, Portugal, Italy, Switzerland, Austria,
-Belgium and the Netherlands). It is independent and non-official: it represents
+Belgium, the Netherlands, Ireland, Scotland, Wales and Northern Ireland). It is independent and non-official: it represents
 neither the pool operators nor any public authority.
 
 ## Resources
@@ -19,7 +19,7 @@ neither the pool operators nor any public authority.
 - **${SITE_URL}/llms.txt** — overview and links to the datasets.
 - **${SITE_URL}/data/index.json** — countries covered, counts, bounding boxes.
 - **${SITE_URL}/data/piscines-<cc>.json** — every pool of a country (\`fr\`,
-  \`gb\`, \`de\`, \`es\`, \`it\`, \`be\`, \`nl\`, \`ch\`, \`pt\`, \`at\`), with coordinates. To answer "near X", geocode X yourself and
+  \`gb\`, \`de\`, \`es\`, \`it\`, \`be\`, \`nl\`, \`ch\`, \`pt\`, \`at\`, \`ie\`, \`sct\`, \`wls\`, \`nir\`), with coordinates. To answer "near X", geocode X yourself and
   filter by haversine distance; the app does exactly that in the browser.
 - **${SITE_URL}/<lang>/piscine/<slug>** — the page of one pool (\`<lang>\` =
   fr, en, de, es, it, nl or pt; \`<slug>\` = kebab-case name + \`-\` + lower-case id, e.g.

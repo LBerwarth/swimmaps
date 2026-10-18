@@ -29,29 +29,46 @@ const OVERPASS_URLS = [
   "https://overpass.private.coffee/api/interpreter",
 ];
 
-const SOURCES: Record<string, { iso: string; load: () => Promise<Pool[]> }> = {
+/**
+ * `iso` délimite la zone OSM (pays ISO 3166-1, ou région ISO 3166-2 comme GB-SCT) ;
+ * `country` est le pays des piscines (monnaie, unités), par défaut `iso`.
+ */
+const SOURCES: Record<string, { iso: string; country?: string; load: () => Promise<Pool[]> }> = {
   fr: { iso: "FR", load: () => loadFrance(getArg("dataes")) },
   gb: { iso: "GB", load: loadEngland },
   de: { iso: "DE", load: () => loadGermany(getArg("baederleben")) },
   ...Object.fromEntries(
-    ["es", "it", "be", "nl", "ch", "pt", "at"].map((cc) => {
-      const iso = cc.toUpperCase();
-      return [
-        cc,
-        {
-          iso,
-          load: async () => {
-            const sites = await loadOsm(iso, getArg(`osm-${cc}`));
-            return poolsFromOsm(
-              iso,
-              sites,
-              await loadOsm(iso, undefined, "places"),
-              await loadBasins(iso, sites),
-            );
-          },
+    (
+      [
+        ["es", "ES"],
+        ["it", "IT"],
+        ["be", "BE"],
+        ["nl", "NL"],
+        ["ch", "CH"],
+        ["pt", "PT"],
+        ["at", "AT"],
+        ["ie", "IE"],
+        // Écosse, pays de Galles, Irlande du Nord : Active Places ne couvre que l'Angleterre.
+        ["sct", "GB-SCT", "GB"],
+        ["wls", "GB-WLS", "GB"],
+        ["nir", "GB-NIR", "GB"],
+      ] as Array<[string, string, string?]>
+    ).map(([cc, iso, country = iso]) => [
+      cc,
+      {
+        iso,
+        country,
+        load: async () => {
+          const sites = await loadOsm(iso, getArg(`osm-${cc}`));
+          return poolsFromOsm(
+            country,
+            sites,
+            await loadOsm(iso, undefined, "places"),
+            await loadBasins(iso, sites),
+          );
         },
-      ];
-    }),
+      },
+    ]),
   ),
 };
 
@@ -72,18 +89,22 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 
 type OsmKind = "pools" | "places";
 
+function areaSelector(iso: string): string {
+  return iso.includes("-") ? `area["ISO3166-2"="${iso}"]` : `area["ISO3166-1"="${iso}"][admin_level=2]`;
+}
+
 function overpassQuery(iso: string, kind: OsmKind): string {
   if (kind === "places") {
     return `
 [out:json][timeout:300];
-area["ISO3166-1"="${iso}"][admin_level=2]->.c;
+${areaSelector(iso)}->.c;
 node["place"~"^(city|town|village|suburb)$"]["name"](area.c);
 out;
 `;
   }
   return `
 [out:json][timeout:300];
-area["ISO3166-1"="${iso}"][admin_level=2]->.c;
+${areaSelector(iso)}->.c;
 (
   nwr["leisure"="sports_centre"]["sport"~"swimming"](area.c);
   nwr["leisure"="water_park"](area.c);
@@ -303,7 +324,7 @@ async function main() {
   }
 
   for (const cc of targets) {
-    const { iso, load } = SOURCES[cc];
+    const { iso, country = iso, load } = SOURCES[cc];
     console.log(`\n=== ${iso} ===`);
     const pools = await load();
     // --skip-osm : publier sans enrichissement (utile quand les serveurs
@@ -317,7 +338,7 @@ async function main() {
     pools.sort((a, b) => a.id.localeCompare(b.id));
 
     const updated = new Date().toISOString();
-    const payload = { updated, country: iso, count: pools.length, pools };
+    const payload = { updated, country, count: pools.length, pools };
     const outFile = join(outDir, `piscines-${cc}.json`);
     writeFileSync(outFile, JSON.stringify(payload));
     console.log(
