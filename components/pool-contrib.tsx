@@ -2,10 +2,42 @@
 
 import { useState } from "react";
 import type { Pool, PoolEnv } from "@/lib/types";
-import { LEN_MAX, LEN_MIN } from "@/lib/contrib";
+import { applyContrib, LEN_MAX, LEN_MIN } from "@/lib/contrib";
 import { Chip } from "@/components/chip";
 import { useDict } from "@/components/locale-provider";
-import { submitContribution, type SubmitResult } from "@/components/use-contributions";
+import { submitContribution, useContributions, type SubmitResult } from "@/components/use-contributions";
+
+/** Lignes « Type » et « Longueurs » du bloc infos de la fiche, compléments inclus. */
+export function PoolKindRows({ pool: source }: { pool: Pool }) {
+  const dict = useDict();
+  const pool = applyContrib(source, useContributions()[source.id]);
+  const note = (field: "env" | "lens") =>
+    pool.contributed?.includes(field) && (
+      <span className="ml-1 text-xs italic text-slate-400">({dict.contribBadge})</span>
+    );
+  return (
+    <>
+      {pool.env && (
+        <>
+          <dt className="text-slate-500 dark:text-slate-400">{dict.typeLabel}</dt>
+          <dd>
+            {dict.envLabels[pool.env]}
+            {note("env")}
+          </dd>
+        </>
+      )}
+      {pool.lens?.length ? (
+        <>
+          <dt className="text-slate-500 dark:text-slate-400">{dict.detailLengths}</dt>
+          <dd>
+            {pool.lens.map((l) => `${l} m`).join(", ")}
+            {note("lens")}
+          </dd>
+        </>
+      ) : null}
+    </>
+  );
+}
 
 /** Questions pour les champs que ni la source ni un visiteur n'ont renseignés. */
 export function PoolContrib({ pool }: { pool: Pool }) {

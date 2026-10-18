@@ -621,6 +621,7 @@ const fr: Dict = {
       "Un script reconstitue les jeux de données pays par pays et les publie avec l'application ; la date du dernier relevé figure en tête de la page d'accueil. Rien n'est complété à la main.",
       "La couverture reflète l'état de l'open data : en France, les horaires ne sont connus que pour environ une piscine sur dix, les tarifs pour une sur cinquante. L'interface affiche alors « non renseigné » et un lien vers le site officiel.",
       "Une erreur se corrige à la source — dans OpenStreetMap pour les horaires, tarifs et sites web — ou via le formulaire de signalement de l'application.",
+      "Quand le type de bassin ou la longueur manque, les nageurs peuvent compléter la fiche ; leur réponse s'affiche aussitôt, marquée « complété par un nageur », et ne remplace jamais une donnée de la source.",
     ],
   },
   privacy: {
@@ -1041,6 +1042,7 @@ const en: Dict = {
       "A script rebuilds the datasets country by country and ships them with the app; the date of the last extraction is shown at the top of the home page. Nothing is completed by hand.",
       "Coverage reflects the state of open data: in France, hours are known for about one pool in ten and prices for one in fifty. The interface then shows “unknown” and a link to the official website.",
       "Errors are fixed at the source — in OpenStreetMap for hours, prices and websites — or through the app's feedback form.",
+      "When the pool type or length is missing, swimmers can fill it in; their answer shows up right away, marked “added by a swimmer”, and never replaces data from the source.",
     ],
   },
   privacy: {
@@ -1461,6 +1463,7 @@ const de: Dict = {
       "Ein Skript erstellt die Datensätze Land für Land neu und liefert sie mit der App aus; das Datum des letzten Abrufs steht oben auf der Startseite. Nichts wird von Hand ergänzt.",
       "Die Abdeckung spiegelt den Stand der offenen Daten: in Frankreich sind Öffnungszeiten nur für etwa jedes zehnte Bad bekannt, Preise für jedes fünfzigste. Die App zeigt dann „unbekannt“ und einen Link zur offiziellen Website.",
       "Fehler werden an der Quelle behoben — in OpenStreetMap für Zeiten, Preise und Websites — oder über das Meldeformular der App.",
+      "Fehlen Bad-Typ oder Länge, können Badegäste sie ergänzen; ihre Antwort erscheint sofort, markiert als „von Badegästen ergänzt“, und ersetzt nie Daten der Quelle.",
     ],
   },
   privacy: {
@@ -1880,6 +1883,7 @@ const it: Dict = {
       "Uno script ricostruisce i dataset paese per paese e li distribuisce con l'app; la data dell'ultima estrazione è indicata in cima alla home page. Niente viene completato a mano.",
       "La copertura riflette lo stato dei dati aperti: in Francia gli orari sono noti per circa una piscina su dieci e i prezzi per una su cinquanta. L'interfaccia mostra allora “sconosciuto” e un link al sito ufficiale.",
       "Gli errori si correggono alla fonte — su OpenStreetMap per orari, prezzi e siti web — o tramite il modulo di segnalazione dell'app.",
+      "Quando mancano il tipo di vasca o la lunghezza, i nuotatori possono completarli; la loro risposta appare subito, contrassegnata «aggiunto dai nuotatori», e non sostituisce mai i dati della fonte.",
     ],
   },
   privacy: {
@@ -2299,6 +2303,7 @@ const nl: Dict = {
       "Een script bouwt de datasets land voor land opnieuw op en levert ze mee met de app; de datum van de laatste extractie staat bovenaan de startpagina. Niets wordt met de hand aangevuld.",
       "De dekking weerspiegelt de stand van de open data: in Frankrijk zijn de tijden bekend voor ongeveer één op de tien zwembaden en de prijzen voor één op de vijftig. De app toont dan “onbekend” en een link naar de officiële website.",
       "Fouten worden bij de bron verbeterd — in OpenStreetMap voor tijden, prijzen en websites — of via het feedbackformulier van de app.",
+      "Ontbreekt het type of de lengte van het bad, dan kunnen zwemmers die aanvullen; hun antwoord is meteen zichtbaar, gemarkeerd als „aangevuld door zwemmers”, en vervangt nooit gegevens van de bron.",
     ],
   },
   privacy: {
@@ -2718,6 +2723,7 @@ const es: Dict = {
       "Un script regenera los conjuntos de datos país por país y los incluye en la app; la fecha de la última extracción aparece en la parte superior de la página de inicio. Nada se completa a mano.",
       "La cobertura refleja el estado de los datos abiertos: en Francia se conoce el horario de una piscina de cada diez y el precio de una de cada cincuenta. En esos casos la interfaz muestra «desconocido» y un enlace a la web oficial.",
       "Los errores se corrigen en la fuente — en OpenStreetMap para horarios, precios y webs — o mediante el formulario de comentarios de la app.",
+      "Cuando falta el tipo de piscina o la longitud, los bañistas pueden completarlo; su respuesta aparece al momento, marcada como «añadido por bañistas», y nunca sustituye los datos de la fuente.",
     ],
   },
   privacy: {

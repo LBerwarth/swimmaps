@@ -4,8 +4,10 @@ const SITE = "https://www.swimmaps.eu";
 const KEY = "65ff204be8046f07e1c0abfec6df36f1";
 const BATCH = 1000;
 
-const xml = await (await fetch(`${SITE}/sitemap.xml`)).text();
-const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+const locs = async (url: string) =>
+  [...(await (await fetch(url)).text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/&amp;/g, "&"));
+// sitemap.xml est un index : une sitemap par langue.
+const urls = (await Promise.all((await locs(`${SITE}/sitemap.xml`)).map(locs))).flat();
 
 for (let i = 0; i < urls.length; i += BATCH) {
   const urlList = urls.slice(i, i + BATCH);

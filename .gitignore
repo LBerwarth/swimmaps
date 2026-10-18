@@ -36,3 +36,8 @@ scripts/cache/osm-*.json
 
 .vercel
 .env*
+
+# agent skills installed by vercel integration
+.agents/
+.claude/
+skills-lock.json

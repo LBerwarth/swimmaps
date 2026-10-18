@@ -17,6 +17,7 @@ import { openingHoursSpec } from "@/lib/schema";
 import { PageHeader } from "@/components/page-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PoolDetail } from "@/components/pool-detail";
+import { PoolKindRows } from "@/components/pool-contrib";
 import { FeedbackForm } from "@/components/feedback-form";
 import { TipJar } from "@/components/tip-jar";
 
@@ -153,7 +154,6 @@ export default async function PoolPage({
     ],
   };
 
-  const lengths = (pool.lens ?? []).map((l) => `${l} m`).join(", ");
   const basins = pool.basins.map((b) => dict.basinLabels[b] ?? dict.basinFallback(b)).join(", ");
   const tarif = pool.charge
     ? pool.charge
@@ -229,22 +229,11 @@ export default async function PoolPage({
               {dict.directions}
             </a>
           </dd>
-          {pool.env && (
-            <>
-              <dt className="text-slate-500 dark:text-slate-400">{dict.typeLabel}</dt>
-              <dd>{dict.envLabels[pool.env]}</dd>
-            </>
-          )}
+          <PoolKindRows pool={pool} />
           {basins && (
             <>
               <dt className="text-slate-500 dark:text-slate-400">{dict.detailBasins}</dt>
               <dd>{basins}</dd>
-            </>
-          )}
-          {lengths && (
-            <>
-              <dt className="text-slate-500 dark:text-slate-400">{dict.detailLengths}</dt>
-              <dd>{lengths}</dd>
             </>
           )}
           {tarif && (
