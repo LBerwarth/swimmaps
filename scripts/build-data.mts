@@ -40,13 +40,15 @@ const SOURCES: Record<string, { iso: string; load: () => Promise<Pool[]> }> = {
         cc,
         {
           iso,
-          load: async () =>
-            poolsFromOsm(
+          load: async () => {
+            const sites = await loadOsm(iso, getArg(`osm-${cc}`));
+            return poolsFromOsm(
               iso,
-              await loadOsm(iso, getArg(`osm-${cc}`)),
+              sites,
               await loadOsm(iso, undefined, "places"),
-              await loadOsm(iso, undefined, "basins"),
-            ),
+              await loadBasins(iso, sites),
+            );
+          },
         },
       ];
     }),
@@ -68,21 +70,9 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return 2 * 6371 * Math.asin(Math.sqrt(a));
 }
 
-type OsmKind = "pools" | "places" | "basins";
+type OsmKind = "pools" | "places";
 
 function overpassQuery(iso: string, kind: OsmKind): string {
-  if (kind === "basins") {
-    return `
-[out:json][timeout:300];
-area["ISO3166-1"="${iso}"][admin_level=2]->.c;
-(
-  nwr["leisure"="sports_centre"]["sport"~"swimming"](area.c);
-  nwr["leisure"="water_park"](area.c);
-)->.s;
-way["leisure"="swimming_pool"]["access"!~"^(private|no)$"](around.s:150);
-out tags geom;
-`;
-  }
   if (kind === "places") {
     return `
 [out:json][timeout:300];
@@ -104,23 +94,61 @@ out tags center;
 }
 
 const OSM_CACHE_TTL_MS = 7 * 24 * 3600 * 1000;
+const CACHE_DIR = join(dirname(fileURLToPath(import.meta.url)), "cache");
 
 async function loadOsm(iso: string, localFile?: string, kind: OsmKind = "pools"): Promise<OsmElement[]> {
   if (localFile) {
     return (JSON.parse(readFileSync(localFile, "utf-8")) as { elements: OsmElement[] })
       .elements;
   }
+  return fetchOverpass(
+    `${iso}${kind === "pools" ? "" : ` (${kind})`}`,
+    `osm-${kind === "pools" ? "" : `${kind}-`}${iso.toLowerCase()}.json`,
+    overpassQuery(iso, kind),
+  );
+}
+
+/** Taille des tuiles de la requête des bassins : l'Espagne entière dépasse le délai d'Overpass. */
+const BASIN_TILE_DEG = 2;
+
+/** Bassins anonymes à moins de 150 m des centres, tuile par tuile autour des sites connus. */
+async function loadBasins(iso: string, sites: OsmElement[]): Promise<OsmElement[]> {
+  const tiles = new Set<string>();
+  for (const el of sites) {
+    const c = osmCoords(el);
+    if (!c) continue;
+    tiles.add(`${Math.floor(c.lat / BASIN_TILE_DEG)}_${Math.floor(c.lon / BASIN_TILE_DEG)}`);
+  }
+  const byId = new Map<number, OsmElement>();
+  for (const tile of [...tiles].sort()) {
+    const [y, x] = tile.split("_").map(Number);
+    const bbox = [y, x, y + 1, x + 1].map((v) => v * BASIN_TILE_DEG).join(",");
+    const elements = await fetchOverpass(
+      `${iso} (bassins ${tile})`,
+      `osm-basins-${iso.toLowerCase()}-${tile}.json`,
+      `
+[out:json][timeout:180];
+(
+  nwr["leisure"="sports_centre"]["sport"~"swimming"](${bbox});
+  nwr["leisure"="water_park"](${bbox});
+)->.s;
+way["leisure"="swimming_pool"]["access"!~"^(private|no)$"](around.s:150);
+out tags geom;
+`,
+    );
+    for (const el of elements) byId.set(el.id, el);
+  }
+  return [...byId.values()];
+}
+
+async function fetchOverpass(label: string, cacheName: string, query: string): Promise<OsmElement[]> {
   // Cache local (non commité) : les serveurs Overpass limitent par IP, un
   // téléchargement réussi ne doit jamais être perdu.
-  const cacheFile = join(
-    dirname(fileURLToPath(import.meta.url)),
-    "cache",
-    `osm-${kind === "pools" ? "" : `${kind}-`}${iso.toLowerCase()}.json`,
-  );
+  const cacheFile = join(CACHE_DIR, cacheName);
   if (existsSync(cacheFile)) {
     const cached = JSON.parse(readFileSync(cacheFile, "utf-8"));
     if (Date.now() - new Date(cached.fetched).getTime() < OSM_CACHE_TTL_MS) {
-      console.log(`OpenStreetMap ${iso} : cache local du ${cached.fetched}`);
+      console.log(`OpenStreetMap ${label} : cache local du ${cached.fetched}`);
       return cached.elements as OsmElement[];
     }
   }
@@ -132,19 +160,19 @@ async function loadOsm(iso: string, localFile?: string, kind: OsmKind = "pools")
       await new Promise((r) => setTimeout(r, 30_000 * 2 ** (round - 1)));
     }
     for (const url of OVERPASS_URLS) {
-      console.log(`Téléchargement OpenStreetMap ${iso} (${new URL(url).host}, ~1 min)…`);
+      console.log(`Téléchargement OpenStreetMap ${label} (${new URL(url).host})…`);
       try {
         const res = await fetch(url, {
           method: "POST",
           // overpass-api.de répond 406 sans User-Agent identifiable.
           headers: { "User-Agent": "swimmaps-build/1.0 (+https://www.swimmaps.eu)" },
-          body: overpassQuery(iso, kind),
+          body: query,
         });
-        if (!res.ok) throw new Error(`Overpass ${iso} : HTTP ${res.status}`);
+        if (!res.ok) throw new Error(`Overpass ${label} : HTTP ${res.status}`);
         const raw = await res.json();
         // Délai dépassé côté serveur : HTTP 200, liste vide et « remark ».
-        if (raw.remark?.includes("error")) throw new Error(`Overpass ${iso} : ${raw.remark}`);
-        mkdirSync(dirname(cacheFile), { recursive: true });
+        if (raw.remark?.includes("error")) throw new Error(`Overpass ${label} : ${raw.remark}`);
+        mkdirSync(CACHE_DIR, { recursive: true });
         writeFileSync(
           cacheFile,
           JSON.stringify({ fetched: new Date().toISOString(), elements: raw.elements }),
