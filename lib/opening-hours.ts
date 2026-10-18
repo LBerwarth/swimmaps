@@ -87,6 +87,16 @@ const L10N: Record<
     allDay: "24 ore su 24",
     time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
   },
+  pt: {
+    days: ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"],
+    monthsShort: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+    monthsFull: ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
+    closed: "fechado",
+    publicHolidays: "feriados",
+    schoolHolidays: "férias escolares",
+    allDay: "24 horas",
+    time: (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}`,
+  },
   nl: {
     days: ["ma", "di", "wo", "do", "vr", "za", "zo"],
     monthsShort: ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"],
@@ -114,6 +124,11 @@ export interface ClosedPeriod {
   to: PeriodBound;
 }
 
+/** Période datée avec son propre planning ; les jours qu'elle ne cite pas gardent la semaine type. */
+export interface Season extends ClosedPeriod {
+  week: WeekSchedule;
+}
+
 export interface ParsedOpeningHours {
   /** Planning par défaut (période scolaire quand des règles SH existent). */
   week: WeekSchedule;
@@ -121,6 +136,8 @@ export interface ParsedOpeningHours {
   holidayWeek?: WeekSchedule;
   /** Fermetures saisonnières (« Jun-Aug off », « Jun 05-Aug 31 off »…). */
   closedPeriods: ClosedPeriod[];
+  /** Semaines propres à une période (« Jul 01-Aug 31 Mo-Su 10:00-19:00 », vacances d'été…). */
+  seasons: Season[];
   /** Règles bornées par des dates, reformatées en français, non interprétées. */
   extras: string[];
 }
@@ -131,6 +148,9 @@ const DAY_SPEC_RE = new RegExp(
 );
 const TIME_RANGE_RE = /^\d{1,2}:\d{2}-\d{1,2}:\d{2}(?:,\d{1,2}:\d{2}-\d{1,2}:\d{2})*$/;
 const MONTH_START_RE = new RegExp(`^(?:${MONTH_CODES.join("|")})\\b`);
+const SEASON_RE = new RegExp(
+  `^(${MONTH_CODES.join("|")})\\s+(\\d{1,2})-(${MONTH_CODES.join("|")})\\s+(\\d{1,2})\\s+(.+)$`,
+);
 // « Jun-Aug off », « Jun 05-Aug 31 off », « Aug off » : fermeture saisonnière.
 const MONTH_TOKEN = `(?:${MONTH_CODES.join("|")})`;
 const CLOSED_PERIOD_RE = new RegExp(
@@ -220,6 +240,7 @@ export function parseOpeningHours(
     return {
       week: Array.from({ length: 7 }, () => [[0, 24 * 60] as [number, number]]),
       closedPeriods: [],
+      seasons: [],
       extras: [],
     };
   }
@@ -229,6 +250,7 @@ export function parseOpeningHours(
   const week = emptyWeek();
   let holidayWeek: WeekSchedule | undefined;
   const closedPeriods: ClosedPeriod[] = [];
+  const seasonRules: Array<{ from: PeriodBound; to: PeriodBound; rule: string }> = [];
   const extras: string[] = [];
   let sawBase = false;
 
@@ -265,8 +287,19 @@ export function parseOpeningHours(
       });
       continue;
     }
-    // Autre règle bornée par des dates (« Oct 17-Nov 2 Mo-Fr 09:00-16:00 ») :
-    // restituée dans la langue demandée sans être appliquée à la semaine type.
+    // Planning d'une période (« Jul 01-Aug 31 Mo-Fr 10:00-19:00 ») : appliqué
+    // à sa propre semaine, qui remplace la semaine type pendant la période.
+    const season = rule.match(SEASON_RE);
+    if (season && applyRule(emptyWeek(), season[5].trim())) {
+      seasonRules.push({
+        from: { month: MONTH_CODES.indexOf(season[1] as never), day: Number(season[2]) },
+        to: { month: MONTH_CODES.indexOf(season[3] as never), day: Number(season[4]) },
+        rule: season[5].trim(),
+      });
+      continue;
+    }
+    // Autre règle bornée par des dates : restituée dans la langue demandée
+    // sans être appliquée à la semaine type.
     if (MONTH_START_RE.test(rule)) {
       extras.push(prettifySegment(rule, locale));
       continue;
@@ -277,7 +310,42 @@ export function parseOpeningHours(
   }
 
   if (!sawBase) return null;
-  return { week, ...(holidayWeek ? { holidayWeek } : {}), closedPeriods, extras };
+  // Chaque période part de la semaine type complète, puis ses règles priment.
+  const seasons: Season[] = [];
+  for (const { from, to, rule } of seasonRules) {
+    let target = seasons.find(
+      (s) => s.from.month === from.month && s.from.day === from.day && s.to.month === to.month && s.to.day === to.day,
+    );
+    if (!target) {
+      target = { from, to, week: week.map((d) => d.slice()) };
+      seasons.push(target);
+    }
+    applyRule(target.week, rule);
+  }
+  return { week, ...(holidayWeek ? { holidayWeek } : {}), closedPeriods, seasons, extras };
+}
+
+/** Semaine en vigueur à `date` : celle d'une période datée qui la contient, sinon la semaine type. */
+export function weekAt(parsed: ParsedOpeningHours, date: Date): WeekSchedule {
+  return parsed.seasons.find((s) => isInClosedPeriod([s], date))?.week ?? parsed.week;
+}
+
+/** « 17 oct.–2 nov. : lun–ven 9h–16h · sam 7h–14h » pour chaque période datée. */
+export function seasonLines(parsed: ParsedOpeningHours, locale: Locale = "fr"): string[] {
+  return parsed.seasons.map(
+    (s) =>
+      `${formatPeriodBounds(s, locale)}${locale === "fr" ? " :" : ":"} ${formatWeekFR(s.week, locale)
+        .map((l) => `${l.days} ${l.hours}`)
+        .join(" · ")}`,
+  );
+}
+
+/** « 1 juil.–31 août » / « Jul 1–Aug 31 » / « 1. Juli–31. Aug. ». */
+export function formatPeriodBounds(period: ClosedPeriod, locale: Locale = "fr"): string {
+  const m = L10N[locale].monthsShort;
+  const one = ({ month, day }: PeriodBound) =>
+    locale === "en" ? `${m[month]} ${day}` : locale === "de" ? `${day}. ${m[month]}` : `${day} ${m[month]}`;
+  return `${one(period.from)}–${one(period.to)}`;
 }
 
 function formatRanges(ranges: Array<[number, number]>, locale: Locale): string {
@@ -359,6 +427,14 @@ export function formatClosedPeriodFR(
         : `chiuso da ${months[period.from.month]} a ${months[period.to.month]}`;
     }
     return `chiuso dal ${period.from.day} ${months[period.from.month]} al ${period.to.day} ${months[period.to.month]}`;
+  }
+  if (locale === "pt") {
+    if (monthsOnly) {
+      return period.from.month === period.to.month
+        ? `fechado em ${months[period.from.month]}`
+        : `fechado de ${months[period.from.month]} a ${months[period.to.month]}`;
+    }
+    return `fechado de ${period.from.day} de ${months[period.from.month]} a ${period.to.day} de ${months[period.to.month]}`;
   }
   if (locale === "nl") {
     if (monthsOnly) {

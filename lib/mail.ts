@@ -3,7 +3,7 @@ import { CONTACT_EMAIL } from "./site";
 
 const MAIL_TO = process.env.FEEDBACK_EMAIL_TO ?? CONTACT_EMAIL;
 // Expéditeur partagé de Resend : sans domaine vérifié, ne délivre qu'au titulaire du compte.
-const MAIL_FROM = process.env.FEEDBACK_EMAIL_FROM ?? "Swimmaps <onboarding@resend.dev>";
+const MAIL_FROM = process.env.FEEDBACK_EMAIL_FROM ?? "SwimMaps <onboarding@resend.dev>";
 
 export type MailResult = "sent" | "no_key" | "failed";
 

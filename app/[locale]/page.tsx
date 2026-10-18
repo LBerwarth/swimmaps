@@ -81,6 +81,13 @@ export default async function Home({
           </Link>{" "}
           <UpdateInfo />
         </p>
+        <p className="mt-1.5 text-xs text-white/90">
+          {dict.coveredLabel}{" "}
+          {index.countries
+            .map((c) => dict.countryNames[c.code] ?? c.code.toUpperCase())
+            .sort((a, b) => a.localeCompare(b, dict.intlLocale))
+            .join(" · ")}
+        </p>
       </PageHeader>
 
       <IosBanner />

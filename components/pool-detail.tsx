@@ -6,7 +6,7 @@ import type { Pool } from "@/lib/types";
 import { fetchToulouseLive, type LivePoolStatus } from "@/lib/toulouse-live";
 import { applyContrib } from "@/lib/contrib";
 import { PoolCard } from "@/components/pool-card";
-import { PoolContrib } from "@/components/pool-contrib";
+import { PoolContrib, PoolCorrect } from "@/components/pool-contrib";
 import { useContributions } from "@/components/use-contributions";
 
 const PoolMap = dynamic(() => import("@/components/pool-map"), {
@@ -36,6 +36,7 @@ export function PoolDetail({ pool: source }: { pool: Pool }) {
       <PoolCard pool={pool} live={live} showDetails={false} />
       <PoolMap center={[pool.lat, pool.lon]} pools={[pool]} />
       <PoolContrib pool={pool} />
+      <PoolCorrect pool={pool} />
     </div>
   );
 }

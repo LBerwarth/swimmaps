@@ -1,10 +1,10 @@
-# Swimmaps
+# SwimMaps
 
 Trouvez les piscines publiques autour de vous — France, Angleterre,
-Allemagne, Espagne, Italie, Belgique et Pays-Bas : choisissez un rayon (1 à 50 km),
+Allemagne, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et Pays-Bas : choisissez un rayon (1 à 50 km),
 voyez les bassins, les horaires et tarifs quand ils sont connus, sur carte, en
-frise horaire et en liste. Interface en français, anglais, allemand, espagnol, italien et néerlandais
-(`/fr`, `/en`, `/de`, `/es`, `/it`, `/nl`, redirection selon la langue du navigateur via `proxy.ts`).
+frise horaire et en liste. Interface en français, anglais, allemand, espagnol, italien, néerlandais et portugais
+(`/fr`, `/en`, `/de`, `/es`, `/it`, `/nl`, `/pt`, redirection selon la langue du navigateur via `proxy.ts`).
 
 Application sœur de [Piscines de Toulouse](https://piscines-toulouse.fr),
 étendue à l'Europe. (Dossier/repo encore nommé `piscines-france` — renommer au
@@ -70,7 +70,7 @@ les lit une fois depuis `public/data` (`lib/pools-server.ts`).
   Sportwissenschaft) : ~4 850 bäder publics avec **tarifs d'entrée (83 %)**,
   longueurs, sites web et téléphones. Attribution obligatoire (affichée dans
   le pied de page) : © BISp, coordonnées © GeoBasis-DE / BKG 2021.
-- **Espagne, Italie, Belgique, Pays-Bas** — OpenStreetMap seul
+- **Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas** — OpenStreetMap seul
   (`scripts/sources/osm.mts`) : centres et parcs aquatiques nommés, hôtels et
   campings écartés d'après le nom, éléments à moins de 200 m fusionnés en un
   site ; commune = `addr:city`, sinon localité OSM la plus proche. Les bases
@@ -126,7 +126,7 @@ le tester).
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Adresse de contact (confidentialité, repli mailto). | adresse de l'auteure |
 | `KV_REST_API_URL` / `KV_REST_API_TOKEN` | Upstash Redis des compléments (posées par l'intégration Vercel). Absentes = compléments désactivés. | — |
 | `RESEND_API_KEY` | Envoi des signalements par e-mail. Absente = repli `mailto:` seul. | — |
-| `FEEDBACK_EMAIL_TO` / `FEEDBACK_EMAIL_FROM` | Destinataire / expéditeur des signalements. | contact / `Swimmaps <onboarding@resend.dev>` |
+| `FEEDBACK_EMAIL_TO` / `FEEDBACK_EMAIL_FROM` | Destinataire / expéditeur des signalements. | contact / `SwimMaps <onboarding@resend.dev>` |
 
 ## Stack
 

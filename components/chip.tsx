@@ -5,11 +5,13 @@ export function Chip({
   selected,
   onClick,
   ariaLabel,
+  className = "",
   children,
 }: {
   selected: boolean;
   onClick: () => void;
   ariaLabel?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -22,7 +24,7 @@ export function Chip({
         selected
           ? "bg-gradient-to-r from-pink-500 to-fuchsia-600 font-semibold text-white shadow-sm dark:from-pink-600 dark:to-fuchsia-700"
           : "bg-white/70 font-medium text-fuchsia-900 hover:bg-fuchsia-100 dark:bg-white/10 dark:text-fuchsia-100 dark:hover:bg-fuchsia-400/20"
-      }`}
+      } ${className}`}
     >
       {children}
     </button>

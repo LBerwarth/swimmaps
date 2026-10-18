@@ -34,7 +34,7 @@ const SOURCES: Record<string, { iso: string; load: () => Promise<Pool[]> }> = {
   gb: { iso: "GB", load: loadEngland },
   de: { iso: "DE", load: () => loadGermany(getArg("baederleben")) },
   ...Object.fromEntries(
-    ["es", "it", "be", "nl"].map((cc) => {
+    ["es", "it", "be", "nl", "ch", "pt", "at"].map((cc) => {
       const iso = cc.toUpperCase();
       return [
         cc,

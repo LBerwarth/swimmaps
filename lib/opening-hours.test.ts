@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   formatClosedPeriodFR,
+  formatPeriodBounds,
   formatWeekFR,
   isInClosedPeriod,
   isOpenAt,
   parseOpeningHours,
   prettifyOpeningHours,
+  seasonLines,
+  weekAt,
 } from "./opening-hours";
 
 describe("parseOpeningHours", () => {
@@ -81,10 +84,11 @@ describe("parseOpeningHours", () => {
       [720, 840],
       [960, 1140],
     ]);
-    expect(parsed!.extras).toEqual([
-      "17 oct.–2 nov. lun–ven 9h–16h",
-      "20 févr.–7 mars lun–ven 9h–16h",
-    ]);
+    expect(parsed!.extras).toEqual([]);
+    expect(parsed!.seasons).toHaveLength(2);
+    expect(parsed!.seasons[0].week[0]).toEqual([[540, 960]]); // lundi 9h-16h pendant la période
+    expect(parsed!.seasons[0].week[6]).toEqual([[690, 1080]]); // dimanche inchangé
+    expect(seasonLines(parsed!)[0]).toMatch(/^17 oct\.–2 nov\. : lun–ven 9h–16h/);
   });
 
   it("restitue « PH » avec horaires en période particulière", () => {
@@ -182,5 +186,19 @@ describe("prettifyOpeningHours", () => {
     expect(
       prettifyOpeningHours("Jun 15-Sep 1: Mo-Su 10:00-20:00; PH off"),
     ).toEqual(["15 juin–1 sept.: lun–dim 10h–20h", "jours fériés fermé"]);
+  });
+});
+
+describe("périodes datées avec leur propre semaine", () => {
+  const osm = "Mo-Fr 07:00-21:00; Sa-Su off; Jul 01-Aug 31 Mo-Su 10:00-19:00";
+
+  it("lit la période et l'applique pendant sa durée", () => {
+    const parsed = parseOpeningHours(osm, "de")!;
+    expect(parsed.seasons).toHaveLength(1);
+    expect(parsed.seasons[0].week[0]).toEqual([[600, 1140]]);
+    expect(parsed.extras).toEqual([]);
+    expect(weekAt(parsed, new Date(2026, 6, 15))[6]).toEqual([[600, 1140]]);
+    expect(weekAt(parsed, new Date(2026, 9, 15))[6]).toEqual([]);
+    expect(formatPeriodBounds(parsed.seasons[0], "de")).toBe("1. Juli–31. Aug.");
   });
 });

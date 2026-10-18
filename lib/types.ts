@@ -1,6 +1,16 @@
 /** Environnement d'une piscine, déduit de la nature de ses bassins (Data ES). */
 export type PoolEnv = "int" | "ext" | "mix";
 
+/** Catégories de tarifs saisies par les visiteurs. */
+export type PriceKind = "adult" | "child" | "senior" | "disabled" | "student" | "family" | "ten" | "season";
+export type Prices = Partial<Record<PriceKind, number>>;
+
+/** Fermeture temporaire (travaux…), dates « AAAA-MM-JJ » incluses. */
+export interface Closure {
+  from: string;
+  to: string;
+}
+
 /**
  * Une piscine (= « installation » Data ES regroupant un ou plusieurs bassins),
  * éventuellement enrichie de données OpenStreetMap (horaires, tarif, site web).
@@ -27,16 +37,22 @@ export interface Pool {
   basins: string[];
   /** Horaires au format OSM `opening_hours` (présent pour ~12 % des piscines). */
   hours?: string;
-  /** « web » = horaires du centre lus sur le site officiel (schema.org). */
-  hoursFrom?: "web";
+  /** « web » = horaires du centre lus sur le site officiel (schema.org) ; « user » = saisis par un visiteur. */
+  hoursFrom?: "web" | "user";
   /** Entrée payante (tag OSM `fee`). */
   fee?: boolean;
   /** Tarif en texte libre (tag OSM `charge`), rare. */
   charge?: string;
+  /** Tarifs par catégorie (visiteurs), dans la monnaie du pays. */
+  prices?: Prices;
   website?: string;
   phone?: string;
+  /** Fermetures temporaires signalées par des visiteurs et validées. */
+  closures?: Closure[];
+  /** Piscine proposée par un visiteur et validée par l'auteure. */
+  addedBy?: "user";
   /** Champs complétés par des visiteurs (fusionnés au chargement, jamais dans les fichiers). */
-  contributed?: Array<"env" | "lens">;
+  contributed?: Array<"env" | "lens" | "hours" | "price">;
 }
 
 export interface PoolDataset {

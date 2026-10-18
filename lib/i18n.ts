@@ -1,12 +1,24 @@
 /**
- * Internationalisation de Swimmaps : français, anglais, allemand — une langue
+ * Internationalisation de SwimMaps : français, anglais, allemand — une langue
  * par pays couvert. Dictionnaires plats, quelques entrées fonctions pour les
  * chaînes paramétrées.
  */
 
-export type Locale = "fr" | "en" | "de" | "es" | "it" | "nl";
-export const LOCALES: Locale[] = ["fr", "en", "de", "es", "it", "nl"];
+import type { PriceKind } from "./types";
+
+export type Locale = "fr" | "en" | "de" | "es" | "it" | "nl" | "pt";
+export const LOCALES: Locale[] = ["fr", "en", "de", "es", "it", "nl", "pt"];
 export const DEFAULT_LOCALE: Locale = "fr";
+/** Nom de chaque langue dans cette langue (menu de langue). */
+export const LOCALE_NAMES: Record<Locale, string> = {
+  fr: "Français",
+  en: "English",
+  de: "Deutsch",
+  es: "Español",
+  it: "Italiano",
+  nl: "Nederlands",
+  pt: "Português",
+};
 
 export type FeedbackKind = "hours" | "info" | "missing" | "suggestion" | "other";
 export const FEEDBACK_KINDS: FeedbackKind[] = ["hours", "info", "missing", "suggestion", "other"];
@@ -145,6 +157,54 @@ export interface Dict {
   contribTooMany: string;
   contribError: string;
   contribBadge: string;
+  contribConfirm: (value: string) => string;
+  contribYes: string;
+  contribCancel: string;
+  contribEdit: (name: string) => string;
+  contribHoursQ: string;
+  contribHoursStart: string;
+  contribClosed: string;
+  contribAddRange: string;
+  contribCopyAll: string;
+  contribNext: string;
+  contribHoursInvalid: string;
+  contribPriceQ: string;
+  contribFree: string;
+  contribHoursNote: string;
+  addTitle: string;
+  addSubtitle: string;
+  addLink: string;
+  addName: string;
+  addWhere: string;
+  addWhereHint: string;
+  addOptional: string;
+  addWebsite: string;
+  addNote: string;
+  addReview: string;
+  addConfirm: string;
+  addSend: string;
+  addEdit: string;
+  addThanks: string;
+  addExists: string;
+  addMissing: string;
+  addedBadge: string;
+  addPhone: string;
+  priceKinds: Record<PriceKind, string>;
+  contribPricesStart: string;
+  contribCount: (n: number, formatted: string) => string;
+  contribHolidayToggle: string;
+  contribSeasonToggle: string;
+  contribFrom: string;
+  contribTo: string;
+  corrClosure: string;
+  closedUntil: (date: string) => string;
+  closureNotice: (from: string, to: string) => string;
+  corrTitle: string;
+  corrIntro: string;
+  corrHours: string;
+  corrPrice: string;
+  corrThanks: string;
+  corrConfirm: (value: string) => string;
   basinLabels: Record<string, string>;
   basinFallback: (label: string) => string;
 
@@ -283,9 +343,9 @@ const BASINS_FR = {
 
 const fr: Dict = {
   intlLocale: "fr-FR",
-  metaTitle: "Swimmaps — trouvez une piscine près de chez vous",
+  metaTitle: "SwimMaps — trouvez une piscine près de chez vous",
   metaDescription:
-    "Les piscines publiques autour de vous en France, Allemagne, Angleterre, Espagne, Italie, Belgique et aux Pays-Bas : " +
+    "Les piscines publiques autour de vous en France, Allemagne, Angleterre, Espagne, Portugal, Italie, Suisse, Autriche, Belgique et aux Pays-Bas : " +
     "bassins, horaires et tarifs, avec carte et itinéraires.",
   subtitle:
     "Trouvez les piscines publiques autour de vous : bassins, horaires et tarifs quand ils sont connus.",
@@ -411,7 +471,7 @@ const fr: Dict = {
   distanceTitle: "Distance à vol d'oiseau",
   favAdd: (name) => `Ajouter ${name} aux favoris`,
   favRemove: (name) => `Retirer ${name} des favoris`,
-  envLabels: { int: "Couverte", ext: "Plein air", mix: "Couverte + plein air" },
+  envLabels: { int: "Couverte", ext: "Plein air", mix: "Couverte + plein air", nat: "Plage / baignade naturelle" },
   contribTitle: "Il manque une info ?",
   contribIntro: "Vous nagez ici ? Complétez la fiche : votre réponse s'affiche tout de suite pour tout le monde.",
   contribEnvQ: "Couverte ou plein air ?",
@@ -422,6 +482,63 @@ const fr: Dict = {
   contribTooMany: "Trop d'envois, réessayez dans une heure.",
   contribError: "Envoi impossible, réessayez plus tard.",
   contribBadge: "complété par un nageur",
+  contribConfirm: (v) => `Vous êtes sûr·e : ${v} ? La réponse sera visible par tous.`,
+  contribYes: "Oui, enregistrer",
+  contribCancel: "Annuler",
+  contribEdit: (n) => `Compléter ou corriger la fiche de ${n}`,
+  contribHoursQ: "Horaires d'ouverture ?",
+  contribHoursStart: "Saisir les horaires",
+  contribClosed: "fermé",
+  contribAddRange: "+ plage",
+  contribCopyAll: "Copier le lundi partout",
+  contribNext: "Continuer",
+  contribHoursInvalid: "Complétez chaque jour ouvert (début avant fin) ou cochez « fermé ».",
+  contribPriceQ: "Tarifs ?",
+  contribFree: "Entrée gratuite",
+  contribHoursNote: "Horaires complétés par un nageur — à vérifier sur le site officiel.",
+  addTitle: "Ajouter une piscine",
+  addSubtitle: "Une piscine publique manque ? Proposez-la : elle apparaîtra après une courte vérification.",
+  addLink: "Une piscine manque ? L'ajouter",
+  addName: "Nom de la piscine",
+  addWhere: "Où se trouve-t-elle ?",
+  addWhereHint: "Cherchez l'adresse, ou « Autour de moi » si vous y êtes.",
+  addOptional: "Facultatif",
+  addWebsite: "Site officiel",
+  addNote: "Message pour l'auteure (non publié)",
+  addReview: "Vérifier la proposition",
+  addConfirm: "Tout est juste ? Après vérification, la piscine sera visible par tous.",
+  addSend: "Proposer",
+  addEdit: "Modifier",
+  addThanks: "Merci ! Votre proposition sera vérifiée puis publiée sur SwimMaps.",
+  addExists: "Une piscine existe déjà à cet endroit :",
+  addMissing: "Indiquez un nom (3 caractères au moins), un emplacement et un type.",
+  addedBadge: "ajoutée par un nageur",
+  addPhone: "Téléphone",
+  priceKinds: {
+    adult: "Adulte",
+    child: "Enfant",
+    senior: "Senior",
+    disabled: "Personne handicapée",
+    student: "Étudiant",
+    family: "Famille",
+    ten: "Carte 10 entrées",
+    season: "Abonnement annuel",
+  },
+  contribPricesStart: "Saisir les tarifs",
+  contribCount: (n, f) => (n === 1 ? "1 information ajoutée par un nageur — merci !" : `${f} informations ajoutées par les nageurs — merci !`),
+  contribHolidayToggle: "Autres horaires pendant les vacances scolaires",
+  contribSeasonToggle: "Autres horaires sur une période (vacances d'été…)",
+  contribFrom: "du",
+  contribTo: "au",
+  corrClosure: "Fermeture temporaire",
+  closedUntil: (d) => `Fermée temporairement jusqu'au ${d}`,
+  closureNotice: (a, b) => `Fermeture du ${a} au ${b}`,
+  corrTitle: "Une info est fausse ?",
+  corrIntro: "Proposez une correction : elle sera vérifiée par l'auteure avant d'être appliquée.",
+  corrHours: "Corriger les horaires",
+  corrPrice: "Corriger le tarif",
+  corrThanks: "Merci ! Votre correction sera vérifiée puis appliquée.",
+  corrConfirm: (v) => `Proposer cette correction : ${v} ?`,
   basinLabels: BASINS_FR,
   basinFallback: (label) => `bassin ${label}`,
 
@@ -501,7 +618,7 @@ const fr: Dict = {
   fbAnother: "Envoyer un autre message",
   fbErrorDefault: "Envoi impossible pour le moment.",
   fbErrorMail: "Vous pouvez aussi envoyer le message par e-mail.",
-  fbSubject: "Swimmaps — signalement",
+  fbSubject: "SwimMaps — signalement",
 
   footerData: "Données :",
   footerLicenceFR: "(licence ouverte)",
@@ -517,21 +634,21 @@ const fr: Dict = {
 
   tipTitle: "Offrir un café",
   tipDesc:
-    "Swimmaps est une application personnelle et indépendante. Si elle vous évite un trajet pour rien, vous pouvez m'offrir un café.",
+    "SwimMaps est une application personnelle et indépendante. Si elle vous évite un trajet pour rien, vous pouvez m'offrir un café.",
   tipButton: "Offrir un café",
   tipNote: "Avec ou sans café, elle reste gratuite et la même pour tout le monde.",
 
   coveredLabel: "Pays couverts :",
   countryNames: {
     fr: "France", gb: "Angleterre", de: "Allemagne",
-    es: "Espagne", it: "Italie", be: "Belgique", nl: "Pays-Bas",
+    es: "Espagne", it: "Italie", be: "Belgique", nl: "Pays-Bas", ch: "Suisse", pt: "Portugal", at: "Autriche",
   },
 
   sources: {
     title: "Sources des données",
     subtitle: "D'où viennent les piscines, horaires et tarifs affichés",
     intro:
-      "Swimmaps est une application personnelle et indépendante, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle n'invente aucune donnée : tout ce qu'elle affiche vient des sources ouvertes ci-dessous, et une information absente est dite absente plutôt que devinée. Vérifiez toujours une information critique sur le site officiel de la piscine.",
+      "SwimMaps est une application personnelle et indépendante, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle n'invente aucune donnée : tout ce qu'elle affiche vient des sources ouvertes ci-dessous, et une information absente est dite absente plutôt que devinée. Vérifiez toujours une information critique sur le site officiel de la piscine.",
     groups: [
       {
         title: "France",
@@ -579,7 +696,7 @@ const fr: Dict = {
         ],
       },
       {
-        title: "Espagne, Italie, Belgique, Pays-Bas",
+        title: "Espagne, Portugal, Italie, Suisse, Autriche, Belgique, Pays-Bas",
         items: [
           {
             label: "OpenStreetMap",
@@ -621,15 +738,15 @@ const fr: Dict = {
       "Un script reconstitue les jeux de données pays par pays et les publie avec l'application ; la date du dernier relevé figure en tête de la page d'accueil. Rien n'est complété à la main.",
       "La couverture reflète l'état de l'open data : en France, les horaires ne sont connus que pour environ une piscine sur dix, les tarifs pour une sur cinquante. L'interface affiche alors « non renseigné » et un lien vers le site officiel.",
       "Une erreur se corrige à la source — dans OpenStreetMap pour les horaires, tarifs et sites web — ou via le formulaire de signalement de l'application.",
-      "Quand le type de bassin ou la longueur manque, les nageurs peuvent compléter la fiche ; leur réponse s'affiche aussitôt, marquée « complété par un nageur », et ne remplace jamais une donnée de la source.",
+      "Quand le type de bassin ou la longueur manque, les nageurs peuvent compléter la fiche ; leur réponse s'affiche aussitôt, marquée « complété par un nageur », et ne remplace jamais une donnée de la source. Ils peuvent aussi proposer une piscine manquante, publiée après vérification par l'auteure.",
     ],
   },
   privacy: {
     title: "Politique de confidentialité",
-    subtitle: "Application « Swimmaps »",
+    subtitle: "Application « SwimMaps »",
     updated: (date) => `Dernière mise à jour : ${date}`,
     intro:
-      "Swimmaps est une application personnelle et bénévole, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle affiche les piscines publiques à partir de données ouvertes. Cette page explique quelles données elle traite — en résumé : rien qui vous identifie, sauf ce que vous choisissez vous-même de nous écrire.",
+      "SwimMaps est une application personnelle et bénévole, non affiliée aux gestionnaires des piscines ni à aucune administration. Elle affiche les piscines publiques à partir de données ouvertes. Cette page explique quelles données elle traite — en résumé : rien qui vous identifie, sauf ce que vous choisissez vous-même de nous écrire.",
     sections: [
       {
         title: "Données personnelles collectées",
@@ -660,7 +777,7 @@ const fr: Dict = {
       {
         title: "Compléments de fiche (facultatif)",
         paragraphs: [
-          "Quand vous complétez une fiche (type de bassin, longueur), seule la réponse est enregistrée, avec la date, dans une base Upstash (hébergée via Vercel) ; elle s'affiche pour tous et l'auteure en est avertie par e-mail. Votre adresse IP est conservée une heure au plus, uniquement pour limiter les envois en rafale.",
+          "Quand vous complétez une fiche (type de bassin, longueur), seule la réponse est enregistrée, avec la date, dans une base Upstash (hébergée via Vercel) ; elle s'affiche pour tous et l'auteure en est avertie par e-mail. Votre adresse IP est conservée une heure au plus, uniquement pour limiter les envois en rafale. Une piscine proposée (nom, emplacement, site, message facultatif) est conservée de la même façon ; elle n'est publiée qu'après validation par l'auteure, le message ne l'est jamais.",
         ],
       },
       {
@@ -691,9 +808,9 @@ const fr: Dict = {
 
 const en: Dict = {
   intlLocale: "en-GB",
-  metaTitle: "Swimmaps — find a swimming pool near you",
+  metaTitle: "SwimMaps — find a swimming pool near you",
   metaDescription:
-    "Public swimming pools near you in France, Germany, England, Spain, Italy, Belgium and the Netherlands: " +
+    "Public swimming pools near you in France, Germany, England, Spain, Portugal, Italy, Switzerland, Austria, Belgium and the Netherlands: " +
     "pools, opening hours and prices, with a map and directions.",
   subtitle:
     "Find the public swimming pools around you: basins, opening hours and prices where known.",
@@ -817,7 +934,7 @@ const en: Dict = {
   distanceTitle: "Straight-line distance",
   favAdd: (name) => `Add ${name} to favourites`,
   favRemove: (name) => `Remove ${name} from favourites`,
-  envLabels: { int: "Indoor", ext: "Outdoor", mix: "Indoor + outdoor" },
+  envLabels: { int: "Indoor", ext: "Outdoor", mix: "Indoor + outdoor", nat: "Beach / natural pool" },
   contribTitle: "Missing information?",
   contribIntro: "Swim here? Fill in the gaps: your answer shows up for everyone right away.",
   contribEnvQ: "Indoor or outdoor?",
@@ -828,6 +945,63 @@ const en: Dict = {
   contribTooMany: "Too many submissions, try again in an hour.",
   contribError: "Couldn't send, please try again later.",
   contribBadge: "added by a swimmer",
+  contribConfirm: (v) => `Are you sure: ${v}? Your answer will be visible to everyone.`,
+  contribYes: "Yes, save",
+  contribCancel: "Cancel",
+  contribEdit: (n) => `Complete or correct the details of ${n}`,
+  contribHoursQ: "Opening hours?",
+  contribHoursStart: "Enter opening hours",
+  contribClosed: "closed",
+  contribAddRange: "+ slot",
+  contribCopyAll: "Copy Monday to all days",
+  contribNext: "Continue",
+  contribHoursInvalid: "Fill in every open day (start before end) or tick “closed”.",
+  contribPriceQ: "Prices?",
+  contribFree: "Free entry",
+  contribHoursNote: "Hours added by a swimmer — check the official website.",
+  addTitle: "Add a pool",
+  addSubtitle: "A public pool is missing? Suggest it: it will appear after a quick check.",
+  addLink: "A pool is missing? Add it",
+  addName: "Pool name",
+  addWhere: "Where is it?",
+  addWhereHint: "Search the address, or use “Around me” if you are there.",
+  addOptional: "Optional",
+  addWebsite: "Official website",
+  addNote: "Message for the author (not published)",
+  addReview: "Review suggestion",
+  addConfirm: "Is everything right? Once checked, the pool will be visible to everyone.",
+  addSend: "Suggest",
+  addEdit: "Edit",
+  addThanks: "Thanks! Your suggestion will be checked, then published on SwimMaps.",
+  addExists: "There is already a pool at this spot:",
+  addMissing: "Please give a name (at least 3 characters), a location and a type.",
+  addedBadge: "added by a swimmer",
+  addPhone: "Phone",
+  priceKinds: {
+    adult: "Adult",
+    child: "Child",
+    senior: "Senior",
+    disabled: "Disabled",
+    student: "Student",
+    family: "Family",
+    ten: "10-visit card",
+    season: "Annual pass",
+  },
+  contribPricesStart: "Enter prices",
+  contribCount: (n, f) => (n === 1 ? "1 detail added by a swimmer — thank you!" : `${f} details added by swimmers — thank you!`),
+  contribHolidayToggle: "Different hours during school holidays",
+  contribSeasonToggle: "Different hours during a period (summer holidays…)",
+  contribFrom: "from",
+  contribTo: "to",
+  corrClosure: "Temporary closure",
+  closedUntil: (d) => `Temporarily closed until ${d}`,
+  closureNotice: (a, b) => `Closed from ${a} to ${b}`,
+  corrTitle: "Something wrong?",
+  corrIntro: "Suggest a correction: the author checks it before it is applied.",
+  corrHours: "Correct the opening hours",
+  corrPrice: "Correct the price",
+  corrThanks: "Thanks! Your correction will be checked, then applied.",
+  corrConfirm: (v) => `Suggest this correction: ${v}?`,
   basinLabels: {
     sportif: "lap pool",
     ludique: "leisure pool",
@@ -922,7 +1096,7 @@ const en: Dict = {
   fbAnother: "Send another message",
   fbErrorDefault: "Sending is not possible right now.",
   fbErrorMail: "You can also send the message by e-mail.",
-  fbSubject: "Swimmaps — feedback",
+  fbSubject: "SwimMaps — feedback",
 
   footerData: "Data:",
   footerLicenceFR: "(open licence)",
@@ -938,21 +1112,21 @@ const en: Dict = {
 
   tipTitle: "Buy me a coffee",
   tipDesc:
-    "Swimmaps is a personal, independent side project. If it saves you a wasted trip, you can buy me a coffee.",
+    "SwimMaps is a personal, independent side project. If it saves you a wasted trip, you can buy me a coffee.",
   tipButton: "Buy me a coffee",
   tipNote: "With or without coffee, the app stays free and the same for everyone.",
 
   coveredLabel: "Countries covered:",
   countryNames: {
     fr: "France", gb: "England", de: "Germany",
-    es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands",
+    es: "Spain", it: "Italy", be: "Belgium", nl: "Netherlands", ch: "Switzerland", pt: "Portugal", at: "Austria",
   },
 
   sources: {
     title: "Data sources",
     subtitle: "Where the pools, hours and prices come from",
     intro:
-      "Swimmaps is a personal, independent app, not affiliated with pool operators or any public authority. It invents no data: everything shown comes from the open sources below, and missing information is shown as missing rather than guessed. Always check critical information on the pool's official website.",
+      "SwimMaps is a personal, independent app, not affiliated with pool operators or any public authority. It invents no data: everything shown comes from the open sources below, and missing information is shown as missing rather than guessed. Always check critical information on the pool's official website.",
     groups: [
       {
         title: "France",
@@ -1000,7 +1174,7 @@ const en: Dict = {
         ],
       },
       {
-        title: "Spain, Italy, Belgium, Netherlands",
+        title: "Spain, Portugal, Italy, Switzerland, Austria, Belgium, Netherlands",
         items: [
           {
             label: "OpenStreetMap",
@@ -1042,15 +1216,15 @@ const en: Dict = {
       "A script rebuilds the datasets country by country and ships them with the app; the date of the last extraction is shown at the top of the home page. Nothing is completed by hand.",
       "Coverage reflects the state of open data: in France, hours are known for about one pool in ten and prices for one in fifty. The interface then shows “unknown” and a link to the official website.",
       "Errors are fixed at the source — in OpenStreetMap for hours, prices and websites — or through the app's feedback form.",
-      "When the pool type or length is missing, swimmers can fill it in; their answer shows up right away, marked “added by a swimmer”, and never replaces data from the source.",
+      "When the pool type or length is missing, swimmers can fill it in; their answer shows up right away, marked “added by a swimmer”, and never replaces data from the source. They can also suggest a missing pool, published after the author checks it.",
     ],
   },
   privacy: {
     title: "Privacy policy",
-    subtitle: "The “Swimmaps” app",
+    subtitle: "The “SwimMaps” app",
     updated: (date) => `Last updated: ${date}`,
     intro:
-      "Swimmaps is a personal, volunteer-run app, not affiliated with pool operators or any public authority. It shows public swimming pools from open data. This page explains which data it processes — in short: nothing that identifies you, except what you choose to write to us.",
+      "SwimMaps is a personal, volunteer-run app, not affiliated with pool operators or any public authority. It shows public swimming pools from open data. This page explains which data it processes — in short: nothing that identifies you, except what you choose to write to us.",
     sections: [
       {
         title: "Personal data collected",
@@ -1081,7 +1255,7 @@ const en: Dict = {
       {
         title: "Filling in pool details (optional)",
         paragraphs: [
-          "When you fill in a pool detail (pool type, length), only your answer and the date are stored, in an Upstash database (hosted through Vercel); it is shown to everyone and the author is notified by email. Your IP address is kept for at most one hour, only to limit bursts of submissions.",
+          "When you fill in a pool detail (pool type, length), only your answer and the date are stored, in an Upstash database (hosted through Vercel); it is shown to everyone and the author is notified by email. Your IP address is kept for at most one hour, only to limit bursts of submissions. A suggested pool (name, location, website, optional message) is stored the same way; it is published only after the author approves it, and the message never is.",
         ],
       },
       {
@@ -1111,9 +1285,9 @@ const en: Dict = {
 
 const de: Dict = {
   intlLocale: "de-DE",
-  metaTitle: "Swimmaps — finde ein Schwimmbad in deiner Nähe",
+  metaTitle: "SwimMaps — finde ein Schwimmbad in deiner Nähe",
   metaDescription:
-    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich, England, Spanien, Italien, Belgien und den Niederlanden: " +
+    "Öffentliche Schwimmbäder in deiner Nähe in Deutschland, Frankreich, England, Österreich, der Schweiz, Spanien, Portugal, Italien, Belgien und den Niederlanden: " +
     "Becken, Öffnungszeiten und Preise, mit Karte und Route.",
   subtitle:
     "Finde die öffentlichen Schwimmbäder um dich herum: Becken, Öffnungszeiten und Preise, soweit bekannt.",
@@ -1238,7 +1412,7 @@ const de: Dict = {
   distanceTitle: "Entfernung Luftlinie",
   favAdd: (name) => `${name} zu Favoriten hinzufügen`,
   favRemove: (name) => `${name} aus Favoriten entfernen`,
-  envLabels: { int: "Hallenbad", ext: "Freibad", mix: "Kombibad" },
+  envLabels: { int: "Hallenbad", ext: "Freibad", mix: "Kombibad", nat: "Strand- / Naturbad" },
   contribTitle: "Fehlt eine Angabe?",
   contribIntro: "Du schwimmst hier? Ergänze die Seite: deine Antwort ist sofort für alle sichtbar.",
   contribEnvQ: "Hallen- oder Freibad?",
@@ -1249,6 +1423,63 @@ const de: Dict = {
   contribTooMany: "Zu viele Einträge, versuch es in einer Stunde wieder.",
   contribError: "Senden fehlgeschlagen, versuch es später noch einmal.",
   contribBadge: "von Badegästen ergänzt",
+  contribConfirm: (v) => `Bist du sicher: ${v}? Die Angabe ist dann für alle sichtbar.`,
+  contribYes: "Ja, eintragen",
+  contribCancel: "Abbrechen",
+  contribEdit: (n) => `Angaben zu ${n} ergänzen oder korrigieren`,
+  contribHoursQ: "Öffnungszeiten?",
+  contribHoursStart: "Öffnungszeiten eintragen",
+  contribClosed: "geschlossen",
+  contribAddRange: "+ Zeitraum",
+  contribCopyAll: "Montag für alle Tage übernehmen",
+  contribNext: "Weiter",
+  contribHoursInvalid: "Bitte jeden offenen Tag ausfüllen (Beginn vor Ende) oder „geschlossen“ anhaken.",
+  contribPriceQ: "Eintrittspreise?",
+  contribFree: "Eintritt frei",
+  contribHoursNote: "Öffnungszeiten von Badegästen ergänzt — bitte auf der offiziellen Website prüfen.",
+  addTitle: "Ein Bad hinzufügen",
+  addSubtitle: "Fehlt ein öffentliches Bad? Schlag es vor: Es erscheint nach einer kurzen Prüfung.",
+  addLink: "Ein Bad fehlt? Hinzufügen",
+  addName: "Name des Bades",
+  addWhere: "Wo liegt es?",
+  addWhereHint: "Adresse suchen oder „In meiner Nähe“, wenn du gerade dort bist.",
+  addOptional: "Optional",
+  addWebsite: "Offizielle Website",
+  addNote: "Nachricht an die Autorin (nicht öffentlich)",
+  addReview: "Vorschlag prüfen",
+  addConfirm: "Stimmt alles? Nach der Prüfung ist das Bad für alle sichtbar.",
+  addSend: "Vorschlagen",
+  addEdit: "Ändern",
+  addThanks: "Danke! Dein Vorschlag wird geprüft und erscheint danach auf SwimMaps.",
+  addExists: "An dieser Stelle gibt es schon ein Bad:",
+  addMissing: "Bitte Name (mindestens 3 Zeichen), Standort und Typ angeben.",
+  addedBadge: "von Badegästen hinzugefügt",
+  addPhone: "Telefon",
+  priceKinds: {
+    adult: "Erwachsene",
+    child: "Kinder",
+    senior: "Senioren",
+    disabled: "Menschen mit Behinderung",
+    student: "Studierende",
+    family: "Familie",
+    ten: "10er-Karte",
+    season: "Jahresabo",
+  },
+  contribPricesStart: "Preise eintragen",
+  contribCount: (n, f) => (n === 1 ? "1 Angabe von Badegästen ergänzt — danke!" : `${f} Angaben von Badegästen ergänzt — danke!`),
+  contribHolidayToggle: "Andere Zeiten in den Schulferien",
+  contribSeasonToggle: "Andere Zeiten in einem bestimmten Zeitraum (z. B. Sommerferien)",
+  contribFrom: "von",
+  contribTo: "bis",
+  corrClosure: "Vorübergehend geschlossen",
+  closedUntil: (d) => `Vorübergehend geschlossen bis ${d}`,
+  closureNotice: (a, b) => `Geschlossen vom ${a} bis ${b}`,
+  corrTitle: "Stimmt etwas nicht?",
+  corrIntro: "Schlag eine Korrektur vor: Die Autorin prüft sie, bevor sie übernommen wird.",
+  corrHours: "Öffnungszeiten korrigieren",
+  corrPrice: "Preis korrigieren",
+  corrThanks: "Danke! Deine Korrektur wird geprüft und dann übernommen.",
+  corrConfirm: (v) => `Diese Korrektur vorschlagen: ${v}?`,
   basinLabels: {
     sportif: "Schwimmerbecken",
     ludique: "Nichtschwimmerbecken",
@@ -1343,7 +1574,7 @@ const de: Dict = {
   fbAnother: "Weitere Nachricht senden",
   fbErrorDefault: "Senden ist derzeit nicht möglich.",
   fbErrorMail: "Du kannst die Nachricht auch per E-Mail senden.",
-  fbSubject: "Swimmaps — Meldung",
+  fbSubject: "SwimMaps — Meldung",
 
   footerData: "Daten:",
   footerLicenceFR: "(offene Lizenz)",
@@ -1359,21 +1590,21 @@ const de: Dict = {
 
   tipTitle: "Spendier mir einen Kaffee",
   tipDesc:
-    "Swimmaps ist ein privates, unabhängiges Hobbyprojekt. Wenn es dir einen umsonst gefahrenen Weg erspart, kannst du mir einen Kaffee spendieren.",
+    "SwimMaps ist ein privates, unabhängiges Hobbyprojekt. Wenn es dir einen umsonst gefahrenen Weg erspart, kannst du mir einen Kaffee spendieren.",
   tipButton: "Kaffee spendieren",
   tipNote: "Mit oder ohne Kaffee: Die App bleibt kostenlos und für alle gleich.",
 
   coveredLabel: "Abgedeckte Länder:",
   countryNames: {
     fr: "Frankreich", gb: "England", de: "Deutschland",
-    es: "Spanien", it: "Italien", be: "Belgien", nl: "Niederlande",
+    es: "Spanien", it: "Italien", be: "Belgien", nl: "Niederlande", ch: "Schweiz", pt: "Portugal", at: "Österreich",
   },
 
   sources: {
     title: "Datenquellen",
     subtitle: "Woher Bäder, Öffnungszeiten und Preise stammen",
     intro:
-      "Swimmaps ist eine private, unabhängige App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie erfindet keine Daten: alles Angezeigte stammt aus den offenen Quellen unten, und fehlende Angaben werden als fehlend gezeigt statt geraten. Prüfe wichtige Angaben immer auf der offiziellen Website des Bades.",
+      "SwimMaps ist eine private, unabhängige App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie erfindet keine Daten: alles Angezeigte stammt aus den offenen Quellen unten, und fehlende Angaben werden als fehlend gezeigt statt geraten. Prüfe wichtige Angaben immer auf der offiziellen Website des Bades.",
     groups: [
       {
         title: "Frankreich",
@@ -1421,7 +1652,7 @@ const de: Dict = {
         ],
       },
       {
-        title: "Spanien, Italien, Belgien, Niederlande",
+        title: "Österreich, Schweiz, Spanien, Portugal, Italien, Belgien, Niederlande",
         items: [
           {
             label: "OpenStreetMap",
@@ -1463,15 +1694,15 @@ const de: Dict = {
       "Ein Skript erstellt die Datensätze Land für Land neu und liefert sie mit der App aus; das Datum des letzten Abrufs steht oben auf der Startseite. Nichts wird von Hand ergänzt.",
       "Die Abdeckung spiegelt den Stand der offenen Daten: in Frankreich sind Öffnungszeiten nur für etwa jedes zehnte Bad bekannt, Preise für jedes fünfzigste. Die App zeigt dann „unbekannt“ und einen Link zur offiziellen Website.",
       "Fehler werden an der Quelle behoben — in OpenStreetMap für Zeiten, Preise und Websites — oder über das Meldeformular der App.",
-      "Fehlen Bad-Typ oder Länge, können Badegäste sie ergänzen; ihre Antwort erscheint sofort, markiert als „von Badegästen ergänzt“, und ersetzt nie Daten der Quelle.",
+      "Fehlen Bad-Typ oder Länge, können Badegäste sie ergänzen; ihre Antwort erscheint sofort, markiert als „von Badegästen ergänzt“, und ersetzt nie Daten der Quelle. Sie können auch ein fehlendes Bad vorschlagen; es erscheint nach Prüfung durch die Autorin.",
     ],
   },
   privacy: {
     title: "Datenschutzerklärung",
-    subtitle: "App „Swimmaps“",
+    subtitle: "App „SwimMaps“",
     updated: (date) => `Zuletzt aktualisiert: ${date}`,
     intro:
-      "Swimmaps ist eine private, ehrenamtliche App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie zeigt öffentliche Schwimmbäder aus offenen Daten. Diese Seite erklärt, welche Daten sie verarbeitet — kurz: nichts, was dich identifiziert, außer dem, was du uns selbst schreibst.",
+      "SwimMaps ist eine private, ehrenamtliche App ohne Verbindung zu den Betreibern der Bäder oder zu Behörden. Sie zeigt öffentliche Schwimmbäder aus offenen Daten. Diese Seite erklärt, welche Daten sie verarbeitet — kurz: nichts, was dich identifiziert, außer dem, was du uns selbst schreibst.",
     sections: [
       {
         title: "Erhobene personenbezogene Daten",
@@ -1502,7 +1733,7 @@ const de: Dict = {
       {
         title: "Ergänzungen zu Bädern (optional)",
         paragraphs: [
-          "Wenn du eine Angabe ergänzt (Hallen-/Freibad, Länge), wird nur deine Antwort mit Datum in einer Upstash-Datenbank (über Vercel gehostet) gespeichert; sie ist für alle sichtbar, und die Autorin erhält eine E-Mail. Deine IP-Adresse wird höchstens eine Stunde lang gespeichert, nur um Massen-Einträge zu begrenzen.",
+          "Wenn du eine Angabe ergänzt (Hallen-/Freibad, Länge), wird nur deine Antwort mit Datum in einer Upstash-Datenbank (über Vercel gehostet) gespeichert; sie ist für alle sichtbar, und die Autorin erhält eine E-Mail. Deine IP-Adresse wird höchstens eine Stunde lang gespeichert, nur um Massen-Einträge zu begrenzen. Ein vorgeschlagenes Bad (Name, Standort, Website, optionale Nachricht) wird genauso gespeichert; es erscheint erst nach Freigabe durch die Autorin, die Nachricht nie.",
         ],
       },
       {
@@ -1532,9 +1763,9 @@ const de: Dict = {
 
 const it: Dict = {
   intlLocale: "it-IT",
-  metaTitle: "Swimmaps — trova una piscina vicino a te",
+  metaTitle: "SwimMaps — trova una piscina vicino a te",
   metaDescription:
-    "Piscine pubbliche vicino a te in Francia, Germania, Inghilterra, Spagna, Italia, Belgio e Paesi Bassi: " +
+    "Piscine pubbliche vicino a te in Francia, Germania, Inghilterra, Spagna, Portogallo, Italia, Svizzera, Austria, Belgio e Paesi Bassi: " +
     "vasche, orari e prezzi, con mappa e indicazioni stradali.",
   subtitle:
     "Trova le piscine pubbliche intorno a te: vasche, orari e prezzi quando noti.",
@@ -1658,7 +1889,7 @@ const it: Dict = {
   distanceTitle: "Distanza in linea d'aria",
   favAdd: (name) => `Aggiungi ${name} ai preferiti`,
   favRemove: (name) => `Rimuovi ${name} dai preferiti`,
-  envLabels: { int: "Coperta", ext: "Scoperta", mix: "Coperta + scoperta" },
+  envLabels: { int: "Coperta", ext: "Scoperta", mix: "Coperta + scoperta", nat: "Spiaggia / piscina naturale" },
   contribTitle: "Manca un'informazione?",
   contribIntro: "Nuoti qui? Completa la scheda: la tua risposta è subito visibile a tutti.",
   contribEnvQ: "Coperta o scoperta?",
@@ -1669,6 +1900,63 @@ const it: Dict = {
   contribTooMany: "Troppi invii, riprova tra un'ora.",
   contribError: "Invio non riuscito, riprova più tardi.",
   contribBadge: "aggiunto dai nuotatori",
+  contribConfirm: (v) => `Sei sicuro: ${v}? La risposta sarà visibile a tutti.`,
+  contribYes: "Sì, salva",
+  contribCancel: "Annulla",
+  contribEdit: (n) => `Completa o correggi la scheda di ${n}`,
+  contribHoursQ: "Orari di apertura?",
+  contribHoursStart: "Inserisci gli orari",
+  contribClosed: "chiuso",
+  contribAddRange: "+ fascia",
+  contribCopyAll: "Copia il lunedì su tutti i giorni",
+  contribNext: "Continua",
+  contribHoursInvalid: "Compila ogni giorno di apertura (inizio prima della fine) o seleziona «chiuso».",
+  contribPriceQ: "Prezzi?",
+  contribFree: "Ingresso gratuito",
+  contribHoursNote: "Orari aggiunti dai nuotatori: verificali sul sito ufficiale.",
+  addTitle: "Aggiungi una piscina",
+  addSubtitle: "Manca una piscina pubblica? Proponila: apparirà dopo una breve verifica.",
+  addLink: "Manca una piscina? Aggiungila",
+  addName: "Nome della piscina",
+  addWhere: "Dove si trova?",
+  addWhereHint: "Cerca l'indirizzo o usa «Intorno a me» se sei lì.",
+  addOptional: "Facoltativo",
+  addWebsite: "Sito ufficiale",
+  addNote: "Messaggio per l'autrice (non pubblicato)",
+  addReview: "Controlla la proposta",
+  addConfirm: "È tutto giusto? Dopo la verifica, la piscina sarà visibile a tutti.",
+  addSend: "Proponi",
+  addEdit: "Modifica",
+  addThanks: "Grazie! La tua proposta verrà verificata e poi pubblicata su SwimMaps.",
+  addExists: "In questo punto c'è già una piscina:",
+  addMissing: "Indica un nome (almeno 3 caratteri), una posizione e un tipo.",
+  addedBadge: "aggiunta dai nuotatori",
+  addPhone: "Telefono",
+  priceKinds: {
+    adult: "Adulti",
+    child: "Bambini",
+    senior: "Over 65",
+    disabled: "Persone con disabilità",
+    student: "Studenti",
+    family: "Famiglia",
+    ten: "Carnet 10 ingressi",
+    season: "Abbonamento annuale",
+  },
+  contribPricesStart: "Inserisci i prezzi",
+  contribCount: (n, f) => (n === 1 ? "1 informazione aggiunta dai nuotatori — grazie!" : `${f} informazioni aggiunte dai nuotatori — grazie!`),
+  contribHolidayToggle: "Orari diversi durante le vacanze scolastiche",
+  contribSeasonToggle: "Orari diversi in un periodo (vacanze estive…)",
+  contribFrom: "dal",
+  contribTo: "al",
+  corrClosure: "Chiusura temporanea",
+  closedUntil: (d) => `Chiusa temporaneamente fino al ${d}`,
+  closureNotice: (a, b) => `Chiusa dal ${a} al ${b}`,
+  corrTitle: "Qualcosa non va?",
+  corrIntro: "Proponi una correzione: l'autrice la verifica prima di applicarla.",
+  corrHours: "Correggi gli orari",
+  corrPrice: "Correggi il prezzo",
+  corrThanks: "Grazie! La tua correzione verrà verificata e poi applicata.",
+  corrConfirm: (v) => `Proporre questa correzione: ${v}?`,
   basinLabels: {
     sportif: "vasca sportiva",
     ludique: "vasca ludica",
@@ -1763,7 +2051,7 @@ const it: Dict = {
   fbAnother: "Invia un altro messaggio",
   fbErrorDefault: "L'invio non è possibile al momento.",
   fbErrorMail: "Puoi anche inviare il messaggio via e-mail.",
-  fbSubject: "Swimmaps — segnalazione",
+  fbSubject: "SwimMaps — segnalazione",
 
   footerData: "Dati:",
   footerLicenceFR: "(licenza aperta)",
@@ -1779,21 +2067,21 @@ const it: Dict = {
 
   tipTitle: "Offrimi un caffè",
   tipDesc:
-    "Swimmaps è un progetto personale e indipendente. Se ti ha evitato un viaggio a vuoto, puoi offrirmi un caffè.",
+    "SwimMaps è un progetto personale e indipendente. Se ti ha evitato un viaggio a vuoto, puoi offrirmi un caffè.",
   tipButton: "Offrimi un caffè",
   tipNote: "Con o senza caffè, l'app resta gratuita e uguale per tutti.",
 
   coveredLabel: "Paesi coperti:",
   countryNames: {
     fr: "Francia", gb: "Inghilterra", de: "Germania",
-    es: "Spagna", it: "Italia", be: "Belgio", nl: "Paesi Bassi",
+    es: "Spagna", it: "Italia", be: "Belgio", nl: "Paesi Bassi", ch: "Svizzera", pt: "Portogallo", at: "Austria",
   },
 
   sources: {
     title: "Fonti dei dati",
     subtitle: "Da dove vengono piscine, orari e prezzi",
     intro:
-      "Swimmaps è un'app personale e indipendente, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Non inventa alcun dato: tutto ciò che mostra proviene dalle fonti aperte qui sotto, e le informazioni mancanti sono indicate come tali anziché indovinate. Verifica sempre le informazioni importanti sul sito ufficiale della piscina.",
+      "SwimMaps è un'app personale e indipendente, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Non inventa alcun dato: tutto ciò che mostra proviene dalle fonti aperte qui sotto, e le informazioni mancanti sono indicate come tali anziché indovinate. Verifica sempre le informazioni importanti sul sito ufficiale della piscina.",
     groups: [
       {
         title: "Francia",
@@ -1841,7 +2129,7 @@ const it: Dict = {
         ],
       },
       {
-        title: "Spagna, Italia, Belgio, Paesi Bassi",
+        title: "Spagna, Portogallo, Italia, Svizzera, Austria, Belgio, Paesi Bassi",
         items: [
           {
             label: "OpenStreetMap",
@@ -1883,15 +2171,15 @@ const it: Dict = {
       "Uno script ricostruisce i dataset paese per paese e li distribuisce con l'app; la data dell'ultima estrazione è indicata in cima alla home page. Niente viene completato a mano.",
       "La copertura riflette lo stato dei dati aperti: in Francia gli orari sono noti per circa una piscina su dieci e i prezzi per una su cinquanta. L'interfaccia mostra allora “sconosciuto” e un link al sito ufficiale.",
       "Gli errori si correggono alla fonte — su OpenStreetMap per orari, prezzi e siti web — o tramite il modulo di segnalazione dell'app.",
-      "Quando mancano il tipo di vasca o la lunghezza, i nuotatori possono completarli; la loro risposta appare subito, contrassegnata «aggiunto dai nuotatori», e non sostituisce mai i dati della fonte.",
+      "Quando mancano il tipo di vasca o la lunghezza, i nuotatori possono completarli; la loro risposta appare subito, contrassegnata «aggiunto dai nuotatori», e non sostituisce mai i dati della fonte. Possono anche proporre una piscina mancante, pubblicata dopo la verifica dell'autrice.",
     ],
   },
   privacy: {
     title: "Informativa sulla privacy",
-    subtitle: "L'app “Swimmaps”",
+    subtitle: "L'app “SwimMaps”",
     updated: (date) => `Ultimo aggiornamento: ${date}`,
     intro:
-      "Swimmaps è un'app personale e volontaria, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Mostra le piscine pubbliche a partire da dati aperti. Questa pagina spiega quali dati tratta — in breve: nulla che ti identifichi, tranne ciò che scegli di scriverci.",
+      "SwimMaps è un'app personale e volontaria, non affiliata ai gestori delle piscine né ad alcun ente pubblico. Mostra le piscine pubbliche a partire da dati aperti. Questa pagina spiega quali dati tratta — in breve: nulla che ti identifichi, tranne ciò che scegli di scriverci.",
     sections: [
       {
         title: "Dati personali raccolti",
@@ -1922,7 +2210,7 @@ const it: Dict = {
       {
         title: "Completamento delle schede (facoltativo)",
         paragraphs: [
-          "Quando completi una scheda (tipo di vasca, lunghezza), viene salvata solo la tua risposta con la data, in un database Upstash (ospitato tramite Vercel); è visibile a tutti e l'autrice ne riceve notifica via e-mail. Il tuo indirizzo IP è conservato al massimo un'ora, solo per limitare gli invii in serie.",
+          "Quando completi una scheda (tipo di vasca, lunghezza), viene salvata solo la tua risposta con la data, in un database Upstash (ospitato tramite Vercel); è visibile a tutti e l'autrice ne riceve notifica via e-mail. Il tuo indirizzo IP è conservato al massimo un'ora, solo per limitare gli invii in serie. Una piscina proposta (nome, posizione, sito, messaggio facoltativo) è conservata allo stesso modo; viene pubblicata solo dopo l'approvazione dell'autrice, il messaggio mai.",
         ],
       },
       {
@@ -1952,9 +2240,9 @@ const it: Dict = {
 
 const nl: Dict = {
   intlLocale: "nl-NL",
-  metaTitle: "Swimmaps — vind een zwembad bij jou in de buurt",
+  metaTitle: "SwimMaps — vind een zwembad bij jou in de buurt",
   metaDescription:
-    "Openbare zwembaden bij jou in de buurt in Nederland, België, Frankrijk, Duitsland, Engeland, Spanje en Italië: " +
+    "Openbare zwembaden bij jou in de buurt in Nederland, België, Frankrijk, Duitsland, Engeland, Spanje, Portugal, Italië, Zwitserland en Oostenrijk: " +
     "baden, openingstijden en prijzen, met kaart en routebeschrijving.",
   subtitle:
     "Vind de openbare zwembaden om je heen: baden, openingstijden en prijzen, voor zover bekend.",
@@ -2078,7 +2366,7 @@ const nl: Dict = {
   distanceTitle: "Afstand hemelsbreed",
   favAdd: (name) => `${name} toevoegen aan favorieten`,
   favRemove: (name) => `${name} verwijderen uit favorieten`,
-  envLabels: { int: "Binnenbad", ext: "Buitenbad", mix: "Binnen- en buitenbad" },
+  envLabels: { int: "Binnenbad", ext: "Buitenbad", mix: "Binnen- en buitenbad", nat: "Strandbad / natuurbad" },
   contribTitle: "Ontbreekt er informatie?",
   contribIntro: "Zwem je hier? Vul de pagina aan: je antwoord is meteen voor iedereen zichtbaar.",
   contribEnvQ: "Binnen- of buitenbad?",
@@ -2089,6 +2377,63 @@ const nl: Dict = {
   contribTooMany: "Te veel inzendingen, probeer het over een uur opnieuw.",
   contribError: "Versturen mislukt, probeer het later opnieuw.",
   contribBadge: "aangevuld door zwemmers",
+  contribConfirm: (v) => `Weet je het zeker: ${v}? Je antwoord is dan voor iedereen zichtbaar.`,
+  contribYes: "Ja, opslaan",
+  contribCancel: "Annuleren",
+  contribEdit: (n) => `Gegevens van ${n} aanvullen of corrigeren`,
+  contribHoursQ: "Openingstijden?",
+  contribHoursStart: "Openingstijden invullen",
+  contribClosed: "gesloten",
+  contribAddRange: "+ tijdvak",
+  contribCopyAll: "Maandag voor alle dagen overnemen",
+  contribNext: "Verder",
+  contribHoursInvalid: "Vul elke open dag in (begin vóór einde) of vink „gesloten” aan.",
+  contribPriceQ: "Prijzen?",
+  contribFree: "Gratis toegang",
+  contribHoursNote: "Openingstijden aangevuld door zwemmers — controleer de officiële website.",
+  addTitle: "Een zwembad toevoegen",
+  addSubtitle: "Ontbreekt er een openbaar zwembad? Stel het voor: het verschijnt na een korte controle.",
+  addLink: "Ontbreekt er een zwembad? Toevoegen",
+  addName: "Naam van het zwembad",
+  addWhere: "Waar ligt het?",
+  addWhereHint: "Zoek het adres, of gebruik „In mijn buurt” als je er nu bent.",
+  addOptional: "Optioneel",
+  addWebsite: "Officiële website",
+  addNote: "Bericht aan de maker (niet openbaar)",
+  addReview: "Voorstel controleren",
+  addConfirm: "Klopt alles? Na controle is het zwembad voor iedereen zichtbaar.",
+  addSend: "Voorstellen",
+  addEdit: "Wijzigen",
+  addThanks: "Bedankt! Je voorstel wordt gecontroleerd en daarna op SwimMaps gepubliceerd.",
+  addExists: "Op deze plek is al een zwembad:",
+  addMissing: "Geef een naam (minstens 3 tekens), een locatie en een type op.",
+  addedBadge: "toegevoegd door zwemmers",
+  addPhone: "Telefoon",
+  priceKinds: {
+    adult: "Volwassene",
+    child: "Kind",
+    senior: "Senior",
+    disabled: "Met beperking",
+    student: "Student",
+    family: "Gezin",
+    ten: "10-badenkaart",
+    season: "Jaarabonnement",
+  },
+  contribPricesStart: "Prijzen invullen",
+  contribCount: (n, f) => (n === 1 ? "1 gegeven aangevuld door zwemmers — bedankt!" : `${f} gegevens aangevuld door zwemmers — bedankt!`),
+  contribHolidayToggle: "Andere tijden in de schoolvakanties",
+  contribSeasonToggle: "Andere tijden in een bepaalde periode (zomervakantie…)",
+  contribFrom: "van",
+  contribTo: "tot",
+  corrClosure: "Tijdelijk gesloten",
+  closedUntil: (d) => `Tijdelijk gesloten tot ${d}`,
+  closureNotice: (a, b) => `Gesloten van ${a} tot ${b}`,
+  corrTitle: "Klopt er iets niet?",
+  corrIntro: "Stel een correctie voor: de maker controleert die voordat ze wordt toegepast.",
+  corrHours: "Openingstijden corrigeren",
+  corrPrice: "Prijs corrigeren",
+  corrThanks: "Bedankt! Je correctie wordt gecontroleerd en daarna toegepast.",
+  corrConfirm: (v) => `Deze correctie voorstellen: ${v}?`,
   basinLabels: {
     sportif: "wedstrijdbad",
     ludique: "recreatiebad",
@@ -2183,7 +2528,7 @@ const nl: Dict = {
   fbAnother: "Nog een bericht versturen",
   fbErrorDefault: "Versturen is momenteel niet mogelijk.",
   fbErrorMail: "Je kunt het bericht ook per e-mail sturen.",
-  fbSubject: "Swimmaps — feedback",
+  fbSubject: "SwimMaps — feedback",
 
   footerData: "Gegevens:",
   footerLicenceFR: "(open licentie)",
@@ -2199,21 +2544,21 @@ const nl: Dict = {
 
   tipTitle: "Trakteer me op een koffie",
   tipDesc:
-    "Swimmaps is een persoonlijk, onafhankelijk hobbyproject. Bespaart het je een vergeefse rit, dan kun je me op een koffie trakteren.",
+    "SwimMaps is een persoonlijk, onafhankelijk hobbyproject. Bespaart het je een vergeefse rit, dan kun je me op een koffie trakteren.",
   tipButton: "Trakteer op koffie",
   tipNote: "Met of zonder koffie: de app blijft gratis en voor iedereen hetzelfde.",
 
   coveredLabel: "Landen:",
   countryNames: {
     fr: "Frankrijk", gb: "Engeland", de: "Duitsland",
-    es: "Spanje", it: "Italië", be: "België", nl: "Nederland",
+    es: "Spanje", it: "Italië", be: "België", nl: "Nederland", ch: "Zwitserland", pt: "Portugal", at: "Oostenrijk",
   },
 
   sources: {
     title: "Gegevensbronnen",
     subtitle: "Waar de zwembaden, tijden en prijzen vandaan komen",
     intro:
-      "Swimmaps is een persoonlijke, onafhankelijke app, niet verbonden aan zwembadexploitanten of overheden. De app verzint geen gegevens: alles wat je ziet komt uit de open bronnen hieronder, en ontbrekende informatie wordt als ontbrekend getoond in plaats van geraden. Controleer belangrijke informatie altijd op de officiële website van het zwembad.",
+      "SwimMaps is een persoonlijke, onafhankelijke app, niet verbonden aan zwembadexploitanten of overheden. De app verzint geen gegevens: alles wat je ziet komt uit de open bronnen hieronder, en ontbrekende informatie wordt als ontbrekend getoond in plaats van geraden. Controleer belangrijke informatie altijd op de officiële website van het zwembad.",
     groups: [
       {
         title: "Frankrijk",
@@ -2261,7 +2606,7 @@ const nl: Dict = {
         ],
       },
       {
-        title: "Spanje, Italië, België, Nederland",
+        title: "Spanje, Portugal, Italië, Zwitserland, Oostenrijk, België, Nederland",
         items: [
           {
             label: "OpenStreetMap",
@@ -2303,15 +2648,15 @@ const nl: Dict = {
       "Een script bouwt de datasets land voor land opnieuw op en levert ze mee met de app; de datum van de laatste extractie staat bovenaan de startpagina. Niets wordt met de hand aangevuld.",
       "De dekking weerspiegelt de stand van de open data: in Frankrijk zijn de tijden bekend voor ongeveer één op de tien zwembaden en de prijzen voor één op de vijftig. De app toont dan “onbekend” en een link naar de officiële website.",
       "Fouten worden bij de bron verbeterd — in OpenStreetMap voor tijden, prijzen en websites — of via het feedbackformulier van de app.",
-      "Ontbreekt het type of de lengte van het bad, dan kunnen zwemmers die aanvullen; hun antwoord is meteen zichtbaar, gemarkeerd als „aangevuld door zwemmers”, en vervangt nooit gegevens van de bron.",
+      "Ontbreekt het type of de lengte van het bad, dan kunnen zwemmers die aanvullen; hun antwoord is meteen zichtbaar, gemarkeerd als „aangevuld door zwemmers”, en vervangt nooit gegevens van de bron. Ze kunnen ook een ontbrekend zwembad voorstellen, dat na controle door de maker verschijnt.",
     ],
   },
   privacy: {
     title: "Privacybeleid",
-    subtitle: "De app “Swimmaps”",
+    subtitle: "De app “SwimMaps”",
     updated: (date) => `Laatst bijgewerkt: ${date}`,
     intro:
-      "Swimmaps is een persoonlijke app, gemaakt door een vrijwilliger, niet verbonden aan zwembadexploitanten of overheden. De app toont openbare zwembaden op basis van open data. Op deze pagina lees je welke gegevens worden verwerkt — kort gezegd: niets wat jou identificeert, behalve wat je ons zelf schrijft.",
+      "SwimMaps is een persoonlijke app, gemaakt door een vrijwilliger, niet verbonden aan zwembadexploitanten of overheden. De app toont openbare zwembaden op basis van open data. Op deze pagina lees je welke gegevens worden verwerkt — kort gezegd: niets wat jou identificeert, behalve wat je ons zelf schrijft.",
     sections: [
       {
         title: "Verzamelde persoonsgegevens",
@@ -2342,7 +2687,7 @@ const nl: Dict = {
       {
         title: "Zwembadgegevens aanvullen (optioneel)",
         paragraphs: [
-          "Als je een gegeven aanvult (binnen/buiten, lengte), wordt alleen je antwoord met de datum opgeslagen in een Upstash-database (gehost via Vercel); het is voor iedereen zichtbaar en de maker krijgt een e-mail. Je IP-adres wordt hoogstens een uur bewaard, alleen om massale inzendingen te beperken.",
+          "Als je een gegeven aanvult (binnen/buiten, lengte), wordt alleen je antwoord met de datum opgeslagen in een Upstash-database (gehost via Vercel); het is voor iedereen zichtbaar en de maker krijgt een e-mail. Je IP-adres wordt hoogstens een uur bewaard, alleen om massale inzendingen te beperken. Een voorgesteld zwembad (naam, locatie, website, optioneel bericht) wordt op dezelfde manier bewaard; het verschijnt pas na goedkeuring door de maker, het bericht nooit.",
         ],
       },
       {
@@ -2372,9 +2717,9 @@ const nl: Dict = {
 
 const es: Dict = {
   intlLocale: "es-ES",
-  metaTitle: "Swimmaps — encuentra una piscina cerca de ti",
+  metaTitle: "SwimMaps — encuentra una piscina cerca de ti",
   metaDescription:
-    "Piscinas públicas cerca de ti en Francia, Alemania, Inglaterra, España, Italia, Bélgica y Países Bajos: " +
+    "Piscinas públicas cerca de ti en Francia, Alemania, Inglaterra, España, Portugal, Italia, Suiza, Austria, Bélgica y Países Bajos: " +
     "tipos de piscina, horarios y precios, con mapa y cómo llegar.",
   subtitle:
     "Encuentra las piscinas públicas a tu alrededor: tipos de piscina, horarios y precios cuando se conocen.",
@@ -2498,7 +2843,7 @@ const es: Dict = {
   distanceTitle: "Distancia en línea recta",
   favAdd: (name) => `Añadir ${name} a favoritas`,
   favRemove: (name) => `Quitar ${name} de favoritas`,
-  envLabels: { int: "Cubierta", ext: "Al aire libre", mix: "Cubierta + al aire libre" },
+  envLabels: { int: "Cubierta", ext: "Al aire libre", mix: "Cubierta + al aire libre", nat: "Playa / piscina natural" },
   contribTitle: "¿Falta información?",
   contribIntro: "¿Nadas aquí? Completa la ficha: tu respuesta se muestra al momento para todos.",
   contribEnvQ: "¿Cubierta o al aire libre?",
@@ -2509,6 +2854,63 @@ const es: Dict = {
   contribTooMany: "Demasiados envíos, inténtalo dentro de una hora.",
   contribError: "No se pudo enviar, inténtalo más tarde.",
   contribBadge: "añadido por bañistas",
+  contribConfirm: (v) => `¿Seguro: ${v}? Tu respuesta será visible para todos.`,
+  contribYes: "Sí, guardar",
+  contribCancel: "Cancelar",
+  contribEdit: (n) => `Completar o corregir la ficha de ${n}`,
+  contribHoursQ: "¿Horario?",
+  contribHoursStart: "Introducir horario",
+  contribClosed: "cerrado",
+  contribAddRange: "+ franja",
+  contribCopyAll: "Copiar el lunes a todos los días",
+  contribNext: "Continuar",
+  contribHoursInvalid: "Completa cada día abierto (inicio antes del final) o marca «cerrado».",
+  contribPriceQ: "¿Precios?",
+  contribFree: "Entrada gratuita",
+  contribHoursNote: "Horario añadido por bañistas: compruébalo en la web oficial.",
+  addTitle: "Añadir una piscina",
+  addSubtitle: "¿Falta una piscina pública? Propónla: aparecerá tras una breve revisión.",
+  addLink: "¿Falta una piscina? Añadirla",
+  addName: "Nombre de la piscina",
+  addWhere: "¿Dónde está?",
+  addWhereHint: "Busca la dirección o usa «Cerca de mí» si estás allí.",
+  addOptional: "Opcional",
+  addWebsite: "Web oficial",
+  addNote: "Mensaje para la autora (no se publica)",
+  addReview: "Revisar la propuesta",
+  addConfirm: "¿Está todo bien? Tras la revisión, la piscina será visible para todos.",
+  addSend: "Proponer",
+  addEdit: "Modificar",
+  addThanks: "¡Gracias! Tu propuesta se revisará y luego se publicará en SwimMaps.",
+  addExists: "Ya hay una piscina en este lugar:",
+  addMissing: "Indica un nombre (al menos 3 caracteres), una ubicación y un tipo.",
+  addedBadge: "añadida por bañistas",
+  addPhone: "Teléfono",
+  priceKinds: {
+    adult: "Adulto",
+    child: "Niño",
+    senior: "Mayor",
+    disabled: "Persona con discapacidad",
+    student: "Estudiante",
+    family: "Familia",
+    ten: "Bono 10 baños",
+    season: "Abono anual",
+  },
+  contribPricesStart: "Introducir precios",
+  contribCount: (n, f) => (n === 1 ? "1 dato añadido por bañistas — ¡gracias!" : `${f} datos añadidos por bañistas — ¡gracias!`),
+  contribHolidayToggle: "Otro horario en vacaciones escolares",
+  contribSeasonToggle: "Otro horario en un periodo (vacaciones de verano…)",
+  contribFrom: "del",
+  contribTo: "al",
+  corrClosure: "Cierre temporal",
+  closedUntil: (d) => `Cerrada temporalmente hasta el ${d}`,
+  closureNotice: (a, b) => `Cerrada del ${a} al ${b}`,
+  corrTitle: "¿Algo está mal?",
+  corrIntro: "Propón una corrección: la autora la revisa antes de aplicarla.",
+  corrHours: "Corregir el horario",
+  corrPrice: "Corregir el precio",
+  corrThanks: "¡Gracias! Tu corrección se revisará y luego se aplicará.",
+  corrConfirm: (v) => `¿Proponer esta corrección: ${v}?`,
   basinLabels: {
     sportif: "piscina deportiva",
     ludique: "piscina recreativa",
@@ -2603,7 +3005,7 @@ const es: Dict = {
   fbAnother: "Enviar otro mensaje",
   fbErrorDefault: "No es posible enviar el mensaje ahora mismo.",
   fbErrorMail: "También puedes enviar el mensaje por correo electrónico.",
-  fbSubject: "Swimmaps — comentarios",
+  fbSubject: "SwimMaps — comentarios",
 
   footerData: "Datos:",
   footerLicenceFR: "(licencia abierta)",
@@ -2619,21 +3021,21 @@ const es: Dict = {
 
   tipTitle: "Invítame a un café",
   tipDesc:
-    "Swimmaps es un proyecto personal e independiente. Si te ahorra un viaje en balde, puedes invitarme a un café.",
+    "SwimMaps es un proyecto personal e independiente. Si te ahorra un viaje en balde, puedes invitarme a un café.",
   tipButton: "Invítame a un café",
   tipNote: "Con café o sin él, la app sigue siendo gratuita e igual para todo el mundo.",
 
   coveredLabel: "Países cubiertos:",
   countryNames: {
     fr: "Francia", gb: "Inglaterra", de: "Alemania",
-    es: "España", it: "Italia", be: "Bélgica", nl: "Países Bajos",
+    es: "España", it: "Italia", be: "Bélgica", nl: "Países Bajos", ch: "Suiza", pt: "Portugal", at: "Austria",
   },
 
   sources: {
     title: "Fuentes de datos",
     subtitle: "De dónde proceden las piscinas, los horarios y los precios",
     intro:
-      "Swimmaps es una app personal e independiente, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. No inventa ningún dato: todo lo que muestra procede de las fuentes abiertas que figuran abajo, y la información que falta se indica como tal en lugar de suponerse. Comprueba siempre la información importante en la web oficial de la piscina.",
+      "SwimMaps es una app personal e independiente, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. No inventa ningún dato: todo lo que muestra procede de las fuentes abiertas que figuran abajo, y la información que falta se indica como tal en lugar de suponerse. Comprueba siempre la información importante en la web oficial de la piscina.",
     groups: [
       {
         title: "Francia",
@@ -2681,7 +3083,7 @@ const es: Dict = {
         ],
       },
       {
-        title: "España, Italia, Bélgica, Países Bajos",
+        title: "España, Portugal, Italia, Suiza, Austria, Bélgica, Países Bajos",
         items: [
           {
             label: "OpenStreetMap",
@@ -2723,15 +3125,15 @@ const es: Dict = {
       "Un script regenera los conjuntos de datos país por país y los incluye en la app; la fecha de la última extracción aparece en la parte superior de la página de inicio. Nada se completa a mano.",
       "La cobertura refleja el estado de los datos abiertos: en Francia se conoce el horario de una piscina de cada diez y el precio de una de cada cincuenta. En esos casos la interfaz muestra «desconocido» y un enlace a la web oficial.",
       "Los errores se corrigen en la fuente — en OpenStreetMap para horarios, precios y webs — o mediante el formulario de comentarios de la app.",
-      "Cuando falta el tipo de piscina o la longitud, los bañistas pueden completarlo; su respuesta aparece al momento, marcada como «añadido por bañistas», y nunca sustituye los datos de la fuente.",
+      "Cuando falta el tipo de piscina o la longitud, los bañistas pueden completarlo; su respuesta aparece al momento, marcada como «añadido por bañistas», y nunca sustituye los datos de la fuente. También pueden proponer una piscina que falte, que se publica tras la revisión de la autora.",
     ],
   },
   privacy: {
     title: "Política de privacidad",
-    subtitle: "La app «Swimmaps»",
+    subtitle: "La app «SwimMaps»",
     updated: (date) => `Última actualización: ${date}`,
     intro:
-      "Swimmaps es una app personal y voluntaria, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. Muestra las piscinas públicas a partir de datos abiertos. Esta página explica qué datos trata — en resumen: nada que te identifique, salvo lo que decidas escribirnos.",
+      "SwimMaps es una app personal y voluntaria, sin vínculo con los gestores de las piscinas ni con ninguna administración pública. Muestra las piscinas públicas a partir de datos abiertos. Esta página explica qué datos trata — en resumen: nada que te identifique, salvo lo que decidas escribirnos.",
     sections: [
       {
         title: "Datos personales recogidos",
@@ -2762,7 +3164,7 @@ const es: Dict = {
       {
         title: "Completar fichas (opcional)",
         paragraphs: [
-          "Cuando completas una ficha (tipo de piscina, longitud), solo se guarda tu respuesta con la fecha, en una base de datos Upstash (alojada a través de Vercel); se muestra a todos y la autora recibe un aviso por correo. Tu dirección IP se conserva como máximo una hora, solo para limitar envíos masivos.",
+          "Cuando completas una ficha (tipo de piscina, longitud), solo se guarda tu respuesta con la fecha, en una base de datos Upstash (alojada a través de Vercel); se muestra a todos y la autora recibe un aviso por correo. Tu dirección IP se conserva como máximo una hora, solo para limitar envíos masivos. Una piscina propuesta (nombre, ubicación, web, mensaje opcional) se guarda igual; solo se publica tras la aprobación de la autora, y el mensaje nunca.",
         ],
       },
       {
@@ -2790,7 +3192,484 @@ const es: Dict = {
   },
 };
 
-const DICTS: Record<Locale, Dict> = { fr, en, de, es, it, nl };
+const pt: Dict = {
+  intlLocale: "pt-PT",
+  metaTitle: "SwimMaps — encontra uma piscina perto de ti",
+  metaDescription:
+    "Piscinas públicas perto de ti em Portugal, Espanha, França, Alemanha, Inglaterra, Itália, Suíça, Áustria, Bélgica e Países Baixos: " +
+    "tipos de piscina, horários e preços, com mapa e indicações.",
+  subtitle:
+    "Encontra as piscinas públicas à tua volta: tipos de piscina, horários e preços quando conhecidos.",
+
+  langAria: "Idioma / Language / Langue",
+  navSources: "Fontes",
+  navPrivacy: "Privacidade",
+  navFeedback: "Reportar um erro",
+  backHome: "Todas as piscinas",
+  dataDate: (date) => `Dados de ${date}`,
+  dataInfoAria: "Como são atualizados os dados",
+  dataInfo:
+    "Os conjuntos de dados (Data ES, Active Places, Bäderleben, OpenStreetMap) são reconstruídos por script e incluídos na app: a data é a da última extração. As piscinas de Toulouse recebem ainda o estado diário em direto.",
+  themeNames: { system: "automático", light: "claro", dark: "escuro" },
+  themeSwitch: (current, next) => `Tema: ${current} — mudar para ${next}`,
+
+  iosInstallLead: "Instala a app: toca em",
+  iosInstallTail: "e depois em “Adicionar ao ecrã principal”.",
+  iosHow: "Como?",
+  iosHideSteps: "Ocultar os passos",
+  iosDismiss: "Ocultar este convite",
+  iosShare: "Partilhar",
+  iosStep1: "— no Safari, em baixo no ecrã do iPhone, em cima à direita no iPad.",
+  iosStep2a: "Desliza a lista de ações até",
+  iosStep2b: "“Adicionar ao ecrã principal”.",
+  iosCopy: "Copiar",
+  iosBookmark: "Adicionar marcador",
+  iosAddHome: "Adicionar ao ecrã principal",
+  iosCancel: "Cancelar",
+  iosAdd: "Adicionar",
+  iosStep3a: "Toca em",
+  iosStep3b: "O ícone aparece no ecrã principal: abre a app a partir daí.",
+
+  offlineBanner:
+    "Estás sem ligação. As piscinas mostradas vêm do último carregamento — o mapa e a pesquisa de moradas voltam com a rede.",
+  offlineReload: "Recarregar",
+
+  searchPlaceholder: "Morada, localidade, código postal…",
+  searchAria: "Pesquisar uma morada",
+  locateButton: "📍 Perto de mim",
+  locating: "A localizar…",
+  errNoGeolocation: "A geolocalização não está disponível neste dispositivo.",
+  errGeoDenied: "Localização recusada ou indisponível — pesquisa antes uma morada.",
+  errSearchDown: "A pesquisa de moradas está indisponível de momento.",
+
+  savedAddressesAria: "Moradas guardadas",
+  saveAddress: "☆ Guardar",
+  removeAddress: (label) => `Remover a morada ${label}`,
+
+  poolSearchPlaceholder: "Pesquisa uma piscina ou localidade dentro do raio…",
+  poolSearchAria: "Pesquisar uma piscina ou localidade",
+  poolSearchClear: "Limpar a pesquisa",
+  searchCount: (n, total) =>
+    `${n === 0 ? "Nenhuma piscina tem este nome" : `${n} piscina${n > 1 ? "s" : ""} encontrada${n > 1 ? "s" : ""}`} entre as ${total} dentro do raio, sem contar com os filtros.`,
+  searchNone: (query) => `Nenhuma piscina corresponde a “${query}”.`,
+
+  radiusLabel: "Raio",
+  radiusAria: "Raio de pesquisa",
+  typeLabel: "Tipo",
+  typeAria: "Tipo de piscina",
+  typeAll: "Todas",
+  typeIndoor: "Coberta",
+  typeOutdoor: "Ao ar livre",
+  openLabel: "Aberta",
+  openAria: "Abertura",
+  openTitle:
+    "“Esta semana”: exclui os encerramentos sazonais conhecidos. “Hoje”: mantém as piscinas com horário desconhecido. “Agora”: só as piscinas com horário conhecido e abertas neste momento.",
+  openAll: "Todas",
+  openWeek: "Esta semana",
+  openWeekShort: "Semana",
+  openNow: "Agora",
+  openNowShort: "Agora",
+  openToday: "Hoje",
+  openTodayShort: "Hoje",
+  favLabel: "Favoritas",
+  favAria: "Favoritas",
+  favAll: "Todas",
+  favOnly: "★ Favoritas",
+  favTip:
+    "💡 Toca em ☆ ao lado do nome de uma piscina para a seguir: passa para o topo da lista e o botão ★ Favoritas volta a mostrá-la.",
+  favTipOk: "Percebi",
+  lenLabel: "Comprimento",
+  lenAria: "Comprimento da piscina",
+  lenAll: "Qualquer",
+
+  sectionTimeline: "Horários por dia",
+  sectionMap: "Onde ficam as piscinas",
+  sectionList: (n) => `As piscinas (${n})`,
+
+  dayShort: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"],
+  todaySuffix: "(hoje)",
+  legendOpenNow: "aberta agora",
+  legendSlot: "horário de abertura",
+  legendNow: "agora",
+  timelineUnknown: (n) =>
+    `${n} piscina${n > 1 ? "s" : ""} dentro do raio com horário desconhecido não ${n > 1 ? "são mostradas" : "é mostrada"} aqui.`,
+  timelineMore: (n) => `Mais ${n} mais longe — reduz o raio para as veres.`,
+  timelineSeasonal: "encerramento sazonal",
+  timelineClosed: "fechada",
+  timelineHolidayNote:
+    "Semana normal em período escolar; os horários das férias escolares estão na página de cada piscina.",
+  timelineGoto: (name) => `Ir para ${name}`,
+
+  loadError: "Não foi possível carregar a lista de piscinas. Recarrega a página.",
+  emptyTitle: "Onde procuras uma piscina?",
+  emptyHint: "Toca em “📍 Perto de mim” ou escreve uma morada acima.",
+  referenced: (n) => `${n} piscinas públicas registadas.`,
+  loadingPools: "A carregar as piscinas…",
+  noneInRadius: "Nenhuma piscina dentro deste raio — experimenta um maior.",
+  noneInRadiusNear: (km) => `Nenhuma piscina dentro deste raio — a mais próxima fica a ${km}.`,
+  noneFavorite: "Nenhuma piscina favorita dentro deste raio — toca em ☆ numa piscina para a adicionar.",
+  noneFilters: "Nenhuma piscina corresponde a estes filtros dentro deste raio.",
+  countLine: (n, radiusKm, label) =>
+    `${n} piscina${n > 1 ? "s" : ""} a menos de ${radiusKm} km de ${label} (em linha reta).`,
+  showMore: (n) => `Ver mais (faltam ${n})`,
+  mapAria: "Mapa das piscinas",
+  mapOpenCount: (n) => `${n} piscina${n > 1 ? "s" : ""} aberta${n > 1 ? "s" : ""} neste momento.`,
+  mapHint: "Toca num marcador para abrir a página. ★ = piscina favorita, cor viva = aberta neste momento.",
+  mapPopupDetail: "Detalhes",
+
+  distanceTitle: "Distância em linha reta",
+  favAdd: (name) => `Adicionar ${name} às favoritas`,
+  favRemove: (name) => `Remover ${name} das favoritas`,
+  envLabels: { int: "Coberta", ext: "Ao ar livre", mix: "Coberta + ao ar livre", nat: "Praia / piscina natural" },
+  contribTitle: "Falta informação?",
+  contribIntro: "Nadas aqui? Completa a ficha: a tua resposta fica logo visível para todos.",
+  contribEnvQ: "Coberta ou ao ar livre?",
+  contribLenQ: "Comprimento da piscina principal?",
+  contribOtherLen: "Outro (m)",
+  contribSend: "OK",
+  contribThanks: "Obrigado, foi adicionado!",
+  contribTooMany: "Demasiados envios, tenta de novo daqui a uma hora.",
+  contribError: "Não foi possível enviar, tenta de novo mais tarde.",
+  contribBadge: "adicionado por um nadador",
+  contribConfirm: (v) => `Tens a certeza: ${v}? A tua resposta ficará visível para todos.`,
+  contribYes: "Sim, guardar",
+  contribCancel: "Cancelar",
+  contribEdit: (n) => `Completar ou corrigir os dados de ${n}`,
+  contribHoursQ: "Horário de abertura?",
+  contribHoursStart: "Indicar o horário",
+  contribClosed: "fechada",
+  contribAddRange: "+ horário",
+  contribCopyAll: "Copiar segunda-feira para todos os dias",
+  contribNext: "Continuar",
+  contribHoursInvalid: "Preenche todos os dias de abertura (início antes do fim) ou marca “fechada”.",
+  contribPriceQ: "Preços?",
+  contribFree: "Entrada gratuita",
+  contribHoursNote: "Horário adicionado por um nadador — confirma no site oficial.",
+  addTitle: "Adicionar uma piscina",
+  addSubtitle: "Falta uma piscina pública? Sugere-a: aparecerá depois de uma verificação rápida.",
+  addLink: "Falta uma piscina? Adiciona-a",
+  addName: "Nome da piscina",
+  addWhere: "Onde fica?",
+  addWhereHint: "Pesquisa a morada ou usa “📍 Perto de mim” se estiveres no local.",
+  addOptional: "Opcional",
+  addWebsite: "Site oficial",
+  addNote: "Mensagem para a autora (não publicada)",
+  addReview: "Rever a sugestão",
+  addConfirm: "Está tudo certo? Depois de verificada, a piscina ficará visível para todos.",
+  addSend: "Sugerir",
+  addEdit: "Editar",
+  addThanks: "Obrigado! A tua sugestão será verificada e depois publicada no SwimMaps.",
+  addExists: "Já existe uma piscina neste local:",
+  addMissing: "Indica um nome (pelo menos 3 caracteres), um local e um tipo.",
+  addedBadge: "adicionada por um nadador",
+  addPhone: "Telefone",
+  priceKinds: {
+    adult: "Adulto",
+    child: "Criança",
+    senior: "Sénior",
+    disabled: "Pessoa com deficiência",
+    student: "Estudante",
+    family: "Família",
+    ten: "Cartão de 10 entradas",
+    season: "Passe anual",
+  },
+  contribPricesStart: "Indicar os preços",
+  contribCount: (n, f) => (n === 1 ? "1 dado adicionado por um nadador — obrigado!" : `${f} dados adicionados por nadadores — obrigado!`),
+  contribHolidayToggle: "Outro horário nas férias escolares",
+  contribSeasonToggle: "Outro horário num período (férias de verão…)",
+  contribFrom: "de",
+  contribTo: "a",
+  corrClosure: "Encerramento temporário",
+  closedUntil: (d) => `Fechada temporariamente até ${d}`,
+  closureNotice: (a, b) => `Fechada de ${a} a ${b}`,
+  corrTitle: "Algo está errado?",
+  corrIntro: "Sugere uma correção: a autora verifica-a antes de a aplicar.",
+  corrHours: "Corrigir o horário",
+  corrPrice: "Corrigir o preço",
+  corrThanks: "Obrigado! A tua correção será verificada e depois aplicada.",
+  corrConfirm: (v) => `Sugerir esta correção: ${v}?`,
+  basinLabels: {
+    sportif: "piscina desportiva",
+    ludique: "piscina lúdica",
+    mixte: "piscina mista",
+    toboggan: "piscina de escorrega",
+    plongeon: "fosso de saltos",
+    plongée: "fosso de mergulho",
+    principal: "piscina principal",
+    apprentissage: "piscina de aprendizagem",
+    lido: "piscina ao ar livre",
+    pataugeoire: "chapinheiro",
+    vagues: "piscina de ondas",
+    spa: "jacuzzi",
+    kneipp: "tanque Kneipp",
+    naturel: "piscina natural",
+  },
+  basinFallback: (label) => `piscina ${label}`,
+
+  seasonalClosed: "Fechada fora de época",
+  badgeOpenNow: "Aberta agora",
+  badgeOpenUntil: (time) => `Aberta · até às ${time}`,
+  badgeOpensAt: (time) => `Abre às ${time}`,
+  badgeDone: "Já fechou hoje",
+  badgeClosedNow: "Fechada agora",
+  badgeClosedToday: "Fechada hoje",
+  todayLabel: "Hoje:",
+  liveSource: (at) => `Estado do dia verificado ${at} — piscines-toulouse.fr`,
+  toulouseRecommend: "Semana completa, encerramentos e preços em Piscines de Toulouse",
+  schoolTerm: "Período escolar",
+  schoolHolidays: "Férias escolares",
+  specialPeriods: "Períodos especiais",
+  hoursLabel: "Horário:",
+  centreHoursNote:
+    "Horário do complexo (fonte: site oficial) — os horários da piscina podem ser diferentes.",
+  noHours: "Horário desconhecido — consulta o site oficial.",
+  priceLabel: "Preço:",
+  paidEntry: "Entrada paga",
+  freeEntry: "Entrada gratuita",
+  directions: "Como chegar",
+  directionsAria: (name) => `Como chegar a ${name} (Google Maps)`,
+  directionsTitle: "Como chegar — abre o Google Maps",
+  phoneAria: (name, phone) => `Ligar para ${name} através do ${phone}`,
+  phoneTitle: (phone) => `Ligar para a receção — ${phone}`,
+  website: "Site",
+  websiteAria: (name) => `Site oficial de ${name} (novo separador)`,
+  websiteTitle: "Site oficial — abre num novo separador",
+  searchWebsite: "Procurar o site",
+  searchWebsiteTitle: "Site desconhecido — pesquisar na web",
+  detailLink: "Detalhes",
+  detailLinkTitle: "Página de detalhe — horário semanal e informações práticas",
+
+  detailMetaTitle: (name, city) => `${name} em ${city} — horários, piscinas e acesso`,
+  detailMetaDescription: (name, city) =>
+    `${/piscin|aqu[aá]tic|natat|parque|pool|swim/i.test(name) ? name : `Piscina ${name}`} em ${city}: horários quando conhecidos, piscinas, preço, morada e como chegar.`,
+  detailSubtitle: (city) => `Piscina pública em ${city} — horários, piscinas e acesso.`,
+  detailHoursTitle: "Horário semanal",
+  detailHoursNote:
+    "Os horários vêm de fontes abertas (OpenStreetMap, site oficial) — confirma antes de te deslocares.",
+  detailHoursUnknown:
+    "O horário não consta das nossas fontes: consulta o site oficial ou liga para a receção.",
+  detailRawHours: "Horário publicado (não interpretado)",
+  detailInfoTitle: "Informações práticas",
+  detailAddress: "Morada",
+  detailBasins: "Piscinas",
+  detailLengths: "Comprimentos",
+  detailNearbyTitle: "Outras piscinas perto",
+  detailNearbyAway: (km) => `a ${km}`,
+  detailBack: "← Todas as piscinas perto de mim",
+
+  fbTitle: "💬 Reportar um erro ou dar a tua opinião",
+  fbIntro:
+    "Horário errado, piscina fechada ou em falta, uma ideia? Diz-nos — ajuda a corrigir a app e as suas fontes abertas.",
+  fbKinds: {
+    hours: "Horário errado",
+    info: "Informação errada",
+    missing: "Piscina em falta ou fechada",
+    suggestion: "Sugestão",
+    other: "Outro",
+  },
+  fbPool: "Piscina em causa (opcional)",
+  fbPoolPlaceholder: "Nome e localidade",
+  fbMessage: "A tua mensagem",
+  fbMessagePlaceholder: "Ex.: a piscina fecha às 19h ao sábado, não às 20h.",
+  fbEmail: "O teu e-mail",
+  fbEmailHint: "(opcional, para uma resposta)",
+  fbSend: "Enviar",
+  fbSending: "A enviar…",
+  fbOrEmail: "ou por e-mail",
+  fbSent: "✓ Obrigado, a tua mensagem chegou.",
+  fbSentHint:
+    "Os horários também podem ser corrigidos diretamente no OpenStreetMap — assim todos beneficiam.",
+  fbAnother: "Enviar outra mensagem",
+  fbErrorDefault: "De momento não é possível enviar.",
+  fbErrorMail: "Também podes enviar a mensagem por e-mail.",
+  fbSubject: "SwimMaps — feedback",
+
+  footerData: "Dados:",
+  footerLicenceFR: "(licença aberta)",
+  footerLicenceGB: "(licença OGL v3)",
+  footerLicenceDE:
+    "(© Bundesinstitut für Sportwissenschaft · coordenadas © GeoBasis-DE / BKG 2021)",
+  footerOsm: "© colaboradores do OpenStreetMap",
+  footerDisclaimer:
+    "Os horários e preços vêm de fontes abertas e só estão disponíveis para parte " +
+    "das piscinas — consulta o site oficial antes de te deslocares.",
+  footerIndependent:
+    "App pessoal e independente, sem ligação aos operadores das piscinas nem a qualquer entidade pública.",
+
+  tipTitle: "Paga-me um café",
+  tipDesc:
+    "O SwimMaps é um projeto pessoal e independente. Se te poupar uma viagem em vão, podes pagar-me um café.",
+  tipButton: "Paga-me um café",
+  tipNote: "Com ou sem café, a app continua gratuita e igual para todos.",
+
+  coveredLabel: "Países abrangidos:",
+  countryNames: {
+    fr: "França", gb: "Inglaterra", de: "Alemanha",
+    es: "Espanha", it: "Itália", be: "Bélgica", nl: "Países Baixos", ch: "Suíça", pt: "Portugal", at: "Áustria",
+  },
+
+  sources: {
+    title: "Fontes dos dados",
+    subtitle: "De onde vêm as piscinas, os horários e os preços",
+    intro:
+      "O SwimMaps é uma app pessoal e independente, sem ligação aos operadores das piscinas nem a qualquer entidade pública. Não inventa dados: tudo o que mostra vem das fontes abertas abaixo, e a informação em falta aparece como em falta em vez de ser adivinhada. Confirma sempre a informação importante no site oficial da piscina.",
+    groups: [
+      {
+        title: "França",
+        items: [
+          {
+            label: "Data ES — recenseamento nacional de equipamentos desportivos",
+            detail:
+              "Ministério do Desporto francês, licença aberta: nome, morada, coordenadas, piscinas e comprimentos. Os equipamentos de acesso restrito (escolas, militares, hotéis…) são excluídos.",
+            url: URLS.dataEs,
+          },
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL: horários (opening_hours), preço, site e telefone, associados por proximidade geográfica (< 300 m).",
+            url: URLS.osm,
+          },
+          {
+            label: "Piscines de Toulouse — estado do dia em direto",
+            detail:
+              "A app irmã lê as páginas oficiais de Toulouse e arredores; o seu estado substitui os horários do OSM para essas piscinas.",
+            url: URLS.toulouse,
+          },
+        ],
+      },
+      {
+        title: "Inglaterra",
+        items: [
+          {
+            label: "Active Places (Sport England)",
+            detail:
+              "Licença OGL v3: piscinas abertas ao público (“Pay and Play” e clubes comunitários), comprimentos e sites. O mesmo enriquecimento com OpenStreetMap que em França.",
+            url: URLS.activePlaces,
+          },
+        ],
+      },
+      {
+        title: "Alemanha",
+        items: [
+          {
+            label: "Bäderleben (Bundesinstitut für Sportwissenschaft)",
+            detail:
+              "Piscinas públicas com preços de entrada, comprimentos, sites e telefones. © BISp; coordenadas © GeoBasis-DE / BKG 2021.",
+            url: URLS.baederleben,
+          },
+        ],
+      },
+      {
+        title: "Portugal, Espanha, Itália, Suíça, Áustria, Bélgica, Países Baixos",
+        items: [
+          {
+            label: "OpenStreetMap",
+            detail:
+              "ODbL, fonte única: piscinas e parques aquáticos com nome, excluindo hotéis e parques de campismo. Horários e preços são mais raros do que noutros países; a localidade é a mais próxima quando falta a morada.",
+            url: URLS.osm,
+          },
+        ],
+      },
+      {
+        title: "Outros serviços utilizados",
+        items: [
+          {
+            label: "Sites oficiais das piscinas",
+            detail:
+              "Horário do complexo lido nos seus dados estruturados schema.org quando o OpenStreetMap não o tem (assinalado como tal na página).",
+            url: URLS.schema,
+          },
+          {
+            label: "Base Adresse Nationale",
+            detail: "Pesquisa de moradas em França (api-adresse.data.gouv.fr).",
+            url: URLS.ban,
+          },
+          {
+            label: "Photon (komoot)",
+            detail: "Pesquisa de moradas fora de França, com dados do OpenStreetMap.",
+            url: URLS.photon,
+          },
+          {
+            label: "Mapa de base OpenStreetMap",
+            detail: "Mosaicos servidos pela OpenStreetMap Foundation.",
+            url: URLS.tiles,
+          },
+        ],
+      },
+    ],
+    howTitle: "Como são recolhidos os dados",
+    how: [
+      "Um script reconstrói os conjuntos de dados país a país e inclui-os na app; a data da última extração aparece no topo da página inicial. Nada é completado à mão.",
+      "A cobertura reflete o estado dos dados abertos: em França, o horário é conhecido para cerca de uma piscina em cada dez e o preço para uma em cada cinquenta. A interface mostra então “desconhecido” e um link para o site oficial.",
+      "Os erros são corrigidos na fonte — no OpenStreetMap para horários, preços e sites — ou através do formulário de feedback da app.",
+      "Quando falta o tipo ou o comprimento da piscina, os nadadores podem preenchê-lo; a resposta aparece logo, marcada “adicionado por um nadador”, e nunca substitui os dados da fonte. Também podem sugerir uma piscina em falta, publicada depois de a autora a verificar.",
+    ],
+  },
+  privacy: {
+    title: "Política de privacidade",
+    subtitle: "A app “SwimMaps”",
+    updated: (date) => `Última atualização: ${date}`,
+    intro:
+      "O SwimMaps é uma app pessoal e voluntária, sem ligação aos operadores das piscinas nem a qualquer entidade pública. Mostra piscinas públicas a partir de dados abertos. Esta página explica que dados trata — em resumo: nada que te identifique, exceto o que decidires escrever-nos.",
+    sections: [
+      {
+        title: "Dados pessoais recolhidos",
+        paragraphs: [
+          "Nenhuns, por defeito. A app não exige conta e não recolhe dados sobre ti. Só acede à tua localização se tocares em “📍 Perto de mim”, e essa localização fica no teu navegador: serve para calcular distâncias e nunca é enviada para o nosso servidor.",
+          "Quando escreves uma morada, o texto é enviado para serviços de pesquisa de moradas (Base Adresse Nationale para França, Photon/komoot nos restantes países) para ser convertido em coordenadas. Nada mais lhes é transmitido.",
+        ],
+      },
+      {
+        title: "Armazenamento local no teu dispositivo",
+        paragraphs: [
+          "As tuas favoritas (★), moradas guardadas, última pesquisa, tema escolhido e blocos recolhidos ficam no armazenamento local do teu navegador, apenas no teu dispositivo. Nunca são transmitidos e desaparecem se apagares os dados do site.",
+        ],
+      },
+      {
+        title: "Rastreio, publicidade e cookies",
+        paragraphs: [
+          "A app não contém publicidade e não define cookies.",
+          "Usa a medição de audiência da Vercel, fornecida pelo seu alojamento, que conta visitas e páginas vistas. Esta medição é agregada e sem cookies: não cria perfis, não te segue entre sites e não te pode identificar.",
+        ],
+      },
+      {
+        title: "Serviços de terceiros mostrados na página",
+        paragraphs: [
+          "O mapa de base é servido pela OpenStreetMap Foundation: como em qualquer imagem carregada de outro site, o teu endereço IP fica visível para ela. O estado diário das piscinas de Toulouse é lido na app irmã Piscines de Toulouse, sem qualquer dado sobre ti.",
+        ],
+      },
+      {
+        title: "Completar os dados de uma piscina (opcional)",
+        paragraphs: [
+          "Quando completas um dado de uma piscina (tipo, comprimento), só a tua resposta e a data são guardadas, numa base de dados Upstash (alojada através da Vercel); é mostrada a todos e a autora é notificada por e-mail. O teu endereço IP é guardado no máximo uma hora, apenas para limitar rajadas de envios. Uma piscina sugerida (nome, local, site, mensagem opcional) é guardada da mesma forma; só é publicada depois de a autora a aprovar, e a mensagem nunca o é.",
+        ],
+      },
+      {
+        title: "Formulário de feedback (opcional)",
+        paragraphs: [
+          "O formulário só transmite o que escreves: o tipo de reporte, a piscina em causa, a tua mensagem e — se quiseres — o teu endereço de e-mail. É enviado por e-mail à autora da app (através do fornecedor Resend), apenas para corrigir a app e, se for caso disso, responder-te. Sem lista de correio, sem partilha, sem revenda; escreve-nos para que uma mensagem enviada seja apagada.",
+        ],
+      },
+      {
+        title: "Dados técnicos de alojamento",
+        paragraphs: [
+          "O site está alojado na Vercel. Como qualquer servidor web, o alojamento pode registar dados técnicos padrão (endereço IP, tipo de navegador) apenas para servir a página e manter o serviço seguro. Estes registos não são consultados nem usados pela autora.",
+        ],
+      },
+      {
+        title: "Os teus direitos",
+        paragraphs: [
+          "Se não enviaste qualquer feedback, não existe nenhum dado sobre ti. Caso contrário, podes a qualquer momento pedir para aceder, corrigir ou apagar o que te diz respeito no endereço abaixo.",
+        ],
+      },
+    ],
+    contactTitle: "Contacto",
+    changesTitle: "Alterações",
+    changes: "Esta política pode ser atualizada. A data da última atualização aparece no topo da página.",
+  },
+};
+
+const DICTS: Record<Locale, Dict> = { fr, en, de, es, it, nl, pt };
 
 export function getDict(locale: Locale): Dict {
   return DICTS[locale] ?? DICTS[DEFAULT_LOCALE];

@@ -10,11 +10,14 @@ import {
   formatWeekFR,
   isInClosedPeriod,
   prettifyOpeningHours,
+  seasonLines,
   type WeekSchedule,
 } from "@/lib/opening-hours";
 import { formatSlotTime, toulouseUrl, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, type DayState } from "@/lib/pool-state";
 import { poolPagePath } from "@/lib/slug";
+import { CONTRIB_ANCHOR, envKey, missingFields, nextClosure, pricesText } from "@/lib/contrib";
+import { FEEDBACK_ANCHOR } from "@/lib/feedback";
 import { toggleFavorite, useFavorites } from "@/components/use-favorites";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { useNow } from "@/components/use-now";
@@ -57,6 +60,12 @@ function Pill({
   );
 }
 
+/** « 2026-12-31 » → « 31 décembre 2026 » dans la langue de l'interface. */
+function longDate(iso: string, intlLocale: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(intlLocale, { day: "numeric", month: "long", year: "numeric" });
+}
+
 function Badge({ state }: { state: DayState }) {
   const dict = useDict();
   const locale = useLocale();
@@ -71,6 +80,8 @@ function Badge({ state }: { state: DayState }) {
       return <Pill tone="closed">{dict.badgeClosedToday}</Pill>;
     case "seasonal":
       return <Pill tone="seasonal">{dict.seasonalClosed}</Pill>;
+    case "temporary":
+      return <Pill tone="seasonal">{dict.closedUntil(longDate(state.until, dict.intlLocale))}</Pill>;
     default:
       return null;
   }
@@ -83,6 +94,7 @@ const SEARCH_WORD: Record<Locale, string> = {
   es: "piscina",
   it: "piscina",
   nl: "zwembad",
+  pt: "piscina",
 };
 
 const ICON_BTN =
@@ -112,9 +124,12 @@ export function PoolCard({
     : false;
   const state: DayState = now ? poolDayState(pool, live, now, locale) : { kind: "unknown" };
 
-  const tarif = pool.charge
-    ? pool.charge
-    : pool.fee === true
+  const upcoming = now ? nextClosure(pool, now) : undefined;
+  const tarif = pool.prices
+    ? pricesText(pool.prices, pool.country, dict.priceKinds)
+    : pool.charge
+      ? pool.charge
+      : pool.fee === true
       ? dict.paidEntry
       : pool.fee === false
         ? dict.freeEntry
@@ -176,6 +191,18 @@ export function PoolCard({
                   </svg>
                 </Link>
               )}
+              {showDetails && (
+                <Link
+                  href={`${detailHref}#${missingFields(pool).length ? CONTRIB_ANCHOR : FEEDBACK_ANCHOR}`}
+                  aria-label={dict.contribEdit(pool.name)}
+                  title={dict.contribEdit(pool.name)}
+                  className="ml-1 inline-block h-6 w-6 overflow-hidden rounded-lg bg-violet-500 p-[5px] align-[-0.35rem] text-white shadow-sm transition-colors hover:bg-violet-600 dark:bg-violet-700 dark:hover:bg-violet-600"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="block h-3.5 w-3.5 fill-current">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                  </svg>
+                </Link>
+              )}
             </h2>
           </div>
           <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
@@ -193,12 +220,12 @@ export function PoolCard({
             ))}
             {pool.env && (
               <span className="rounded-full bg-fuchsia-50 px-2 py-0.5 text-[11px] font-medium text-fuchsia-700 ring-1 ring-fuchsia-200 dark:bg-fuchsia-400/15 dark:text-fuchsia-100 dark:ring-white/15">
-                {dict.envLabels[pool.env]}
+                {dict.envLabels[envKey(pool)!]}
               </span>
             )}
-            {pool.contributed && (
+            {(pool.contributed || pool.addedBy) && (
               <span className="px-1 py-0.5 text-[11px] italic text-slate-400 dark:text-slate-400">
-                {dict.contribBadge}
+                {pool.addedBy ? dict.addedBadge : dict.contribBadge}
               </span>
             )}
             {pool.basins.map((b) => (
@@ -313,6 +340,11 @@ export function PoolCard({
             </p>
           </div>
         )}
+        {upcoming && (
+          <p className="text-xs font-medium text-rose-700 dark:text-rose-300">
+            {dict.closureNotice(longDate(upcoming.from, dict.intlLocale), longDate(upcoming.to, dict.intlLocale))}
+          </p>
+        )}
         {!live &&
           (parsed ? (
             <div>
@@ -330,10 +362,12 @@ export function PoolCard({
                   <WeekLines week={parsed.holidayWeek} />
                 </>
               )}
-              {pool.hoursFrom === "web" && (
-                <p className="mt-1 text-[10px] text-slate-400">{dict.centreHoursNote}</p>
+              {pool.hoursFrom && (
+                <p className="mt-1 text-[10px] text-slate-400">
+                  {pool.hoursFrom === "web" ? dict.centreHoursNote : dict.contribHoursNote}
+                </p>
               )}
-              {(parsed.extras.length > 0 || parsed.closedPeriods.length > 0) && (
+              {(parsed.extras.length > 0 || parsed.closedPeriods.length > 0 || parsed.seasons.length > 0) && (
                 <>
                   <p className="mt-2 text-[11px] font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
                     {dict.specialPeriods}
@@ -345,7 +379,7 @@ export function PoolCard({
                         {seasonalClosed ? " ●" : ""}
                       </li>
                     ))}
-                    {parsed.extras.map((line) => (
+                    {[...seasonLines(parsed, locale), ...parsed.extras].map((line) => (
                       <li key={line}>{line}</li>
                     ))}
                   </ul>

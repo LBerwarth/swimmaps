@@ -2,14 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import type { CountryIndex, Pool, PoolDataset, PoolWithDistance } from "@/lib/types";
 import type { Locale } from "@/lib/i18n";
 import { formatDistance, haversineKm } from "@/lib/geo";
-import { isInClosedPeriod, isOpenAt } from "@/lib/opening-hours";
+import { isInClosedPeriod, isOpenAt, weekAt } from "@/lib/opening-hours";
 import { fetchToulouseLive, isOpenNowLive, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
 import { matchesQuery } from "@/lib/search";
-import { applyContrib } from "@/lib/contrib";
+import { applyContrib, closureAt, contributionCount } from "@/lib/contrib";
 import {
   RADIUS_OPTIONS_KM,
   readFilterPreset,
@@ -21,7 +22,7 @@ import {
 import { FAV_TIP_KEY, clearFlag } from "@/lib/client-flags";
 import { LocationSearch, type UserLocation } from "@/components/location-search";
 import { PoolCard } from "@/components/pool-card";
-import { useContributions } from "@/components/use-contributions";
+import { useContributions, useUserPools } from "@/components/use-contributions";
 import { Chip, ChipLabel } from "@/components/chip";
 import { CollapsibleSection } from "@/components/collapsible-section";
 import { WeekTimeline } from "@/components/week-timeline";
@@ -89,10 +90,11 @@ function passesOpen(
     if (open === "today") return live.openToday;
     return true;
   }
+  if (closureAt(pool, now)) return false;
   const parsed = parsedHours(pool, locale);
   if (!parsed) return open !== "now";
   if (isInClosedPeriod(parsed.closedPeriods, now)) return false;
-  const weeks = [parsed.week, ...(parsed.holidayWeek ? [parsed.holidayWeek] : [])];
+  const weeks = [weekAt(parsed, now), ...(parsed.holidayWeek ? [parsed.holidayWeek] : [])];
   if (open === "now") return weeks.some((week) => isOpenAt(week, now));
   if (open === "week") return weeks.some((week) => week.some((day) => day.length > 0));
   const day = weekdayOf(now);
@@ -250,9 +252,10 @@ export function FinderView() {
   }, [index, location, poolsByCountry]);
 
   const contributions = useContributions();
+  const userPools = useUserPools();
   const allPools = useMemo(
-    () => [...poolsByCountry.values()].flat().map((p) => applyContrib(p, contributions[p.id])),
-    [poolsByCountry, contributions],
+    () => [...[...poolsByCountry.values()].flat(), ...userPools].map((p) => applyContrib(p, contributions[p.id])),
+    [poolsByCountry, userPools, contributions],
   );
 
   const loadingPools =
@@ -421,8 +424,18 @@ export function FinderView() {
     { value: "now", label: dict.openNow, short: dict.openNowShort },
   ];
 
+  const contribCount = contributionCount(contributions, userPools.length);
+
   return (
     <div className="space-y-4">
+      {contribCount > 0 && (
+        <p className="text-center text-xs text-violet-800/80 dark:text-violet-200/85">
+          🏊 {dict.contribCount(contribCount, contribCount.toLocaleString(dict.intlLocale))}{" "}
+          <Link href={`/${locale}/ajouter`} className="font-medium underline underline-offset-2">
+            {dict.addLink}
+          </Link>
+        </p>
+      )}
       <LocationSearch
         value={location}
         onChange={(l) => {
@@ -741,6 +754,14 @@ export function FinderView() {
             )}
           </CollapsibleSection>
 
+          <p className="pt-2 text-center text-sm">
+            <Link
+              href={`/${locale}/ajouter`}
+              className="font-medium text-fuchsia-700 underline underline-offset-2 hover:text-fuchsia-900 dark:text-fuchsia-300"
+            >
+              {dict.addLink}
+            </Link>
+          </p>
           {index && (
             <p className="pt-2 text-center text-xs text-slate-400">
               {dict.coveredLabel} {coveredCountries}

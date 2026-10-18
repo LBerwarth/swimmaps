@@ -1,20 +1,20 @@
-import { Redis } from "@upstash/redis";
-import { parseContribution, type ContribMap, type Contribution } from "@/lib/contrib";
+import {
+  applyContrib,
+  envOf,
+  pricesText,
+  missingFields,
+  parseContribution,
+  weekToOsm,
+  type ContribMap,
+  type Contribution,
+} from "@/lib/contrib";
 import { sendMail } from "@/lib/mail";
-import { getPoolBySlug } from "@/lib/pools-server";
+import { CONTRIB_KEY as KEY, redis, tooMany } from "@/lib/redis";
 import { poolPagePath } from "@/lib/slug";
 import { SITE_URL } from "@/lib/site";
+import { findPool } from "@/lib/user-pools";
 
 export const runtime = "nodejs";
-
-const KEY = "contrib";
-const MAX_PER_HOUR = 20;
-
-function redis(): Redis | null {
-  const url = process.env.KV_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN;
-  return url && token ? new Redis({ url, token }) : null;
-}
 
 export async function GET() {
   const db = redis();
@@ -28,38 +28,45 @@ export async function POST(req: Request) {
   const db = redis();
   if (!db) return Response.json({ error: "unavailable" }, { status: 503 });
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  const rl = `rl:contrib:${ip}`;
-  const hits = await db.incr(rl);
-  if (hits === 1) await db.expire(rl, 3600);
-  if (hits > MAX_PER_HOUR) return Response.json({ error: "too_many" }, { status: 429 });
+  if (await tooMany(db, req)) return Response.json({ error: "too_many" }, { status: 429 });
 
   const input = parseContribution(await req.json().catch(() => null));
   if (!input) return Response.json({ error: "invalid" }, { status: 400 });
-  const pool = getPoolBySlug(input.id);
+  const pool = await findPool(input.id);
   if (!pool) return Response.json({ error: "invalid" }, { status: 400 });
 
   // Premier arrivé : une valeur déjà connue (source ou visiteur) n'est pas écrasée.
   const prev = (await db.hget<Contribution>(KEY, pool.id)) ?? undefined;
-  const env = input.env && !pool.env && !prev?.env ? input.env : undefined;
-  const len = input.len && !pool.lens?.length && !prev?.lens?.length ? input.len : undefined;
-  if (!env && !len) return Response.json({ error: "known" }, { status: 409 });
+  const open = missingFields(applyContrib(pool, prev));
+  const choice = input.env && open.includes("env") ? envOf(input.env) : undefined;
+  const env = choice?.env;
+  const len = input.len && open.includes("lens") ? input.len : undefined;
+  const hours = input.week && open.includes("hours") ? weekToOsm(input.week, input.holiday, input.season) : undefined;
+  const prices = input.prices && open.includes("price") ? input.prices : undefined;
+  const free = input.free && open.includes("price") && pool.fee === undefined ? true : undefined;
+  if (!env && !len && !hours && !prices && !free) return Response.json({ error: "known" }, { status: 409 });
 
   const next: Contribution = {
     ...prev,
-    ...(env && { env }),
+    ...(choice && { env: choice.env, ...(choice.natural && { natural: true as const }) }),
     ...(len && { lens: [len] }),
+    ...(hours && { hours }),
+    ...(prices && { prices }),
+    ...(free && { free }),
     at: new Date().toISOString(),
   };
   await db.hset(KEY, { [pool.id]: next });
 
   await sendMail(
-    `Swimmaps — complément : ${pool.name}`,
+    `SwimMaps — complément : ${pool.name}`,
     [
       `Piscine : ${pool.name} (${pool.city}, ${pool.country}) — ${pool.id}`,
       `Page : ${SITE_URL}${poolPagePath("fr", pool)}`,
-      ...(env ? [`Type : ${env}`] : []),
+      ...(input.env && env ? [`Type : ${input.env}`] : []),
       ...(len ? [`Longueur : ${len} m`] : []),
+      ...(hours ? [`Horaires : ${hours}`] : []),
+      ...(prices ? [`Tarifs : ${pricesText(prices, pool.country)}`] : []),
+      ...(free ? ["Entrée gratuite"] : []),
       "",
       `Retirer : HDEL ${KEY} ${pool.id} (console Upstash)`,
     ].join("\n"),

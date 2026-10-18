@@ -33,7 +33,7 @@ const CACHE_TTL_MS = 30 * 24 * 3600 * 1000;
 const CONCURRENCY = 4;
 const FETCH_TIMEOUT_MS = 12000;
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36 Swimmaps-data";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36 SwimMaps-data";
 
 interface CacheEntry {
   hours: string | null;

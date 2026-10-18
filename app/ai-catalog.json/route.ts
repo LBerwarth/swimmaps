@@ -8,7 +8,7 @@ export function GET() {
   const catalog = {
     specVersion: "1.0",
     host: {
-      displayName: "Swimmaps",
+      displayName: "SwimMaps",
       documentationUrl: `${SITE_URL}/fr/sources`,
     },
     entries: [
@@ -18,7 +18,7 @@ export function GET() {
         type: 'text/markdown; profile="urn:air:agent-skills"',
         url: `${SITE_URL}/agent-skill.md`,
         description:
-          "Comment trouver une piscine publique près d'un lieu en France, Allemagne, Angleterre, Espagne, Italie, Belgique ou aux Pays-Bas : jeux de données ouverts par pays, fiches par piscine, horaires et tarifs quand ils sont connus, et limites des données.",
+          "Comment trouver une piscine publique près d'un lieu en France, Allemagne, Angleterre, Espagne, Portugal, Italie, Suisse, Autriche, Belgique ou aux Pays-Bas : jeux de données ouverts par pays, fiches par piscine, horaires et tarifs quand ils sont connus, et limites des données.",
         tags: ["piscine", "swimming pool", "Schwimmbad", "natation", "horaires", "open data"],
         representativeQueries: [
           "Quelle piscine publique près de Lyon a un bassin de 50 m ?",

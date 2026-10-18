@@ -55,9 +55,18 @@ export function getPoolBySlug(slug: string): Pool | undefined {
 
 /** Les `limit` piscines les plus proches (hors elle-même), avec leur distance. */
 export function nearestPools(pool: Pool, limit: number): Array<Pool & { distanceKm: number }> {
-  return load()
-    .pools.filter((p) => p.id !== pool.id)
-    .map((p) => ({ ...p, distanceKm: haversineKm(pool.lat, pool.lon, p.lat, p.lon) }))
-    .sort((a, b) => a.distanceKm - b.distanceKm)
-    .slice(0, limit);
+  // Top-k par insertion : copier et trier les ~14 000 fiches coûtait ~28 ms par rendu
+  const best: Array<{ p: Pool; d: number }> = [];
+  for (const p of load().pools) {
+    if (p.id === pool.id) continue;
+    const d = haversineKm(pool.lat, pool.lon, p.lat, p.lon);
+    if (best.length === limit && d >= best[limit - 1].d) continue;
+    let i = Math.min(best.length, limit - 1);
+    while (i > 0 && best[i - 1].d > d) {
+      best[i] = best[i - 1];
+      i--;
+    }
+    best[i] = { p, d };
+  }
+  return best.map(({ p, d }) => ({ ...p, distanceKm: d }));
 }

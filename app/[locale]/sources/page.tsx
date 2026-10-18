@@ -14,7 +14,7 @@ export async function generateMetadata({
   if (!isLocale(locale)) return {};
   const dict = getDict(locale);
   return {
-    title: `${dict.sources.title} — Swimmaps`,
+    title: `${dict.sources.title} — SwimMaps`,
     description: dict.sources.subtitle,
     alternates: {
       canonical: `/${locale}/sources`,

@@ -2,9 +2,11 @@ import type { Locale } from "./i18n";
 import {
   isInClosedPeriod,
   parseOpeningHours,
+  weekAt,
   type ParsedOpeningHours,
   type WeekSchedule,
 } from "./opening-hours";
+import { closureAt } from "./contrib";
 import type { LivePoolStatus } from "./toulouse-live";
 import type { Pool } from "./types";
 
@@ -15,6 +17,7 @@ export type DayState =
   | { kind: "done" }
   | { kind: "closed" }
   | { kind: "seasonal" }
+  | { kind: "temporary"; until: string }
   | { kind: "unknown" };
 
 export type Range = [number, number];
@@ -89,11 +92,13 @@ export function poolDayState(
     if (!live.openToday) return { kind: "closed" };
     return slotsState(liveRanges(live), minutesOf(now));
   }
+  const closure = closureAt(pool, now);
+  if (closure) return { kind: "temporary", until: closure.to };
   const parsed = parsedHours(pool, locale);
   if (!parsed) return { kind: "unknown" };
   if (isInClosedPeriod(parsed.closedPeriods, now)) return { kind: "seasonal" };
   if (!isCertain(parsed)) return { kind: "unknown" };
-  return scheduleState(parsed.week, now);
+  return scheduleState(weekAt(parsed, now), now);
 }
 
 /** Créneaux du jour `weekday` (0 = lundi), tous plannings confondus, ou null si inconnus. */
@@ -108,8 +113,12 @@ export function rangesForDay(
   if (live && isToday) {
     return { ranges: live.openToday ? liveRanges(live) : [], state: "known" };
   }
+  // Date réelle du jour demandé (dans les 7 prochains jours) : une période datée peut s'appliquer.
+  const date = new Date(now);
+  date.setDate(now.getDate() + ((weekday - weekdayOf(now) + 7) % 7));
+  if (closureAt(pool, date)) return { ranges: [], state: "known" };
   const parsed = parsedHours(pool, locale);
   if (!parsed) return { ranges: [], state: "unknown" };
   if (isInClosedPeriod(parsed.closedPeriods, now)) return { ranges: [], state: "seasonal" };
-  return { ranges: parsed.week[weekday], state: "known" };
+  return { ranges: weekAt(parsed, date)[weekday], state: "known" };
 }

@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   if (!parsed.ok) return Response.json({ error: parsed.error }, { status: 400 });
 
   const sent = await sendMail(
-    `Swimmaps — ${parsed.value.kind}`,
+    `SwimMaps — ${parsed.value.kind}`,
     feedbackText(parsed.value),
     parsed.value.email,
   );

@@ -13,10 +13,10 @@ const bounded = (promise) =>
 
 const OFFLINE_HTML =
   "<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>" +
-  "<title>Swimmaps</title>" +
+  "<title>SwimMaps</title>" +
   "<div style=\"font-family:system-ui;padding:2rem;text-align:center;color:#6d28d9\">" +
-  "<h1>Hors ligne · Offline</h1><p>Ouvrez Swimmaps au moins une fois en ligne pour " +
-  "consulter ensuite les dernières données enregistrées.<br>Open Swimmaps online once to browse the last saved data offline.</p>" +
+  "<h1>Hors ligne · Offline</h1><p>Ouvrez SwimMaps au moins une fois en ligne pour " +
+  "consulter ensuite les dernières données enregistrées.<br>Open SwimMaps online once to browse the last saved data offline.</p>" +
   "<button onclick=\"location.reload()\" style=\"margin-top:1rem;padding:.6rem 1.6rem;" +
   "border:0;border-radius:9999px;background:#6d28d9;color:#fff;font-size:1rem\">" +
   "Réessayer · Retry</button></div>" +
