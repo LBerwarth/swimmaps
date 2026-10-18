@@ -14,6 +14,7 @@ import {
   LEN_MAX,
   LEN_MIN,
   MAX_RANGES,
+  normalizeTime,
   missingFields,
   PRICE_MAX,
   weekToOsm,
@@ -171,7 +172,8 @@ export function PriceForm({
 
 type DayDraft = { closed: boolean; ranges: Array<[string, string]> };
 const emptyDays = (): DayDraft[] => Array.from({ length: 7 }, () => ({ closed: false, ranges: [["", ""]] }));
-const toWeek = (days: DayDraft[]): WeekInput => days.map((day) => (day.closed ? [] : day.ranges));
+const toWeek = (days: DayDraft[]): WeekInput =>
+  days.map((day) => (day.closed ? [] : day.ranges.map(([a, b]) => [normalizeTime(a), normalizeTime(b)] as [string, string])));
 const weekOk = (week: WeekInput) =>
   week.every((r) => r.every(([a, b]) => a && b && a < b)) && week.some((r) => r.length);
 
@@ -213,23 +215,35 @@ function DaysGrid({ days, setDays }: { days: DayDraft[]; setDays: (fn: (prev: Da
             day.ranges.map(([from, to], r) => (
               <span key={r} className="flex items-center gap-1">
                 <input
-                  type="time"
+                  type="text"
+                  inputMode="decimal"
                   value={from}
+                  placeholder="9:00"
                   aria-label={`${dict.dayShort[d]} ${r + 1}`}
                   onChange={(e) =>
                     update(d, (x) => ({ ...x, ranges: x.ranges.map((v, i) => (i === r ? [e.target.value, v[1]] : v)) }))
                   }
-                  className={INPUT}
+                  onBlur={(e) => {
+                    const t = normalizeTime(e.target.value);
+                    if (t) update(d, (x) => ({ ...x, ranges: x.ranges.map((v, i) => (i === r ? [t, v[1]] : v)) }));
+                  }}
+                  className={`w-16 text-center ${INPUT}`}
                 />
                 –
                 <input
-                  type="time"
+                  type="text"
+                  inputMode="decimal"
                   value={to}
+                  placeholder="21:00"
                   aria-label={`${dict.dayShort[d]} ${r + 1}`}
                   onChange={(e) =>
                     update(d, (x) => ({ ...x, ranges: x.ranges.map((v, i) => (i === r ? [v[0], e.target.value] : v)) }))
                   }
-                  className={INPUT}
+                  onBlur={(e) => {
+                    const t = normalizeTime(e.target.value);
+                    if (t) update(d, (x) => ({ ...x, ranges: x.ranges.map((v, i) => (i === r ? [v[0], t] : v)) }));
+                  }}
+                  className={`w-16 text-center ${INPUT}`}
                 />
               </span>
             ))}

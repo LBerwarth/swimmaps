@@ -5,6 +5,7 @@ import {
   contributionCount,
   envKey,
   nextClosure,
+  normalizeTime,
   parseClosure,
   parseContribution,
   weekToOsm,
@@ -81,6 +82,13 @@ describe("contributions", () => {
     expect(closureAt(closed, new Date(2026, 10, 15))?.to).toBe("2026-12-31");
     expect(closureAt(closed, now)).toBeUndefined();
     expect(nextClosure(closed, now)?.from).toBe("2026-11-01");
+  });
+
+  it("complète les heures saisies sans minutes", () => {
+    expect(["16", "9", "16:30", "16.30", "16h30", "16h", "1630", "07:05", " 8 "].map(normalizeTime)).toEqual([
+      "16:00", "09:00", "16:30", "16:30", "16:30", "16:00", "16:30", "07:05", "08:00",
+    ]);
+    expect(["24", "16:75", "abc", "", "123456"].map(normalizeTime)).toEqual(["", "", "", "", ""]);
   });
 
   it("compte chaque information saisie et chaque piscine ajoutée", () => {

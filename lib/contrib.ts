@@ -116,6 +116,16 @@ export function nextClosure(pool: Pool, date: Date): Closure | undefined {
   return pool.closures?.filter((c) => c.from > day).sort((a, b) => a.from.localeCompare(b.from))[0];
 }
 
+/** « 16 » → « 16:00 », « 16h30 » / « 16.30 » / « 1630 » → « 16:30 » ; vide si ce n'est pas une heure. */
+export function normalizeTime(value: string): string {
+  const m = value.trim().match(/^(\d{1,2})(?:\s*[:.hH]\s*(\d{2})?|(\d{2}))?$/);
+  if (!m) return "";
+  const h = Number(m[1]);
+  const min = Number(m[2] ?? m[3] ?? 0);
+  if (h > 23 || min > 59) return "";
+  return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
+}
+
 export const PRICE_KINDS: PriceKind[] = ["adult", "child", "senior", "disabled", "student", "family", "ten", "season"];
 
 export function parsePrices(value: unknown): Prices | undefined {
