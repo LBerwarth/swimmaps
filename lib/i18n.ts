@@ -36,6 +36,8 @@ export interface Dict {
   subtitle: string;
 
   langAria: string;
+  shareLabel: string;
+  shareCopied: string;
   navSources: string;
   navPrivacy: string;
   navFeedback: string;
@@ -351,6 +353,8 @@ const fr: Dict = {
     "Trouvez les piscines publiques autour de vous : bassins, horaires et tarifs quand ils sont connus.",
 
   langAria: "Langue / Language / Sprache",
+  shareLabel: "Partager",
+  shareCopied: "Lien copié",
   navSources: "Sources",
   navPrivacy: "Confidentialité",
   navFeedback: "Signaler une erreur",
@@ -816,6 +820,8 @@ const en: Dict = {
     "Find the public swimming pools around you: basins, opening hours and prices where known.",
 
   langAria: "Langue / Language / Sprache",
+  shareLabel: "Share",
+  shareCopied: "Link copied",
   navSources: "Sources",
   navPrivacy: "Privacy",
   navFeedback: "Report an error",
@@ -1293,6 +1299,8 @@ const de: Dict = {
     "Finde die öffentlichen Schwimmbäder um dich herum: Becken, Öffnungszeiten und Preise, soweit bekannt.",
 
   langAria: "Langue / Language / Sprache",
+  shareLabel: "Teilen",
+  shareCopied: "Link kopiert",
   navSources: "Quellen",
   navPrivacy: "Datenschutz",
   navFeedback: "Fehler melden",
@@ -1771,6 +1779,8 @@ const it: Dict = {
     "Trova le piscine pubbliche intorno a te: vasche, orari e prezzi quando noti.",
 
   langAria: "Lingua / Language / Taal",
+  shareLabel: "Condividi",
+  shareCopied: "Link copiato",
   navSources: "Fonti",
   navPrivacy: "Privacy",
   navFeedback: "Segnala un errore",
@@ -2248,6 +2258,8 @@ const nl: Dict = {
     "Vind de openbare zwembaden om je heen: baden, openingstijden en prijzen, voor zover bekend.",
 
   langAria: "Taal / Language / Lingua",
+  shareLabel: "Delen",
+  shareCopied: "Link gekopieerd",
   navSources: "Bronnen",
   navPrivacy: "Privacy",
   navFeedback: "Fout melden",
@@ -2725,6 +2737,8 @@ const es: Dict = {
     "Encuentra las piscinas públicas a tu alrededor: tipos de piscina, horarios y precios cuando se conocen.",
 
   langAria: "Idioma / Language / Langue",
+  shareLabel: "Compartir",
+  shareCopied: "Enlace copiado",
   navSources: "Fuentes",
   navPrivacy: "Privacidad",
   navFeedback: "Informar de un error",
@@ -3202,6 +3216,8 @@ const pt: Dict = {
     "Encontra as piscinas públicas à tua volta: tipos de piscina, horários e preços quando conhecidos.",
 
   langAria: "Idioma / Language / Langue",
+  shareLabel: "Partilhar",
+  shareCopied: "Ligação copiada",
   navSources: "Fontes",
   navPrivacy: "Privacidade",
   navFeedback: "Reportar um erro",

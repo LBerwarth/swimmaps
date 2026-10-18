@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDict, LOCALE_NAMES, LOCALES, type Locale } from "@/lib/i18n";
+import { ShareButton } from "@/components/share-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 /**
@@ -54,17 +55,18 @@ export function PageHeader({
             ))}
           </nav>
         </details>
+        <ShareButton />
         <ThemeToggle />
       </div>
       {back && (
-        <p className="mb-2 pr-36">
+        <p className="mb-2 pr-44">
           <Link href={back.href} className="inline-flex items-center gap-2 text-sm hover:text-white">
             <span aria-hidden className="text-xl leading-none">←</span>
             <span className="underline decoration-pink-200/60 underline-offset-4">{back.label}</span>
           </Link>
         </p>
       )}
-      <h1 className={`text-2xl font-bold tracking-tight sm:text-3xl ${back ? "" : "pr-36"}`}>{title}</h1>
+      <h1 className={`text-2xl font-bold tracking-tight sm:text-3xl ${back ? "" : "pr-44"}`}>{title}</h1>
       {subtitle && <p className="mt-1.5 text-sm font-light text-pink-50">{subtitle}</p>}
       {children}
       {/* Vagues décoratives, rognées au cadre arrondi (le menu de langue, lui, déborde). */}
