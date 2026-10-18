@@ -53,6 +53,8 @@ export interface Dict {
   iosHow: string;
   iosHideSteps: string;
   iosDismiss: string;
+  installLead: string;
+  installButton: string;
   iosShare: string;
   iosStep1: string;
   iosStep2a: string;
@@ -371,6 +373,8 @@ const fr: Dict = {
   iosHow: "Comment faire ?",
   iosHideSteps: "Masquer les étapes",
   iosDismiss: "Masquer cette invitation",
+  installLead: "Installez SwimMaps comme une appli : un accès direct depuis l'écran d'accueil, même hors ligne.",
+  installButton: "Installer",
   iosShare: "Partager",
   iosStep1: "— dans Safari, en bas de l'écran sur iPhone, en haut à droite sur iPad.",
   iosStep2a: "Faites défiler la liste des actions vers le bas jusqu'à",
@@ -838,6 +842,8 @@ const en: Dict = {
   iosHow: "How?",
   iosHideSteps: "Hide the steps",
   iosDismiss: "Hide this invitation",
+  installLead: "Install SwimMaps as an app: one tap from your home screen, even offline.",
+  installButton: "Install",
   iosShare: "Share",
   iosStep1: "— in Safari, at the bottom of the screen on iPhone, top right on iPad.",
   iosStep2a: "Scroll the list of actions down to",
@@ -1317,6 +1323,8 @@ const de: Dict = {
   iosHow: "Wie geht das?",
   iosHideSteps: "Schritte ausblenden",
   iosDismiss: "Hinweis ausblenden",
+  installLead: "Installiere SwimMaps als App: direkt vom Startbildschirm, auch offline.",
+  installButton: "Installieren",
   iosShare: "Teilen",
   iosStep1: "— in Safari unten auf dem iPhone, oben rechts auf dem iPad.",
   iosStep2a: "Scrolle die Liste der Aktionen nach unten bis zu",
@@ -1797,6 +1805,8 @@ const it: Dict = {
   iosHow: "Come?",
   iosHideSteps: "Nascondi i passaggi",
   iosDismiss: "Nascondi questo invito",
+  installLead: "Installa SwimMaps come app: accesso diretto dalla schermata home, anche offline.",
+  installButton: "Installa",
   iosShare: "Condividi",
   iosStep1: "— in Safari, in basso sullo schermo su iPhone, in alto a destra su iPad.",
   iosStep2a: "Scorri l'elenco delle azioni fino a",
@@ -2276,6 +2286,8 @@ const nl: Dict = {
   iosHow: "Hoe?",
   iosHideSteps: "Stappen verbergen",
   iosDismiss: "Deze uitnodiging verbergen",
+  installLead: "Installeer SwimMaps als app: direct vanaf je beginscherm, ook offline.",
+  installButton: "Installeren",
   iosShare: "Deel",
   iosStep1: "— in Safari, onderaan het scherm op iPhone, rechtsboven op iPad.",
   iosStep2a: "Scrol in de lijst met acties omlaag naar",
@@ -2755,6 +2767,8 @@ const es: Dict = {
   iosHow: "¿Cómo?",
   iosHideSteps: "Ocultar los pasos",
   iosDismiss: "Ocultar esta invitación",
+  installLead: "Instala SwimMaps como app: acceso directo desde la pantalla de inicio, incluso sin conexión.",
+  installButton: "Instalar",
   iosShare: "Compartir",
   iosStep1: "— en Safari, abajo de la pantalla en iPhone, arriba a la derecha en iPad.",
   iosStep2a: "Desplaza la lista de acciones hasta",
@@ -3234,6 +3248,8 @@ const pt: Dict = {
   iosHow: "Como?",
   iosHideSteps: "Ocultar os passos",
   iosDismiss: "Ocultar este convite",
+  installLead: "Instala o SwimMaps como app: acesso direto a partir do ecrã inicial, mesmo offline.",
+  installButton: "Instalar",
   iosShare: "Partilhar",
   iosStep1: "— no Safari, em baixo no ecrã do iPhone, em cima à direita no iPad.",
   iosStep2a: "Desliza a lista de ações até",

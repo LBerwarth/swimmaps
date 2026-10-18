@@ -1,4 +1,5 @@
 export const IOS_DISMISS_KEY = "pf:ios-banner";
+export const INSTALL_DISMISS_KEY = "pf:install-banner";
 export const FAV_TIP_KEY = "pf:fav-tip";
 export const FAVORITES_KEY = "pf:favorites";
 
