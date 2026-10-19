@@ -112,6 +112,7 @@ export interface Dict {
   hoursLate: string;
   hoursKnownOnly: string;
   holidayBanner: (name: string, until: string | null) => string;
+  holidayHoursIncluded: string;
   favLabel: string;
   favAria: string;
   favAll: string;
@@ -460,6 +461,7 @@ const fr: Dict = {
   hoursKnownOnly: "Filtre horaires : seules les piscines aux horaires connus apparaissent.",
   holidayBanner: (name, until) =>
     `${name} : beaucoup de piscines appliquent leurs horaires de vacances${until ? ` (jusqu'au ${until})` : ""}.`,
+  holidayHoursIncluded: "Les horaires affichés plus bas incluent déjà ceux des vacances : pas besoin de les chercher ailleurs.",
   favLabel: "Suivies",
   favAria: "Favoris",
   favAll: "Toutes",
@@ -1003,6 +1005,7 @@ const en: Dict = {
   hoursKnownOnly: "Hours filter: only pools with known opening hours are shown.",
   holidayBanner: (name, until) =>
     `${name}: many pools switch to their school-holiday hours${until ? ` (until ${until})` : ""}.`,
+  holidayHoursIncluded: "The opening times below already include the holiday schedule, no need to look them up elsewhere.",
   favLabel: "Starred",
   favAria: "Favourites",
   favAll: "All",
@@ -1558,6 +1561,7 @@ const de: Dict = {
   hoursKnownOnly: "Zeitfilter: Es erscheinen nur Bäder mit bekannten Öffnungszeiten.",
   holidayBanner: (name, until) =>
     `${name}: Viele Bäder haben jetzt Ferienöffnungszeiten${until ? ` (bis ${until})` : ""}.`,
+  holidayHoursIncluded: "Die Öffnungszeiten unten enthalten die Ferienzeiten bereits, du musst sie nicht anderswo nachschlagen.",
   favLabel: "Gemerkt",
   favAria: "Favoriten",
   favAll: "Alle",
@@ -2114,6 +2118,7 @@ const it: Dict = {
   hoursKnownOnly: "Filtro orari: compaiono solo le piscine con orari noti.",
   holidayBanner: (name, until) =>
     `${name}: molte piscine applicano l'orario delle vacanze${until ? ` (fino al ${until})` : ""}.`,
+  holidayHoursIncluded: "Gli orari qui sotto includono già quelli delle vacanze: non serve cercarli altrove.",
   favLabel: "Preferite",
   favAria: "Preferiti",
   favAll: "Tutte",
@@ -2669,6 +2674,7 @@ const nl: Dict = {
   hoursKnownOnly: "Tijdfilter: alleen zwembaden met bekende openingstijden worden getoond.",
   holidayBanner: (name, until) =>
     `${name}: veel zwembaden hanteren nu hun vakantierooster${until ? ` (tot ${until})` : ""}.`,
+  holidayHoursIncluded: "De openingstijden hieronder bevatten het vakantierooster al, je hoeft ze nergens anders op te zoeken.",
   favLabel: "Bewaard",
   favAria: "Favorieten",
   favAll: "Alle",
@@ -3224,6 +3230,7 @@ const es: Dict = {
   hoursKnownOnly: "Filtro de horario: solo aparecen las piscinas con horario conocido.",
   holidayBanner: (name, until) =>
     `${name}: muchas piscinas aplican su horario de vacaciones${until ? ` (hasta el ${until})` : ""}.`,
+  holidayHoursIncluded: "Los horarios de abajo ya incluyen los de vacaciones: no hace falta buscarlos en otro sitio.",
   favLabel: "Favoritas",
   favAria: "Favoritas",
   favAll: "Todas",
@@ -3779,6 +3786,7 @@ const pt: Dict = {
   hoursKnownOnly: "Filtro de horário: só aparecem piscinas com horário conhecido.",
   holidayBanner: (name, until) =>
     `${name}: muitas piscinas aplicam o horário de férias${until ? ` (até ${until})` : ""}.`,
+  holidayHoursIncluded: "Os horários abaixo já incluem os das férias: não é preciso procurá-los noutro lado.",
   favLabel: "Favoritas",
   favAria: "Favoritas",
   favAll: "Todas",

@@ -9,7 +9,7 @@ import { formatDistance, haversineKm, usesMiles } from "@/lib/geo";
 import { isInClosedPeriod, isOpenAt, weekAt } from "@/lib/opening-hours";
 import { fetchToulouseLive, isOpenNowLive, type LivePoolStatus } from "@/lib/toulouse-live";
 import { matchesHoursOn, parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
-import { currentSchoolHoliday, type SchoolHoliday } from "@/lib/school-holidays";
+import { HolidayBanner } from "@/components/holiday-banner";
 import { matchesQuery } from "@/lib/search";
 import { applyContrib, closureAt, contributionCount } from "@/lib/contrib";
 import {
@@ -195,7 +195,6 @@ export function FinderView() {
   const [savedAddresses, setSavedAddresses] = useState<UserLocation[] | null>(null);
   // Statut du jour en direct (piscines de Toulouse), superposé aux données OSM.
   const [live, setLive] = useState<Map<string, LivePoolStatus> | null>(null);
-  const [holiday, setHoliday] = useState<{ poolId: string; value: SchoolHoliday | null } | null>(null);
 
   const hasFavorites = favorites.length > 0;
   // « Favoris » actif mais plus aucune ★ : le filtre devient inactif (dérivé au
@@ -365,17 +364,6 @@ export function FinderView() {
 
   // Vacances autour de la piscine la plus proche (sa région, pas la position de l'utilisateur).
   const nearestPool = nearest?.pool ?? null;
-  useEffect(() => {
-    if (!nearestPool) return;
-    let cancelled = false;
-    currentSchoolHoliday(nearestPool, locale).then((value) => {
-      if (!cancelled) setHoliday({ poolId: nearestPool.id, value });
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [nearestPool, locale]);
-  const currentHoliday = holiday && holiday.poolId === nearestPool?.id ? holiday.value : null;
 
   // 0 résultat : combien de piscines du rayon n'ont simplement pas la donnée filtrée.
   const missingDataCount =
@@ -785,21 +773,7 @@ export function FinderView() {
 
       {location && center && (
         <>
-          {currentHoliday && (
-            <p className="rounded-2xl bg-amber-100/45 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-300/60 dark:bg-amber-400/10 dark:text-amber-100 dark:ring-white/15">
-              {dict.holidayBanner(
-                currentHoliday.name,
-                currentHoliday.lastDay
-                  ? new Intl.DateTimeFormat(dict.intlLocale, {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                      timeZone: "UTC",
-                    }).format(new Date(`${currentHoliday.lastDay}T00:00:00Z`))
-                  : null,
-              )}
-            </p>
-          )}
+          {nearestPool && <HolidayBanner pool={nearestPool} />}
           <p className="text-sm text-slate-600 dark:text-slate-300" aria-live="polite">
             {index === null || loadingPools
               ? dict.loadingPools

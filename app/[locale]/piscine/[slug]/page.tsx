@@ -17,6 +17,7 @@ import { PoolHours, PoolKindRows } from "@/components/pool-contrib";
 import { WeekList } from "@/components/week-list";
 import { FeedbackForm } from "@/components/feedback-form";
 import { TipJar } from "@/components/tip-jar";
+import { HolidayBanner } from "@/components/holiday-banner";
 import { PhoneIcon } from "@/components/icons";
 
 // Fiches rendues à la demande (10 000 piscines × 3 langues) et gardées un jour.
@@ -120,6 +121,8 @@ export default async function PoolPage({
         subtitle={dict.detailSubtitle(pool.city)}
         back={{ href: `/${locale}`, label: dict.backHome }}
       />
+
+      <HolidayBanner pool={pool} hoursIncluded={Boolean(parsed?.holidayWeek)} className="mb-4" />
 
       <PoolDetail pool={pool} />
 
