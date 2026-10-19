@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { academyOf, pickMinistryHoliday, pickOpenHoliday, subdivisionOf } from "./school-holidays";
+import {
+  academyOf,
+  pickMinistryHoliday,
+  pickOpenHoliday,
+  subdivisionByPostcode,
+  subdivisionOf,
+} from "./school-holidays";
 
 describe("academyOf", () => {
   it("rattache le département à son académie", () => {
@@ -17,6 +23,20 @@ describe("subdivisionOf", () => {
   });
   it("laisse Bruxelles sans calendrier", () => {
     expect(subdivisionOf("BE", "Région de Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest")).toBeNull();
+  });
+});
+
+describe("subdivisionByPostcode", () => {
+  it("lit la province espagnole et la région italienne dans le code postal", () => {
+    expect(subdivisionByPostcode("ES", "41004")).toBe("ES-AN-SE");
+    expect(subdivisionByPostcode("ES", "48008")).toBe("ES-PV");
+    expect(subdivisionByPostcode("IT", "20122")).toBe("IT-LO");
+    expect(subdivisionByPostcode("IT", "39100")).toBe("IT-TR-BZ");
+    expect(subdivisionByPostcode("IT", "00184")).toBe("IT-LA");
+  });
+  it("ignore un code postal absent ou mal formé", () => {
+    expect(subdivisionByPostcode("ES", "")).toBeNull();
+    expect(subdivisionByPostcode("IT", "2012")).toBeNull();
   });
 });
 
@@ -55,5 +75,10 @@ describe("pickOpenHoliday", () => {
   });
   it("ignore les autres Länder", () => {
     expect(pickOpenHoliday([herbst], "DE-BY", "2026-10-10", "de")).toBeNull();
+  });
+  it("applique les vacances d'une région à ses provinces", () => {
+    const aragon = { ...herbst, name: [{ language: "ES", text: "Navidad" }], subdivisions: [{ code: "ES-AR" }] };
+    expect(pickOpenHoliday([aragon], "ES-AR-HU", "2026-10-10", "es")?.name).toBe("Navidad");
+    expect(pickOpenHoliday([aragon], "ES-ARX", "2026-10-10", "es")).toBeNull();
   });
 });

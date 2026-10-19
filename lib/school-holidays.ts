@@ -93,10 +93,58 @@ const SUBDIVISIONS: Record<string, Record<string, string>> = {
 };
 
 /** Pays dont les vacances sont nationales chez OpenHolidays. */
-const NATIONWIDE = ["PT"];
+const NATIONWIDE = ["PT", "IE"];
+
+/** Code postal espagnol : les deux premiers chiffres = province (INE). Andalousie et Aragon : par province. */
+const ES_PROVINCES: Record<string, string> = {
+  "01": "ES-PV", "02": "ES-CM", "03": "ES-VC", "04": "ES-AN-AL", "05": "ES-CL", "06": "ES-EX",
+  "07": "ES-IB", "08": "ES-CT", "09": "ES-CL", "10": "ES-EX", "11": "ES-AN-CA", "12": "ES-VC",
+  "13": "ES-CM", "14": "ES-AN-CO", "15": "ES-GA", "16": "ES-CM", "17": "ES-CT", "18": "ES-AN-GR",
+  "19": "ES-CM", "20": "ES-PV", "21": "ES-AN-HL", "22": "ES-AR-HU", "23": "ES-AN-JA", "24": "ES-CL",
+  "25": "ES-CT", "26": "ES-RI", "27": "ES-GA", "28": "ES-MD", "29": "ES-AN-MA", "30": "ES-MC",
+  "31": "ES-NC", "32": "ES-GA", "33": "ES-AS", "34": "ES-CL", "35": "ES-CN", "36": "ES-GA",
+  "37": "ES-CL", "38": "ES-CN", "39": "ES-CB", "40": "ES-CL", "41": "ES-AN-SE", "42": "ES-CL",
+  "43": "ES-CT", "44": "ES-AR-TE", "45": "ES-CM", "46": "ES-VC", "47": "ES-CL", "48": "ES-PV",
+  "49": "ES-CL", "50": "ES-AR-ZG", "51": "ES-CE", "52": "ES-ML",
+};
+
+/** CAP italien : deux premiers chiffres → région (Trentin et Haut-Adige séparés). */
+const IT_CAP: Array<[string, number[]]> = [
+  ["IT-LA", [0, 1, 2, 3, 4]],
+  ["IT-UM", [5, 6]],
+  ["IT-SA", [7, 8, 9]],
+  ["IT-PI", [10, 12, 13, 14, 15, 28]],
+  ["IT-VA", [11]],
+  ["IT-LI", [16, 17, 18, 19]],
+  ["IT-LO", [20, 21, 22, 23, 24, 25, 26, 27, 46]],
+  ["IT-ER", [29, 40, 41, 42, 43, 44, 47, 48]],
+  ["IT-VE", [30, 31, 32, 35, 36, 37, 45]],
+  ["IT-FV", [33, 34]],
+  ["IT-TR-TN", [38]],
+  ["IT-TR-BZ", [39]],
+  ["IT-TO", [50, 51, 52, 53, 54, 55, 56, 57, 58, 59]],
+  ["IT-MA", [60, 61, 62, 63]],
+  ["IT-AB", [64, 65, 66, 67]],
+  ["IT-PU", [70, 71, 72, 73, 74, 76]],
+  ["IT-BA", [75, 85]],
+  ["IT-CM", [80, 81, 82, 83, 84]],
+  ["IT-MO", [86]],
+  ["IT-CL", [87, 88, 89]],
+  ["IT-SI", [90, 91, 92, 93, 94, 95, 96, 97, 98]],
+];
+
+const BY_POSTCODE = ["ES", "IT"];
 
 export function subdivisionOf(country: string, state: string | null | undefined): string | null {
   return (state && SUBDIVISIONS[country]?.[state]) || null;
+}
+
+export function subdivisionByPostcode(country: string, postcode: string | null | undefined): string | null {
+  if (!postcode || !/^\d{5}$/.test(postcode)) return null;
+  const prefix = postcode.slice(0, 2);
+  if (country === "ES") return ES_PROVINCES[prefix] ?? null;
+  if (country === "IT") return IT_CAP.find(([, ps]) => ps.includes(Number(prefix)))?.[0] ?? null;
+  return null;
 }
 
 const isoDay = (d: Date) =>
@@ -143,7 +191,10 @@ export function pickOpenHoliday(
     (h) =>
       h.startDate <= today &&
       today <= h.endDate &&
-      (h.nationwide || (subdivision !== null && (h.subdivisions ?? []).some((s) => s.code === subdivision))),
+      (h.nationwide ||
+        (subdivision !== null &&
+          // Vacances d'une région valables pour ses provinces (ES-AR → ES-AR-HU).
+          (h.subdivisions ?? []).some((s) => s.code === subdivision || subdivision.startsWith(`${s.code}-`)))),
   );
   if (!r) return null;
   const name =
@@ -152,25 +203,36 @@ export function pickOpenHoliday(
 }
 
 /** Région de la piscine la plus proche (Photon), pas celle de l'utilisateur : aucune position ne sort. */
-async function photonState(pool: Pool): Promise<string | null> {
+async function photonPlace(pool: Pool): Promise<{ state: string | null; postcode: string | null }> {
   const res = await fetch(`https://photon.komoot.io/reverse?lat=${pool.lat}&lon=${pool.lon}`);
-  if (!res.ok) return null;
-  const data = (await res.json()) as { features?: Array<{ properties?: { state?: string; city?: string } }> };
+  if (!res.ok) return { state: null, postcode: null };
+  const data = (await res.json()) as {
+    features?: Array<{ properties?: { state?: string; city?: string; postcode?: string } }>;
+  };
   const p = data.features?.[0]?.properties;
   // Villes-États (Berlin, Hambourg, Vienne) : Photon ne renvoie que la ville.
-  return p?.state ?? p?.city ?? null;
+  return { state: p?.state ?? p?.city ?? null, postcode: p?.postcode ?? null };
+}
+
+async function subdivisionFor(pool: Pool): Promise<string | null> {
+  if (BY_POSTCODE.includes(pool.country)) {
+    const own = subdivisionByPostcode(pool.country, pool.cp);
+    return own ?? subdivisionByPostcode(pool.country, (await photonPlace(pool)).postcode);
+  }
+  return subdivisionOf(pool.country, (await photonPlace(pool)).state);
 }
 
 const cache = new Map<string, Promise<SchoolHoliday | null>>();
 
 /**
  * Vacances scolaires en cours autour de la piscine. FR : ministère de
- * l'Éducation nationale ; DE, AT, BE, PT : OpenHolidays. Ailleurs (GB, IE, ES,
- * IT, NL, CH) : pas de source exploitable → null.
+ * l'Éducation nationale ; DE, AT, BE, PT, IE, ES, IT : OpenHolidays (ES, IT et
+ * IE vides pour 2026/27 au 19.10.2026). GB, NL, CH : pas de source → null.
  */
 export function currentSchoolHoliday(pool: Pool, locale: Locale, now = new Date()): Promise<SchoolHoliday | null> {
   const today = isoDay(now);
-  const key = `${pool.country}:${pool.dep ?? ""}:${pool.country in SUBDIVISIONS ? pool.id : ""}:${locale}:${today}`;
+  const regional = pool.country in SUBDIVISIONS || BY_POSTCODE.includes(pool.country);
+  const key = `${pool.country}:${pool.dep ?? ""}:${regional ? pool.id : ""}:${locale}:${today}`;
   let pending = cache.get(key);
   if (!pending) {
     pending = load(pool, locale, now, today).catch(() => null);
@@ -193,8 +255,8 @@ async function load(pool: Pool, locale: Locale, now: Date, today: string): Promi
     return pickMinistryHoliday(data.results ?? [], now);
   }
   const nationwide = NATIONWIDE.includes(pool.country);
-  if (!nationwide && !(pool.country in SUBDIVISIONS)) return null;
-  const subdivision = nationwide ? null : subdivisionOf(pool.country, await photonState(pool));
+  if (!nationwide && !(pool.country in SUBDIVISIONS) && !BY_POSTCODE.includes(pool.country)) return null;
+  const subdivision = nationwide ? null : await subdivisionFor(pool);
   if (!nationwide && !subdivision) return null;
   const res = await fetch(
     `https://openholidaysapi.org/SchoolHolidays?countryIsoCode=${pool.country}&languageIsoCode=${locale.toUpperCase()}` +
