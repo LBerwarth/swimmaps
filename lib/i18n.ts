@@ -45,7 +45,7 @@ export interface Dict {
   dataDate: (date: string) => string;
   dataInfoAria: string;
   dataInfo: string;
-  themeNames: { system: string; light: string; dark: string };
+  themeNames: { light: string; dark: string };
   themeSwitch: (current: string, next: string) => string;
 
   iosInstallLead: string;
@@ -380,7 +380,7 @@ const fr: Dict = {
   dataInfoAria: "Comment les données sont mises à jour",
   dataInfo:
     "Les jeux de données (Data ES, Active Places, Bäderleben, OpenStreetMap) sont reconstitués par script et publiés avec l'application : la date indique le dernier relevé. Les piscines de Toulouse reçoivent en plus leur statut du jour en direct.",
-  themeNames: { system: "automatique", light: "clair", dark: "sombre" },
+  themeNames: { light: "clair", dark: "sombre" },
   themeSwitch: (current, next) => `Thème : ${current} — passer en ${next}`,
 
   iosInstallLead: "Installez l'appli : touchez",
@@ -912,7 +912,7 @@ const en: Dict = {
   dataInfoAria: "How the data is updated",
   dataInfo:
     "The datasets (Data ES, Active Places, Bäderleben, OpenStreetMap) are rebuilt by script and shipped with the app: the date is the last extraction. Toulouse pools additionally get their live daily status.",
-  themeNames: { system: "automatic", light: "light", dark: "dark" },
+  themeNames: { light: "light", dark: "dark" },
   themeSwitch: (current, next) => `Theme: ${current} — switch to ${next}`,
 
   iosInstallLead: "Install the app: tap",
@@ -1456,7 +1456,7 @@ const de: Dict = {
   dataInfoAria: "Wie die Daten aktualisiert werden",
   dataInfo:
     "Die Datensätze (Data ES, Active Places, Bäderleben, OpenStreetMap) werden per Skript neu erstellt und mit der App ausgeliefert: das Datum ist der letzte Abruf. Die Bäder in Toulouse erhalten zusätzlich ihren tagesaktuellen Status.",
-  themeNames: { system: "automatisch", light: "hell", dark: "dunkel" },
+  themeNames: { light: "hell", dark: "dunkel" },
   themeSwitch: (current, next) => `Design: ${current} — zu ${next} wechseln`,
 
   iosInstallLead: "App installieren: tippe auf",
@@ -2001,7 +2001,7 @@ const it: Dict = {
   dataInfoAria: "Come vengono aggiornati i dati",
   dataInfo:
     "I dataset (Data ES, Active Places, Bäderleben, OpenStreetMap) vengono ricostruiti da uno script e distribuiti con l'app: la data è quella dell'ultima estrazione. Le piscine di Tolosa ricevono in più il loro stato giornaliero in tempo reale.",
-  themeNames: { system: "automatico", light: "chiaro", dark: "scuro" },
+  themeNames: { light: "chiaro", dark: "scuro" },
   themeSwitch: (current, next) => `Tema: ${current} — passa a ${next}`,
 
   iosInstallLead: "Installa l'app: tocca",
@@ -2545,7 +2545,7 @@ const nl: Dict = {
   dataInfoAria: "Hoe de gegevens worden bijgewerkt",
   dataInfo:
     "De datasets (Data ES, Active Places, Bäderleben, OpenStreetMap) worden met een script opnieuw opgebouwd en met de app meegeleverd: de datum is die van de laatste extractie. Voor de zwembaden in Toulouse komt daar de dagelijkse live-status bij.",
-  themeNames: { system: "automatisch", light: "licht", dark: "donker" },
+  themeNames: { light: "licht", dark: "donker" },
   themeSwitch: (current, next) => `Thema: ${current} — overschakelen naar ${next}`,
 
   iosInstallLead: "Installeer de app: tik op",
@@ -3089,7 +3089,7 @@ const es: Dict = {
   dataInfoAria: "Cómo se actualizan los datos",
   dataInfo:
     "Los conjuntos de datos (Data ES, Active Places, Bäderleben, OpenStreetMap) se regeneran mediante un script y se incluyen en la app: la fecha es la de la última extracción. Las piscinas de Toulouse reciben además su estado diario en directo.",
-  themeNames: { system: "automático", light: "claro", dark: "oscuro" },
+  themeNames: { light: "claro", dark: "oscuro" },
   themeSwitch: (current, next) => `Tema: ${current} — cambiar a ${next}`,
 
   iosInstallLead: "Instala la app: toca",
@@ -3633,7 +3633,7 @@ const pt: Dict = {
   dataInfoAria: "Como são atualizados os dados",
   dataInfo:
     "Os conjuntos de dados (Data ES, Active Places, Bäderleben, OpenStreetMap) são reconstruídos por script e incluídos na app: a data é a da última extração. As piscinas de Toulouse recebem ainda o estado diário em direto.",
-  themeNames: { system: "automático", light: "claro", dark: "escuro" },
+  themeNames: { light: "claro", dark: "escuro" },
   themeSwitch: (current, next) => `Tema: ${current} — mudar para ${next}`,
 
   iosInstallLead: "Instala a app: toca em",
