@@ -300,6 +300,14 @@ export interface Dict {
   coveredLabel: string;
   countryNames: Record<string, string>;
 
+  navAbout: string;
+  about: {
+    title: string;
+    subtitle: string;
+    intro: string;
+    sections: Array<{ title: string; points: string[] }>;
+    cta: string;
+  };
   sources: {
     title: string;
     subtitle: string;
@@ -670,6 +678,48 @@ const fr: Dict = {
     sct: "Écosse", wls: "Pays de Galles", nir: "Irlande du Nord", ie: "Irlande",
   },
 
+  navAbout: "À propos",
+  about: {
+    title: "À propos de SwimMaps",
+    subtitle: "Ce que c'est, et comment en tirer le meilleur",
+    intro: "SwimMaps vous aide à trouver les piscines publiques autour de vous, chez vous, en vacances ou en déplacement, dans quatorze pays et régions d'Europe. C'est un projet personnel et indépendant : gratuit, sans compte à créer.",
+    sections: [
+      {
+        title: "Ce que vous y trouvez",
+        points: [
+          "Toutes les piscines publiques autour d'une adresse ou de votre position, sur une carte, en liste et sur une frise de la semaine.",
+          "Le type de bassin et sa longueur, les horaires, les tarifs, le téléphone et le site officiel, chaque fois qu'une source ouverte les connaît.",
+          "Le statut du jour en direct pour les piscines de Toulouse, grâce à l'application sœur Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "Comment l'utiliser",
+        points: [
+          "Cherchez une adresse ou touchez « Autour de moi », puis choisissez un rayon.",
+          "Filtrez : couverte ou plein air, 25 m ou 50 m, ouverte cette semaine, aujourd'hui ou maintenant.",
+          "Touchez ☆ pour garder vos piscines préférées en tête de liste, et enregistrez les adresses que vous utilisez souvent.",
+          "Ouvrez la fiche d'une piscine pour voir toute sa semaine, ses tarifs et les piscines les plus proches.",
+          "Installez SwimMaps sur votre téléphone : elle s'ouvre comme une appli et garde les dernières données hors ligne.",
+        ],
+      },
+      {
+        title: "Aidez à compléter la carte",
+        points: [
+          "Les horaires et tarifs ne sont connus que pour une partie des piscines : si vous nagez quelque part, ajoutez ce qui manque avec le bouton ✎.",
+          "Une erreur, une piscine fermée ou absente ? Proposez une correction ou une nouvelle piscine ; l'auteure vérifie avant la mise en ligne.",
+        ],
+      },
+      {
+        title: "Bon à savoir",
+        points: [
+          "Les données viennent de sources ouvertes (ministères, agences du sport, OpenStreetMap) et sont mises à jour régulièrement, pas en direct.",
+          "Un horaire absent signifie « inconnu », jamais « fermé » : en cas de doute, vérifiez sur le site officiel de la piscine.",
+          "SwimMaps n'est affiliée ni aux gestionnaires des piscines ni à aucune administration.",
+        ],
+      },
+    ],
+    cta: "Trouver une piscine",
+  },
   sources: {
     title: "Sources des données",
     subtitle: "D'où viennent les piscines, horaires et tarifs affichés",
@@ -1173,6 +1223,48 @@ const en: Dict = {
     sct: "Scotland", wls: "Wales", nir: "Northern Ireland", ie: "Ireland",
   },
 
+  navAbout: "About",
+  about: {
+    title: "About SwimMaps",
+    subtitle: "What it is, and how to get the most out of it",
+    intro: "SwimMaps helps you find the public swimming pools around you, at home, on holiday or when travelling, in fourteen countries and regions of Europe. It is a personal, independent project: free, with no account needed.",
+    sections: [
+      {
+        title: "What you'll find",
+        points: [
+          "Every public pool around an address or your current position, on a map, in a list and on a weekly timeline.",
+          "Pool type and length, opening hours, prices, phone and official website, whenever an open data source knows them.",
+          "A live daily status for the pools in Toulouse, from the sister app Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "How to use it",
+        points: [
+          "Search an address or tap “Around me”, then choose a radius.",
+          "Filter: indoor or outdoor, 25 m or 50 m, open this week, today or right now.",
+          "Tap ☆ to keep your favourite pools at the top of the list, and save the addresses you use often.",
+          "Open a pool's page to see its whole week, its prices and the nearest other pools.",
+          "Install SwimMaps on your phone: it opens like an app and keeps the latest data offline.",
+        ],
+      },
+      {
+        title: "Help complete the map",
+        points: [
+          "Opening hours and prices are only known for some pools: if you swim somewhere, add what's missing with the ✎ button.",
+          "Spotted a mistake, or a pool that's closed or missing? Suggest a correction or a new pool; the author checks it before it goes online.",
+        ],
+      },
+      {
+        title: "Good to know",
+        points: [
+          "The data come from open sources (ministries, sports agencies, OpenStreetMap) and are refreshed regularly, not live.",
+          "A missing time means “unknown”, never “closed”: when in doubt, check the pool's official website.",
+          "SwimMaps is not affiliated with pool operators or any public authority.",
+        ],
+      },
+    ],
+    cta: "Find a pool",
+  },
   sources: {
     title: "Data sources",
     subtitle: "Where the pools, hours and prices come from",
@@ -1676,6 +1768,48 @@ const de: Dict = {
     sct: "Schottland", wls: "Wales", nir: "Nordirland", ie: "Irland",
   },
 
+  navAbout: "Über SwimMaps",
+  about: {
+    title: "Über SwimMaps",
+    subtitle: "Was es ist und wie du es am besten nutzt",
+    intro: "SwimMaps hilft dir, die öffentlichen Schwimmbäder in deiner Nähe zu finden, zu Hause, im Urlaub oder auf Reisen, in vierzehn Ländern und Regionen Europas. Es ist ein privates, unabhängiges Projekt: kostenlos und ohne Konto.",
+    sections: [
+      {
+        title: "Was du findest",
+        points: [
+          "Alle öffentlichen Bäder rund um eine Adresse oder deinen Standort, auf der Karte, als Liste und in einer Wochenübersicht.",
+          "Bad-Typ und Beckenlänge, Öffnungszeiten, Preise, Telefon und offizielle Website, sofern eine offene Quelle sie kennt.",
+          "Für die Bäder in Toulouse den tagesaktuellen Status, von der Schwester-App Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "So nutzt du es",
+        points: [
+          "Suche eine Adresse oder tippe auf „In meiner Nähe“ und wähle dann einen Umkreis.",
+          "Filtere: Hallen- oder Freibad, 25 m oder 50 m, geöffnet diese Woche, heute oder jetzt.",
+          "Tippe auf ☆, um deine Lieblingsbäder oben in der Liste zu behalten, und speichere Adressen, die du oft nutzt.",
+          "Öffne die Seite eines Bades für die ganze Woche, die Preise und die nächstgelegenen anderen Bäder.",
+          "Installiere SwimMaps auf deinem Handy: Es öffnet sich wie eine App und hat die letzten Daten auch offline.",
+        ],
+      },
+      {
+        title: "Hilf mit, die Karte zu vervollständigen",
+        points: [
+          "Öffnungszeiten und Preise sind nur für einen Teil der Bäder bekannt: Wenn du irgendwo schwimmst, ergänze Fehlendes mit dem ✎-Knopf.",
+          "Ein Fehler, ein geschlossenes oder fehlendes Bad? Schlag eine Korrektur oder ein neues Bad vor; die Autorin prüft es, bevor es online geht.",
+        ],
+      },
+      {
+        title: "Gut zu wissen",
+        points: [
+          "Die Daten stammen aus offenen Quellen (Ministerien, Sportverbände, OpenStreetMap) und werden regelmäßig aktualisiert, nicht live.",
+          "Eine fehlende Uhrzeit heißt „unbekannt“, nie „geschlossen“: Prüfe im Zweifel die offizielle Website des Bades.",
+          "SwimMaps steht in keiner Verbindung zu den Betreibern der Bäder oder zu Behörden.",
+        ],
+      },
+    ],
+    cta: "Bad finden",
+  },
   sources: {
     title: "Datenquellen",
     subtitle: "Woher Bäder, Öffnungszeiten und Preise stammen",
@@ -2178,6 +2312,48 @@ const it: Dict = {
     sct: "Scozia", wls: "Galles", nir: "Irlanda del Nord", ie: "Irlanda",
   },
 
+  navAbout: "Informazioni",
+  about: {
+    title: "Informazioni su SwimMaps",
+    subtitle: "Che cos'è e come sfruttarlo al meglio",
+    intro: "SwimMaps ti aiuta a trovare le piscine pubbliche intorno a te, a casa, in vacanza o in viaggio, in quattordici paesi e regioni d'Europa. È un progetto personale e indipendente: gratuito, senza bisogno di creare un account.",
+    sections: [
+      {
+        title: "Cosa trovi",
+        points: [
+          "Tutte le piscine pubbliche intorno a un indirizzo o alla tua posizione, su una mappa, in un elenco e su una timeline settimanale.",
+          "Il tipo di vasca e la sua lunghezza, gli orari, le tariffe, il telefono e il sito ufficiale, ogni volta che una fonte aperta li conosce.",
+          "Lo stato del giorno in tempo reale per le piscine di Tolosa, grazie all'app gemella Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "Come usarlo",
+        points: [
+          "Cerca un indirizzo o tocca “Intorno a me”, poi scegli un raggio.",
+          "Filtra: coperta o scoperta, 25 m o 50 m, aperta questa settimana, oggi o adesso.",
+          "Tocca ☆ per tenere le tue piscine preferite in cima all'elenco, e salva gli indirizzi che usi spesso.",
+          "Apri la pagina di una piscina per vedere tutta la sua settimana, le tariffe e le piscine più vicine.",
+          "Installa SwimMaps sul telefono: si apre come un'app e conserva gli ultimi dati anche offline.",
+        ],
+      },
+      {
+        title: "Aiuta a completare la mappa",
+        points: [
+          "Orari e tariffe sono noti solo per una parte delle piscine: se nuoti da qualche parte, aggiungi ciò che manca con il pulsante ✎.",
+          "Un errore, una piscina chiusa o mancante? Proponi una correzione o una nuova piscina; l'autrice la verifica prima di pubblicarla.",
+        ],
+      },
+      {
+        title: "Buono a sapersi",
+        points: [
+          "I dati provengono da fonti aperte (ministeri, agenzie sportive, OpenStreetMap) e vengono aggiornati regolarmente, non in tempo reale.",
+          "Un orario assente significa “sconosciuto”, mai “chiusa”: nel dubbio, controlla il sito ufficiale della piscina.",
+          "SwimMaps non è affiliata ai gestori delle piscine né ad alcuna amministrazione pubblica.",
+        ],
+      },
+    ],
+    cta: "Trova una piscina",
+  },
   sources: {
     title: "Fonti dei dati",
     subtitle: "Da dove vengono piscine, orari e prezzi",
@@ -2680,6 +2856,48 @@ const nl: Dict = {
     sct: "Schotland", wls: "Wales", nir: "Noord-Ierland", ie: "Ierland",
   },
 
+  navAbout: "Over SwimMaps",
+  about: {
+    title: "Over SwimMaps",
+    subtitle: "Wat het is en hoe je er het meeste uit haalt",
+    intro: "SwimMaps helpt je de openbare zwembaden bij jou in de buurt te vinden, thuis, op vakantie of onderweg, in veertien landen en regio's van Europa. Het is een persoonlijk, onafhankelijk project: gratis en zonder account.",
+    sections: [
+      {
+        title: "Wat je vindt",
+        points: [
+          "Alle openbare zwembaden rond een adres of je huidige locatie, op een kaart, in een lijst en op een weekoverzicht.",
+          "Type bad en lengte, openingstijden, prijzen, telefoonnummer en officiële website, telkens wanneer een open bron ze kent.",
+          "Voor de zwembaden in Toulouse de actuele status van de dag, via de zusterapp Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "Zo gebruik je het",
+        points: [
+          "Zoek een adres of tik op “In mijn buurt” en kies dan een straal.",
+          "Filter: binnenbad of buitenbad, 25 m of 50 m, open deze week, vandaag of nu.",
+          "Tik op ☆ om je favoriete zwembaden bovenaan de lijst te houden, en bewaar de adressen die je vaak gebruikt.",
+          "Open de pagina van een zwembad voor de hele week, de prijzen en de dichtstbijzijnde andere zwembaden.",
+          "Installeer SwimMaps op je telefoon: het opent als een app en bewaart de laatste gegevens ook offline.",
+        ],
+      },
+      {
+        title: "Help de kaart aan te vullen",
+        points: [
+          "Openingstijden en prijzen zijn maar van een deel van de zwembaden bekend: zwem je ergens, vul dan aan wat ontbreekt met de knop ✎.",
+          "Een fout gezien, of een zwembad dat gesloten is of ontbreekt? Stel een correctie of een nieuw zwembad voor; de maker controleert het voordat het online komt.",
+        ],
+      },
+      {
+        title: "Goed om te weten",
+        points: [
+          "De gegevens komen uit open bronnen (ministeries, sportorganisaties, OpenStreetMap) en worden regelmatig bijgewerkt, niet live.",
+          "Een ontbrekende tijd betekent “onbekend”, nooit “gesloten”: kijk bij twijfel op de officiële website van het zwembad.",
+          "SwimMaps is niet verbonden aan de exploitanten van de zwembaden of aan een overheidsinstantie.",
+        ],
+      },
+    ],
+    cta: "Vind een zwembad",
+  },
   sources: {
     title: "Gegevensbronnen",
     subtitle: "Waar de zwembaden, tijden en prijzen vandaan komen",
@@ -3182,6 +3400,48 @@ const es: Dict = {
     sct: "Escocia", wls: "Gales", nir: "Irlanda del Norte", ie: "Irlanda",
   },
 
+  navAbout: "Acerca de",
+  about: {
+    title: "Acerca de SwimMaps",
+    subtitle: "Qué es y cómo sacarle el máximo partido",
+    intro: "SwimMaps te ayuda a encontrar las piscinas públicas a tu alrededor, en casa, de vacaciones o de viaje, en catorce países y regiones de Europa. Es un proyecto personal e independiente: gratuito y sin necesidad de crear una cuenta.",
+    sections: [
+      {
+        title: "Qué encontrarás",
+        points: [
+          "Todas las piscinas públicas alrededor de una dirección o de tu ubicación, en un mapa, en una lista y en una cronología semanal.",
+          "El tipo de piscina y su longitud, los horarios, las tarifas, el teléfono y la web oficial, siempre que una fuente abierta los conozca.",
+          "El estado del día en directo para las piscinas de Toulouse, gracias a la app hermana Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "Cómo usarlo",
+        points: [
+          "Busca una dirección o toca «Cerca de mí» y luego elige un radio.",
+          "Filtra: cubierta o al aire libre, 25 m o 50 m, abierta esta semana, hoy o ahora.",
+          "Toca ☆ para mantener tus piscinas favoritas al principio de la lista, y guarda las direcciones que usas a menudo.",
+          "Abre la ficha de una piscina para ver toda su semana, sus tarifas y las piscinas más cercanas.",
+          "Instala SwimMaps en tu móvil: se abre como una app y guarda los últimos datos sin conexión.",
+        ],
+      },
+      {
+        title: "Ayuda a completar el mapa",
+        points: [
+          "Los horarios y las tarifas solo se conocen para una parte de las piscinas: si nadas en alguna, añade lo que falta con el botón ✎.",
+          "¿Un error, una piscina cerrada o que no aparece? Propón una corrección o una nueva piscina; la autora la revisa antes de publicarla.",
+        ],
+      },
+      {
+        title: "Conviene saber",
+        points: [
+          "Los datos proceden de fuentes abiertas (ministerios, agencias deportivas, OpenStreetMap) y se actualizan con regularidad, no en directo.",
+          "Un horario ausente significa «desconocido», nunca «cerrada»: ante la duda, consulta la web oficial de la piscina.",
+          "SwimMaps no está vinculada a los gestores de las piscinas ni a ninguna administración pública.",
+        ],
+      },
+    ],
+    cta: "Encontrar una piscina",
+  },
   sources: {
     title: "Fuentes de datos",
     subtitle: "De dónde proceden las piscinas, los horarios y los precios",
@@ -3684,6 +3944,48 @@ const pt: Dict = {
     sct: "Escócia", wls: "País de Gales", nir: "Irlanda do Norte", ie: "Irlanda",
   },
 
+  navAbout: "Sobre",
+  about: {
+    title: "Sobre o SwimMaps",
+    subtitle: "O que é e como tirar o máximo partido dele",
+    intro: "O SwimMaps ajuda-te a encontrar as piscinas públicas à tua volta, em casa, de férias ou em viagem, em catorze países e regiões da Europa. É um projeto pessoal e independente: gratuito e sem necessidade de criar conta.",
+    sections: [
+      {
+        title: "O que encontras",
+        points: [
+          "Todas as piscinas públicas à volta de uma morada ou da tua localização, num mapa, numa lista e numa cronologia semanal.",
+          "O tipo de piscina e o seu comprimento, os horários, os preços, o telefone e o site oficial, sempre que uma fonte aberta os conhece.",
+          "O estado do dia em direto para as piscinas de Toulouse, graças à app irmã Piscines de Toulouse.",
+        ],
+      },
+      {
+        title: "Como usar",
+        points: [
+          "Pesquisa uma morada ou toca em “Perto de mim” e depois escolhe um raio.",
+          "Filtra: coberta ou ao ar livre, 25 m ou 50 m, aberta esta semana, hoje ou agora.",
+          "Toca em ☆ para manter as tuas piscinas favoritas no topo da lista, e guarda as moradas que usas com frequência.",
+          "Abre a página de uma piscina para ver toda a sua semana, os preços e as piscinas mais próximas.",
+          "Instala o SwimMaps no telemóvel: abre como uma app e guarda os dados mais recentes offline.",
+        ],
+      },
+      {
+        title: "Ajuda a completar o mapa",
+        points: [
+          "Os horários e preços só são conhecidos para uma parte das piscinas: se nadas nalguma, acrescenta o que falta com o botão ✎.",
+          "Um erro, uma piscina fechada ou em falta? Propõe uma correção ou uma nova piscina; a autora verifica-a antes de a publicar.",
+        ],
+      },
+      {
+        title: "Bom saber",
+        points: [
+          "Os dados vêm de fontes abertas (ministérios, agências desportivas, OpenStreetMap) e são atualizados regularmente, não em direto.",
+          "Um horário em falta significa “desconhecido”, nunca “fechada”: em caso de dúvida, consulta o site oficial da piscina.",
+          "O SwimMaps não está associado às entidades gestoras das piscinas nem a qualquer organismo público.",
+        ],
+      },
+    ],
+    cta: "Encontrar uma piscina",
+  },
   sources: {
     title: "Fontes dos dados",
     subtitle: "De onde vêm as piscinas, os horários e os preços",

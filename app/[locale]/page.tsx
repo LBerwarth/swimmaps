@@ -8,6 +8,7 @@ import { FinderView } from "@/components/finder-view";
 import { PageHeader } from "@/components/page-header";
 import { SiteFooter } from "@/components/site-footer";
 import { IosBanner } from "@/components/ios-banner";
+import { FirstVisit } from "@/components/first-visit";
 import { InstallBanner } from "@/components/install-banner";
 import { OfflineBanner } from "@/components/offline-banner";
 import { UpdateInfo } from "@/components/update-info";
@@ -91,6 +92,7 @@ export default async function Home({
         </p>
       </PageHeader>
 
+      <FirstVisit />
       <IosBanner />
       <InstallBanner />
       <OfflineBanner />

@@ -50,6 +50,10 @@ export function SiteFooter({
       <p>{dict.footerDisclaimer}</p>
       <p>{dict.footerIndependent}</p>
       <p>
+        <Link href={`/${locale}/about`} className={LINK}>
+          {dict.navAbout}
+        </Link>
+        {" · "}
         <Link href={`/${locale}/sources`} className={LINK}>
           {dict.navSources}
         </Link>

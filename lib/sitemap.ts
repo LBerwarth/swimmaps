@@ -21,6 +21,7 @@ export async function localeSitemap(locale: Locale): Promise<string> {
   const urls = [
     entry((l) => `/${l}`, locale, 1, updated),
     entry((l) => `/${l}/sources`, locale, 0.3),
+    entry((l) => `/${l}/about`, locale, 0.4),
     entry((l) => `/${l}/privacy`, locale, 0.2),
     ...[...getAllPools(), ...(await getUserPools())].filter((p) => !removed.has(p.id)).map((pool) => entry((l) => poolPagePath(l, pool), locale, 0.6, updated)),
   ];
