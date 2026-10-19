@@ -1,0 +1,56 @@
+name: Mise à jour des données
+
+on:
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # Un pays en échec (Overpass saturé…) n'empêche pas de publier les autres.
+      - name: Reconstruire les jeux de données
+        id: build
+        run: npm run build:data
+        continue-on-error: true
+
+      # Le rebuild écrase les horaires lus sur les sites officiels : on les réapplique (cache commité).
+      - name: Réappliquer les horaires des sites officiels
+        run: npm run scrape:hours
+        continue-on-error: true
+
+      - name: Publier les données mises à jour
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data scripts/cache/website-hours.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement."
+          else
+            git commit -m "Données : mise à jour mensuelle des piscines"
+            git push
+          fi
+
+      - name: Signaler un échec partiel
+        if: steps.build.outcome == 'failure'
+        run: |
+          echo "::warning::Au moins un pays n'a pas pu être reconstruit, voir l'étape précédente."
+          exit 1

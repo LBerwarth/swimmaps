@@ -312,6 +312,9 @@ function enrichWithOsm(pools: Pool[], elements: OsmElement[]) {
   );
 }
 
+/** En dessous de 70 % du compte précédent, on soupçonne une panne de la source. */
+const MIN_KEEP_RATIO = 0.7;
+
 interface IndexEntry {
   code: string;
   count: number;
@@ -340,35 +343,46 @@ async function main() {
     for (const e of existing.countries ?? []) entries.set(e.code, e);
   }
 
+  const failures: string[] = [];
   for (const cc of targets) {
     const { iso, country = iso, load } = SOURCES[cc];
     console.log(`\n=== ${iso} ===`);
-    const pools = await load();
-    // --skip-osm : publier sans enrichissement (utile quand les serveurs
-    // Overpass limitent) ; relancer sans le drapeau pour enrichir.
-    if (process.argv.includes("--skip-osm")) {
-      console.log("  Enrichissement OSM sauté (--skip-osm).");
-    } else {
-      const osm = await loadOsm(iso, getArg(`osm-${cc}`) ?? (cc === "fr" ? getArg("osm") : undefined));
-      enrichWithOsm(pools, osm);
+    try {
+      const pools = await load();
+      // Exécution sans surveillance : une source à moitié en panne ne doit pas vider un pays.
+      const previous = entries.get(cc)?.count;
+      if (previous && pools.length < previous * MIN_KEEP_RATIO) {
+        throw new Error(`${pools.length} piscines au lieu de ${previous} : données précédentes conservées`);
+      }
+      // --skip-osm : publier sans enrichissement (utile quand les serveurs
+      // Overpass limitent) ; relancer sans le drapeau pour enrichir.
+      if (process.argv.includes("--skip-osm")) {
+        console.log("  Enrichissement OSM sauté (--skip-osm).");
+      } else {
+        const osm = await loadOsm(iso, getArg(`osm-${cc}`) ?? (cc === "fr" ? getArg("osm") : undefined));
+        enrichWithOsm(pools, osm);
+      }
+      pools.sort((a, b) => a.id.localeCompare(b.id));
+
+      const updated = new Date().toISOString();
+      const payload = { updated, country, count: pools.length, pools };
+      const outFile = join(outDir, `piscines-${cc}.json`);
+      writeFileSync(outFile, JSON.stringify(payload));
+      console.log(
+        `✔ ${pools.length} piscines → ${outFile} (${(JSON.stringify(payload).length / 1024 / 1024).toFixed(2)} Mo)`,
+      );
+
+      const bbox: [number, number, number, number] = [
+        Math.min(...pools.map((p) => p.lat)),
+        Math.min(...pools.map((p) => p.lon)),
+        Math.max(...pools.map((p) => p.lat)),
+        Math.max(...pools.map((p) => p.lon)),
+      ];
+      entries.set(cc, { code: cc, count: pools.length, bbox, updated });
+    } catch (err) {
+      failures.push(cc);
+      console.error(`✘ ${iso} : ${err instanceof Error ? err.message : err}`);
     }
-    pools.sort((a, b) => a.id.localeCompare(b.id));
-
-    const updated = new Date().toISOString();
-    const payload = { updated, country, count: pools.length, pools };
-    const outFile = join(outDir, `piscines-${cc}.json`);
-    writeFileSync(outFile, JSON.stringify(payload));
-    console.log(
-      `✔ ${pools.length} piscines → ${outFile} (${(JSON.stringify(payload).length / 1024 / 1024).toFixed(2)} Mo)`,
-    );
-
-    const bbox: [number, number, number, number] = [
-      Math.min(...pools.map((p) => p.lat)),
-      Math.min(...pools.map((p) => p.lon)),
-      Math.max(...pools.map((p) => p.lat)),
-      Math.max(...pools.map((p) => p.lon)),
-    ];
-    entries.set(cc, { code: cc, count: pools.length, bbox, updated });
   }
 
   const index = {
@@ -377,6 +391,10 @@ async function main() {
   };
   writeFileSync(indexFile, JSON.stringify(index));
   console.log(`\n✔ Index : ${index.countries.map((c) => `${c.code}=${c.count}`).join(", ")}`);
+  if (failures.length) {
+    console.error(`✘ Échecs : ${failures.join(", ")}`);
+    process.exitCode = 1;
+  }
 }
 
 main().catch((err) => {
