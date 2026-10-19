@@ -318,7 +318,8 @@ async function nlHoliday(pool: Pool, today: string): Promise<SchoolHoliday | nul
 
 /** Région de la piscine la plus proche (Photon), pas celle de l'utilisateur : aucune position ne sort. */
 async function photonPlace(pool: Pool): Promise<{ state: string | null; postcode: string | null }> {
-  const res = await fetch(`https://photon.komoot.io/reverse?lat=${pool.lat}&lon=${pool.lon}`);
+  // Sans lang=default, Photon traduit selon Accept-Language (« Rhénanie-du-Nord-Westphalie »).
+  const res = await fetch(`https://photon.komoot.io/reverse?lat=${pool.lat}&lon=${pool.lon}&lang=default`);
   if (!res.ok) return { state: null, postcode: null };
   const data = (await res.json()) as {
     features?: Array<{ properties?: { state?: string; city?: string; postcode?: string } }>;
