@@ -1,10 +1,10 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { applyContrib, pricesText, todayIso, type Contribution, type PendingCorrection } from "@/lib/contrib";
 import { LOCALES } from "@/lib/i18n";
 import { CONTRIB_KEY, CORRECTION_KEY, redis } from "@/lib/redis";
 import { esc, GONE, reviewForm, reviewPage } from "@/lib/review-page";
 import { poolPagePath } from "@/lib/slug";
-import { findPool } from "@/lib/user-pools";
+import { findPool, USER_POOLS_TAG } from "@/lib/user-pools";
 
 export const runtime = "nodejs";
 
@@ -95,6 +95,7 @@ export async function POST(req: Request) {
   if (entry.removal) next.removed = entry.removal;
   next.corrected = [...corrected];
   await db.hset(CONTRIB_KEY, { [source.id]: next });
+  if (entry.removal) revalidateTag(USER_POOLS_TAG, { expire: 0 });
   for (const l of LOCALES) revalidatePath(poolPagePath(l, source));
   return reviewPage(
     `<p>Correction appliquée : <a href="${esc(poolPagePath("fr", source))}">${esc(source.name)}</a>.</p>`,

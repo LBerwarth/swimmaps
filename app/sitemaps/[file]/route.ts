@@ -3,6 +3,8 @@ import { localeSitemap } from "@/lib/sitemap";
 
 export const revalidate = 86400;
 export const dynamicParams = false;
+// La lecture Redis (piscines ajoutées) rendait chaque sitemap de 12 Mo à chaque passage de robot.
+export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return LOCALES.map((l) => ({ file: `${l}.xml` }));

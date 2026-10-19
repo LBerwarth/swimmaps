@@ -1,10 +1,10 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { pricesText } from "@/lib/contrib";
 import { LOCALES } from "@/lib/i18n";
 import { redis } from "@/lib/redis";
 import { esc, GONE, reviewForm, reviewPage } from "@/lib/review-page";
 import { poolPagePath } from "@/lib/slug";
-import { APPROVED_KEY, PENDING_KEY, type PendingPool } from "@/lib/user-pools";
+import { APPROVED_KEY, PENDING_KEY, USER_POOLS_TAG, type PendingPool } from "@/lib/user-pools";
 
 export const runtime = "nodejs";
 
@@ -54,6 +54,7 @@ export async function POST(req: Request) {
   if (form.get("action") !== "approve") return reviewPage("<p>Proposition refusée et supprimée.</p>");
 
   await db.hset(APPROVED_KEY, { [entry.pool.id]: entry.pool });
+  revalidateTag(USER_POOLS_TAG, { expire: 0 });
   for (const l of LOCALES) revalidatePath(poolPagePath(l, entry.pool));
   return reviewPage(
     `<p>Piscine validée : <a href="${esc(poolPagePath("fr", entry.pool))}">${esc(entry.pool.name)}</a>.</p>`,

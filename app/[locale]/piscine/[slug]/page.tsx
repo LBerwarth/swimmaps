@@ -21,6 +21,10 @@ import { TipJar } from "@/components/tip-jar";
 // Fiches rendues à la demande (10 000 piscines × 3 langues) et gardées un jour.
 export const dynamicParams = true;
 export const revalidate = 86400;
+// Sans liste (même vide), Next rend chaque fiche à chaque visite, robots compris : la CPU s'envole.
+export async function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,

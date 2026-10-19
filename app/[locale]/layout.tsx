@@ -19,7 +19,6 @@ export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
 
-export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
