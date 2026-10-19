@@ -32,7 +32,7 @@ import { WeekTimeline } from "@/components/week-timeline";
 import { useFavorites } from "@/components/use-favorites";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { useNow } from "@/components/use-now";
-import { BulbIcon, SwimmerIcon } from "@/components/icons";
+import { BulbIcon, PencilIcon, SwimmerIcon } from "@/components/icons";
 
 const PoolMap = dynamic(() => import("@/components/pool-map"), {
   ssr: false,
@@ -448,7 +448,7 @@ export function FinderView() {
     <div className="space-y-4">
       {contribCount > 0 && (
         <p className="text-center text-xs text-violet-800/80 dark:text-violet-200/85">
-          <SwimmerIcon className="mr-1" />
+          <PencilIcon className="mr-1 inline-block h-[1.15em] w-[1.15em] overflow-hidden align-[-0.225em]" />
           {dict.contribCount(contribCount, contribCount.toLocaleString(dict.intlLocale))}{" "}
           <Link href={`/${locale}/ajouter`} className="font-medium underline underline-offset-2">
             {dict.addLink}
