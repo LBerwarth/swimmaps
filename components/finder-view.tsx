@@ -32,6 +32,7 @@ import { WeekTimeline } from "@/components/week-timeline";
 import { useFavorites } from "@/components/use-favorites";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { useNow } from "@/components/use-now";
+import { BulbIcon, SwimmerIcon } from "@/components/icons";
 
 const PoolMap = dynamic(() => import("@/components/pool-map"), {
   ssr: false,
@@ -447,7 +448,8 @@ export function FinderView() {
     <div className="space-y-4">
       {contribCount > 0 && (
         <p className="text-center text-xs text-violet-800/80 dark:text-violet-200/85">
-          🏊 {dict.contribCount(contribCount, contribCount.toLocaleString(dict.intlLocale))}{" "}
+          <SwimmerIcon className="mr-1" />
+          {dict.contribCount(contribCount, contribCount.toLocaleString(dict.intlLocale))}{" "}
           <Link href={`/${locale}/ajouter`} className="font-medium underline underline-offset-2">
             {dict.addLink}
           </Link>
@@ -673,7 +675,10 @@ export function FinderView() {
           data-slot="fav-tip"
           className="flex-wrap items-center justify-between gap-2 rounded-xl bg-violet-50 px-3 py-2 dark:bg-violet-400/10"
         >
-          <span className="text-xs text-violet-900 dark:text-violet-100">{dict.favTip}</span>
+          <span className="text-xs text-violet-900 dark:text-violet-100">
+            <BulbIcon className="mr-1" />
+            {dict.favTip}
+          </span>
           <button
             type="button"
             onClick={dismissTip}
@@ -692,7 +697,9 @@ export function FinderView() {
 
       {!location && !loadError && (
         <div className="rounded-2xl border border-dashed border-fuchsia-300 bg-white/60 px-5 py-8 text-center text-sm text-slate-600 dark:border-fuchsia-300/40 dark:bg-white/5 dark:text-slate-300">
-          <p className="text-2xl">🏊</p>
+          <p className="text-3xl text-fuchsia-500 dark:text-fuchsia-300">
+            <SwimmerIcon />
+          </p>
           <p className="mt-2 font-medium text-slate-800 dark:text-slate-100">{dict.emptyTitle}</p>
           <p className="mt-1">{dict.emptyHint}</p>
           {index && (

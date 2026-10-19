@@ -8,6 +8,7 @@ import { formatDistance } from "@/lib/geo";
 import type { DayState } from "@/lib/pool-state";
 import { poolPagePath } from "@/lib/slug";
 import { useDict, useLocale } from "@/components/locale-provider";
+import { STAR_POINTS } from "@/components/icons";
 
 type MapPool = Pool & { distanceKm?: number };
 
@@ -30,13 +31,6 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Étoile à cinq branches (repère des piscines ★), rayon 1 centrée sur (0,0). */
-const STAR = Array.from({ length: 10 }, (_, i) => {
-  const angle = (Math.PI / 5) * i - Math.PI / 2;
-  const r = i % 2 === 0 ? 1 : 0.42;
-  return `${(Math.cos(angle) * r).toFixed(3)},${(Math.sin(angle) * r).toFixed(3)}`;
-}).join(" ");
-
 /** Couleur vive = ouverte maintenant ; claire = état inconnu ; grise = fermée / plus tard / terminé. */
 function fillFor(kind: DayState["kind"]): string {
   if (kind === "open") return "#c026d3";
@@ -48,7 +42,7 @@ function poolIcon(kind: DayState["kind"], starred: boolean): L.DivIcon {
   const fill = fillFor(kind);
   const size = starred ? 26 : 18;
   const html = starred
-    ? `<svg width="${size}" height="${size}" viewBox="-1.2 -1.2 2.4 2.4" style="overflow:visible;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))"><polygon points="${STAR}" fill="${fill}" stroke="white" stroke-width="0.14"/></svg>`
+    ? `<svg width="${size}" height="${size}" viewBox="-1.2 -1.2 2.4 2.4" style="overflow:visible;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))"><polygon points="${STAR_POINTS}" fill="${fill}" stroke="white" stroke-width="0.14"/></svg>`
     : `<div style="width:${size}px;height:${size}px;border-radius:9999px;background:${fill};border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,.4)"></div>`;
   return L.divIcon({ className: "", html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
 }

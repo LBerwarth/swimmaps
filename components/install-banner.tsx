@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { INSTALL_DISMISS_KEY } from "@/lib/client-flags";
 import { useDict } from "@/components/locale-provider";
+import { CloseIcon, InstallIcon } from "@/components/icons";
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -52,9 +53,9 @@ export function InstallBanner() {
 
   return (
     <div className="mb-4 flex items-center gap-3 rounded-2xl bg-card px-4 py-3 shadow-md shadow-pink-100/50 dark:shadow-none dark:ring-1 dark:ring-white/10">
-      <span aria-hidden className="text-xl">
-        📲
-      </span>
+      <span aria-hidden className="text-xl text-fuchsia-600 dark:text-fuchsia-300">
+          <InstallIcon />
+        </span>
       <p className="min-w-0 flex-1 text-sm text-slate-700 dark:text-slate-200">{dict.installLead}</p>
       <button
         type="button"
@@ -69,8 +70,8 @@ export function InstallBanner() {
         aria-label={dict.iosDismiss}
         className="shrink-0 rounded-full p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
       >
-        ✕
-      </button>
+          <CloseIcon />
+        </button>
     </div>
   );
 }

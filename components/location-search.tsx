@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDict } from "@/components/locale-provider";
+import { PinIcon } from "@/components/icons";
 
 export interface UserLocation {
   lat: number;
@@ -135,7 +136,7 @@ export function LocationSearch({ value, onChange }: Props) {
         onChange({
           lat: pos.coords.latitude,
           lon: pos.coords.longitude,
-          label: dict.locateButton.replace("📍 ", ""),
+          label: dict.locateButton,
         });
       },
       () => {
@@ -185,6 +186,7 @@ export function LocationSearch({ value, onChange }: Props) {
           disabled={locating}
           className="shrink-0 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-violet-700 disabled:opacity-60"
         >
+          {!locating && <PinIcon className="mr-1.5" />}
           {locating ? dict.locating : dict.locateButton}
         </button>
       </div>

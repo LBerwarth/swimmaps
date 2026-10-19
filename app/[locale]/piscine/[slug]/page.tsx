@@ -17,6 +17,7 @@ import { PoolHours, PoolKindRows } from "@/components/pool-contrib";
 import { WeekList } from "@/components/week-list";
 import { FeedbackForm } from "@/components/feedback-form";
 import { TipJar } from "@/components/tip-jar";
+import { PhoneIcon } from "@/components/icons";
 
 // Fiches rendues à la demande (10 000 piscines × 3 langues) et gardées un jour.
 export const dynamicParams = true;
@@ -189,7 +190,9 @@ export default async function PoolPage({
           )}
           {pool.phone && (
             <>
-              <dt className="text-slate-500 dark:text-slate-400">☎</dt>
+              <dt className="text-slate-500 dark:text-slate-400">
+                <PhoneIcon className="inline-block h-4 w-4 align-[-0.15em]" />
+              </dt>
               <dd>
                 <a href={`tel:${pool.phone.replace(/\s/g, "")}`} className={LINK}>
                   {pool.phone}

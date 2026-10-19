@@ -3,10 +3,10 @@
 import { useSyncExternalStore } from "react";
 import { THEME_COLOR, THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
 import { useDict } from "@/components/locale-provider";
+import { MoonIcon, SunIcon } from "@/components/icons";
 
 type Resolved = Exclude<Theme, "system">;
 
-const ICONS: Record<Resolved, string> = { light: "☀️", dark: "🌙" };
 
 // « storage » ne se déclenche que dans les AUTRES onglets : un événement local
 // tient à jour le bouton de l'onglet courant.
@@ -71,7 +71,7 @@ export function ThemeToggle() {
       title={label}
       className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-sm leading-none transition-colors hover:bg-white/35"
     >
-      <span aria-hidden>{ICONS[theme]}</span>
+      {theme === "dark" ? <MoonIcon className="h-4 w-4" /> : <SunIcon className="h-4 w-4" />}
     </button>
   );
 }

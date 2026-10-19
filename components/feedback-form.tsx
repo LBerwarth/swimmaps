@@ -5,6 +5,7 @@ import { FEEDBACK_KINDS, type FeedbackKind } from "@/lib/i18n";
 import { FEEDBACK_ANCHOR, MESSAGE_MAX, feedbackText } from "@/lib/feedback";
 import { CONTACT_EMAIL } from "@/lib/site";
 import { useDict, useLocale } from "@/components/locale-provider";
+import { ChatIcon } from "@/components/icons";
 
 // Fond OPAQUE : Chrome peint la liste d'un <select> avec le fond du champ, et
 // un fond translucide la rendrait illisible en thème sombre.
@@ -74,7 +75,10 @@ export function FeedbackForm({ poolName }: { poolName?: string }) {
         aria-expanded={open}
         className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
       >
-        <span className="text-sm font-semibold text-violet-800 dark:text-violet-200">{dict.fbTitle}</span>
+        <span className="text-sm font-semibold text-violet-800 dark:text-violet-200">
+          <ChatIcon className="mr-1.5" />
+          {dict.fbTitle}
+        </span>
         <span
           aria-hidden
           className={`shrink-0 text-xs text-violet-500 transition-transform dark:text-violet-300 ${

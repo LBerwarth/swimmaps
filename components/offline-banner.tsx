@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { useDict } from "@/components/locale-provider";
+import { OfflineIcon } from "@/components/icons";
 
 function subscribe(callback: () => void): () => void {
   window.addEventListener("online", callback);
@@ -27,7 +28,7 @@ export function OfflineBanner() {
       className="mb-4 flex items-start gap-2 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 shadow-sm dark:border-amber-400/40 dark:bg-amber-300/10 dark:text-amber-100"
     >
       <span aria-hidden className="mt-0.5 text-base leading-none">
-        📡
+        <OfflineIcon />
       </span>
       <div>
         <p>{dict.offlineBanner}</p>

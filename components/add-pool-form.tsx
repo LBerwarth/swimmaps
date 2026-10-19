@@ -19,6 +19,7 @@ import { HoursForm, hoursSummary, PriceForm } from "@/components/pool-contrib";
 import type { Prices } from "@/lib/types";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { submitNewPool, type NewPoolResult } from "@/components/use-contributions";
+import { PinIcon } from "@/components/icons";
 
 const OUTLINE = "ring-1 ring-fuchsia-200 dark:ring-white/15";
 const INPUT =
@@ -105,7 +106,10 @@ export function AddPoolForm() {
           <p className={LABEL}>{dict.addWhere}</p>
           <p className="mb-2 text-xs text-slate-500 dark:text-slate-400">{dict.addWhereHint}</p>
           <LocationSearch value={where} onChange={setWhere} />
-          {where && <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">📍 {where.label}</p>}
+          {where && <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+              <PinIcon className="mr-1" />
+              {where.label}
+            </p>}
         </div>
         <div>
           <p className={LABEL}>

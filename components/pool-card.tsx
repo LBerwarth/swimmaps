@@ -21,6 +21,15 @@ import { FEEDBACK_ANCHOR } from "@/lib/feedback";
 import { toggleFavorite, useFavorites } from "@/components/use-favorites";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { useNow } from "@/components/use-now";
+import {
+  DirectionsIcon,
+  DoubleChevronIcon,
+  ExternalLinkIcon,
+  PencilIcon,
+  PhoneIcon,
+  SearchIcon,
+  StarIcon,
+} from "@/components/icons";
 
 function WeekLines({ week }: { week: WeekSchedule }) {
   const locale = useLocale();
@@ -158,13 +167,13 @@ export function PoolCard({
               onClick={() => toggleFavorite(pool.id)}
               aria-pressed={isFavorite}
               aria-label={isFavorite ? dict.favRemove(pool.name) : dict.favAdd(pool.name)}
-              className={`-ml-0.5 shrink-0 text-lg leading-none transition-colors ${
+              className={`-ml-0.5 shrink-0 text-base leading-snug transition-colors ${
                 isFavorite
                   ? "text-amber-400"
                   : "text-slate-300 hover:text-amber-300 dark:text-slate-500 dark:hover:text-amber-300"
               }`}
             >
-              {isFavorite ? "★" : "☆"}
+              <StarIcon filled={isFavorite} />
             </button>
             <h2 className="group/name min-w-0 text-base font-semibold leading-snug text-slate-900 dark:text-slate-50">
               {showDetails ? (
@@ -186,9 +195,7 @@ export function PoolCard({
                   title={dict.detailLinkTitle}
                   className="ml-2 inline-block h-6 w-6 overflow-hidden rounded-lg bg-pink-500 p-[5px] align-[-0.35rem] text-white shadow-sm transition-colors hover:bg-pink-600 dark:bg-pink-700 dark:hover:bg-pink-600"
                 >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="block h-3.5 w-3.5 fill-current">
-                    <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z" />
-                  </svg>
+                  <DoubleChevronIcon className="block h-3.5 w-3.5" />
                 </Link>
               )}
               {showDetails && (
@@ -198,9 +205,7 @@ export function PoolCard({
                   title={dict.contribEdit(pool.name)}
                   className="ml-1 inline-block h-6 w-6 overflow-hidden rounded-lg bg-violet-500 p-[5px] align-[-0.35rem] text-white shadow-sm transition-colors hover:bg-violet-600 dark:bg-violet-700 dark:hover:bg-violet-600"
                 >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" className="block h-3.5 w-3.5 fill-current">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                  </svg>
+                  <PencilIcon className="block h-3.5 w-3.5" />
                 </Link>
               )}
             </h2>
@@ -258,9 +263,7 @@ export function PoolCard({
               title={dict.directionsTitle}
               className={`${ICON_BTN} bg-fuchsia-600 hover:bg-fuchsia-700 dark:bg-fuchsia-500 dark:hover:bg-fuchsia-400`}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                <path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z" />
-              </svg>
+              <DirectionsIcon className="h-4 w-4" />
             </a>
             {phone && (
               <a
@@ -269,9 +272,7 @@ export function PoolCard({
                 title={dict.phoneTitle(pool.phone!)}
                 className={`${ICON_BTN} bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-400`}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                  <path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.24.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
-                </svg>
+                <PhoneIcon className="h-4 w-4" />
               </a>
             )}
             {website ? (
@@ -283,9 +284,7 @@ export function PoolCard({
                 title={dict.websiteTitle}
                 className={`${ICON_BTN} bg-violet-800 hover:bg-violet-900 dark:bg-violet-700 dark:hover:bg-violet-600`}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                  <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                </svg>
+                <ExternalLinkIcon className="h-4 w-4" />
               </a>
             ) : (
               <a
@@ -296,9 +295,7 @@ export function PoolCard({
                 title={dict.searchWebsiteTitle}
                 className={`${ICON_BTN} bg-slate-400 hover:bg-slate-500 dark:bg-slate-600 dark:hover:bg-slate-500`}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
-                  <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                </svg>
+                <SearchIcon className="h-4 w-4" />
               </a>
             )}
           </div>

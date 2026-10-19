@@ -408,7 +408,7 @@ const fr: Dict = {
 
   searchPlaceholder: "Adresse, ville, code postal…",
   searchAria: "Rechercher une adresse",
-  locateButton: "📍 Autour de moi",
+  locateButton: "Autour de moi",
   locating: "Localisation…",
   errNoGeolocation: "La géolocalisation n'est pas disponible sur cet appareil.",
   errGeoDenied: "Position refusée ou indisponible — cherchez une adresse à la place.",
@@ -448,7 +448,7 @@ const fr: Dict = {
   favAll: "Toutes",
   favOnly: "★ Favoris",
   favTip:
-    "💡 Touchez ☆ à côté du nom d'une piscine pour la suivre : elle passe en tête de liste, et la pastille ★ Favoris la retrouve.",
+    "Touchez ☆ à côté du nom d'une piscine pour la suivre : elle passe en tête de liste, et la pastille ★ Favoris la retrouve.",
   favTipOk: "Compris",
   lenLabel: "Bassin",
   lenAria: "Longueur de bassin",
@@ -474,7 +474,7 @@ const fr: Dict = {
 
   loadError: "Impossible de charger la liste des piscines. Rechargez la page.",
   emptyTitle: "Où cherchez-vous une piscine ?",
-  emptyHint: "Touchez « 📍 Autour de moi » ou saisissez une adresse ci-dessus.",
+  emptyHint: "Touchez « Autour de moi » ou saisissez une adresse ci-dessus.",
   referenced: (n) => `${n} piscines publiques référencées.`,
   loadingPools: "Chargement des piscines…",
   noneInRadius: "Aucune piscine dans ce rayon — essayez un rayon plus grand.",
@@ -626,7 +626,7 @@ const fr: Dict = {
   detailNearbyAway: (km) => `à ${km}`,
   detailBack: "← Toutes les piscines autour de moi",
 
-  fbTitle: "💬 Signaler une erreur ou donner votre avis",
+  fbTitle: "Signaler une erreur ou donner votre avis",
   fbIntro:
     "Un horaire faux, une piscine fermée ou manquante, une idée ? Dites-le, cela aide à corriger l'application et ses sources ouvertes.",
   fbKinds: {
@@ -940,7 +940,7 @@ const en: Dict = {
 
   searchPlaceholder: "Address, town, postcode…",
   searchAria: "Search for an address",
-  locateButton: "📍 Around me",
+  locateButton: "Around me",
   locating: "Locating…",
   errNoGeolocation: "Geolocation is not available on this device.",
   errGeoDenied: "Location denied or unavailable — search for an address instead.",
@@ -980,7 +980,7 @@ const en: Dict = {
   favAll: "All",
   favOnly: "★ Favourites",
   favTip:
-    "💡 Tap ☆ next to a pool's name to follow it: it moves to the top of the list, and the ★ Favourites chip brings it back.",
+    "Tap ☆ next to a pool's name to follow it: it moves to the top of the list, and the ★ Favourites chip brings it back.",
   favTipOk: "Got it",
   lenLabel: "Length",
   lenAria: "Pool length",
@@ -1006,7 +1006,7 @@ const en: Dict = {
 
   loadError: "Could not load the pool list. Please reload the page.",
   emptyTitle: "Where are you looking for a pool?",
-  emptyHint: "Tap “📍 Around me” or type an address above.",
+  emptyHint: "Tap “Around me” or type an address above.",
   referenced: (n) => `${n} public pools listed.`,
   loadingPools: "Loading pools…",
   noneInRadius: "No pool within this radius — try a larger one.",
@@ -1171,7 +1171,7 @@ const en: Dict = {
   detailNearbyAway: (km) => `${km} away`,
   detailBack: "← All pools around me",
 
-  fbTitle: "💬 Report an error or share feedback",
+  fbTitle: "Report an error or share feedback",
   fbIntro:
     "Wrong hours, a closed or missing pool, an idea? Tell us — it helps fix the app and its open sources.",
   fbKinds: {
@@ -1484,7 +1484,7 @@ const de: Dict = {
 
   searchPlaceholder: "Adresse, Ort, Postleitzahl…",
   searchAria: "Adresse suchen",
-  locateButton: "📍 In meiner Nähe",
+  locateButton: "In meiner Nähe",
   locating: "Ortung…",
   errNoGeolocation: "Standortbestimmung ist auf diesem Gerät nicht verfügbar.",
   errGeoDenied: "Standort abgelehnt oder nicht verfügbar — suche stattdessen eine Adresse.",
@@ -1524,7 +1524,7 @@ const de: Dict = {
   favAll: "Alle",
   favOnly: "★ Favoriten",
   favTip:
-    "💡 Tippe auf ☆ neben dem Namen eines Bades, um es zu merken: es rückt an den Anfang der Liste, und der Filter ★ Favoriten findet es wieder.",
+    "Tippe auf ☆ neben dem Namen eines Bades, um es zu merken: es rückt an den Anfang der Liste, und der Filter ★ Favoriten findet es wieder.",
   favTipOk: "Verstanden",
   lenLabel: "Becken",
   lenAria: "Beckenlänge",
@@ -1550,7 +1550,7 @@ const de: Dict = {
 
   loadError: "Die Schwimmbadliste konnte nicht geladen werden. Bitte Seite neu laden.",
   emptyTitle: "Wo suchst du ein Schwimmbad?",
-  emptyHint: "Tippe auf „📍 In meiner Nähe“ oder gib oben eine Adresse ein.",
+  emptyHint: "Tippe auf „In meiner Nähe“ oder gib oben eine Adresse ein.",
   referenced: (n) => `${n} öffentliche Schwimmbäder erfasst.`,
   loadingPools: "Schwimmbäder werden geladen…",
   noneInRadius: "Kein Schwimmbad in diesem Umkreis — versuche einen größeren.",
@@ -1716,7 +1716,7 @@ const de: Dict = {
   detailNearbyAway: (km) => `${km} entfernt`,
   detailBack: "← Alle Schwimmbäder in meiner Nähe",
 
-  fbTitle: "💬 Fehler melden oder Feedback geben",
+  fbTitle: "Fehler melden oder Feedback geben",
   fbIntro:
     "Falsche Zeiten, ein geschlossenes oder fehlendes Bad, eine Idee? Sag es uns — das hilft, die App und ihre offenen Quellen zu verbessern.",
   fbKinds: {
@@ -2029,7 +2029,7 @@ const it: Dict = {
 
   searchPlaceholder: "Indirizzo, città, CAP…",
   searchAria: "Cerca un indirizzo",
-  locateButton: "📍 Intorno a me",
+  locateButton: "Intorno a me",
   locating: "Localizzazione…",
   errNoGeolocation: "La geolocalizzazione non è disponibile su questo dispositivo.",
   errGeoDenied: "Posizione negata o non disponibile — cerca invece un indirizzo.",
@@ -2069,7 +2069,7 @@ const it: Dict = {
   favAll: "Tutte",
   favOnly: "★ Preferiti",
   favTip:
-    "💡 Tocca ☆ accanto al nome di una piscina per seguirla: sale in cima all'elenco e il filtro ★ Preferiti te la ritrova.",
+    "Tocca ☆ accanto al nome di una piscina per seguirla: sale in cima all'elenco e il filtro ★ Preferiti te la ritrova.",
   favTipOk: "Ok, capito",
   lenLabel: "Lunghezza",
   lenAria: "Lunghezza della vasca",
@@ -2095,7 +2095,7 @@ const it: Dict = {
 
   loadError: "Impossibile caricare l'elenco delle piscine. Ricarica la pagina.",
   emptyTitle: "Dove cerchi una piscina?",
-  emptyHint: "Tocca “📍 Intorno a me” o scrivi un indirizzo qui sopra.",
+  emptyHint: "Tocca “Intorno a me” o scrivi un indirizzo qui sopra.",
   referenced: (n) => `${n} piscine pubbliche censite.`,
   loadingPools: "Caricamento delle piscine…",
   noneInRadius: "Nessuna piscina in questo raggio — provane uno più ampio.",
@@ -2260,7 +2260,7 @@ const it: Dict = {
   detailNearbyAway: (km) => `a ${km}`,
   detailBack: "← Tutte le piscine intorno a me",
 
-  fbTitle: "💬 Segnala un errore o lascia un commento",
+  fbTitle: "Segnala un errore o lascia un commento",
   fbIntro:
     "Orari sbagliati, una piscina chiusa o mancante, un'idea? Scrivici — aiuta a correggere l'app e le sue fonti aperte.",
   fbKinds: {
@@ -2573,7 +2573,7 @@ const nl: Dict = {
 
   searchPlaceholder: "Adres, plaats, postcode…",
   searchAria: "Zoek een adres",
-  locateButton: "📍 In mijn buurt",
+  locateButton: "In mijn buurt",
   locating: "Locatie bepalen…",
   errNoGeolocation: "Locatiebepaling is niet beschikbaar op dit apparaat.",
   errGeoDenied: "Locatie geweigerd of niet beschikbaar — zoek in plaats daarvan een adres.",
@@ -2613,7 +2613,7 @@ const nl: Dict = {
   favAll: "Alle",
   favOnly: "★ Favorieten",
   favTip:
-    "💡 Tik op ☆ naast de naam van een zwembad om het te volgen: het komt bovenaan de lijst te staan, en met het filter ★ Favorieten vind je het terug.",
+    "Tik op ☆ naast de naam van een zwembad om het te volgen: het komt bovenaan de lijst te staan, en met het filter ★ Favorieten vind je het terug.",
   favTipOk: "Begrepen",
   lenLabel: "Lengte",
   lenAria: "Lengte van het bad",
@@ -2639,7 +2639,7 @@ const nl: Dict = {
 
   loadError: "De lijst met zwembaden kon niet worden geladen. Laad de pagina opnieuw.",
   emptyTitle: "Waar zoek je een zwembad?",
-  emptyHint: "Tik op “📍 In mijn buurt” of typ hierboven een adres.",
+  emptyHint: "Tik op “In mijn buurt” of typ hierboven een adres.",
   referenced: (n) => `${n} openbare zwembaden opgenomen.`,
   loadingPools: "Zwembaden laden…",
   noneInRadius: "Geen zwembad binnen deze straal — probeer een grotere.",
@@ -2804,7 +2804,7 @@ const nl: Dict = {
   detailNearbyAway: (km) => `op ${km}`,
   detailBack: "← Alle zwembaden in mijn buurt",
 
-  fbTitle: "💬 Meld een fout of geef feedback",
+  fbTitle: "Meld een fout of geef feedback",
   fbIntro:
     "Verkeerde tijden, een gesloten of ontbrekend zwembad, een idee? Laat het ons weten — zo verbeteren we de app en haar open bronnen.",
   fbKinds: {
@@ -3117,7 +3117,7 @@ const es: Dict = {
 
   searchPlaceholder: "Dirección, localidad, código postal…",
   searchAria: "Buscar una dirección",
-  locateButton: "📍 Cerca de mí",
+  locateButton: "Cerca de mí",
   locating: "Localizando…",
   errNoGeolocation: "La geolocalización no está disponible en este dispositivo.",
   errGeoDenied: "Ubicación denegada o no disponible — busca una dirección.",
@@ -3157,7 +3157,7 @@ const es: Dict = {
   favAll: "Todas",
   favOnly: "★ Favoritas",
   favTip:
-    "💡 Toca ☆ junto al nombre de una piscina para seguirla: sube al principio de la lista y el botón ★ Favoritas te la vuelve a mostrar.",
+    "Toca ☆ junto al nombre de una piscina para seguirla: sube al principio de la lista y el botón ★ Favoritas te la vuelve a mostrar.",
   favTipOk: "Entendido",
   lenLabel: "Longitud",
   lenAria: "Longitud de la piscina",
@@ -3183,7 +3183,7 @@ const es: Dict = {
 
   loadError: "No se ha podido cargar la lista de piscinas. Recarga la página.",
   emptyTitle: "¿Dónde buscas una piscina?",
-  emptyHint: "Toca «📍 Cerca de mí» o escribe una dirección arriba.",
+  emptyHint: "Toca «Cerca de mí» o escribe una dirección arriba.",
   referenced: (n) => `${n} piscinas públicas registradas.`,
   loadingPools: "Cargando piscinas…",
   noneInRadius: "Ninguna piscina en este radio — prueba con uno mayor.",
@@ -3348,7 +3348,7 @@ const es: Dict = {
   detailNearbyAway: (km) => `a ${km}`,
   detailBack: "← Todas las piscinas cerca de mí",
 
-  fbTitle: "💬 Informar de un error o dar tu opinión",
+  fbTitle: "Informar de un error o dar tu opinión",
   fbIntro:
     "¿Horario incorrecto, una piscina cerrada o que falta, una idea? Cuéntanoslo — ayuda a mejorar la app y sus fuentes abiertas.",
   fbKinds: {
@@ -3661,7 +3661,7 @@ const pt: Dict = {
 
   searchPlaceholder: "Morada, localidade, código postal…",
   searchAria: "Pesquisar uma morada",
-  locateButton: "📍 Perto de mim",
+  locateButton: "Perto de mim",
   locating: "A localizar…",
   errNoGeolocation: "A geolocalização não está disponível neste dispositivo.",
   errGeoDenied: "Localização recusada ou indisponível — pesquisa antes uma morada.",
@@ -3701,7 +3701,7 @@ const pt: Dict = {
   favAll: "Todas",
   favOnly: "★ Favoritas",
   favTip:
-    "💡 Toca em ☆ ao lado do nome de uma piscina para a seguir: passa para o topo da lista e o botão ★ Favoritas volta a mostrá-la.",
+    "Toca em ☆ ao lado do nome de uma piscina para a seguir: passa para o topo da lista e o botão ★ Favoritas volta a mostrá-la.",
   favTipOk: "Percebi",
   lenLabel: "Comprimento",
   lenAria: "Comprimento da piscina",
@@ -3727,7 +3727,7 @@ const pt: Dict = {
 
   loadError: "Não foi possível carregar a lista de piscinas. Recarrega a página.",
   emptyTitle: "Onde procuras uma piscina?",
-  emptyHint: "Toca em “📍 Perto de mim” ou escreve uma morada acima.",
+  emptyHint: "Toca em “Perto de mim” ou escreve uma morada acima.",
   referenced: (n) => `${n} piscinas públicas registadas.`,
   loadingPools: "A carregar as piscinas…",
   noneInRadius: "Nenhuma piscina dentro deste raio — experimenta um maior.",
@@ -3775,7 +3775,7 @@ const pt: Dict = {
   addLink: "Falta uma piscina? Adiciona-a",
   addName: "Nome da piscina",
   addWhere: "Onde fica?",
-  addWhereHint: "Pesquisa a morada ou usa “📍 Perto de mim” se estiveres no local.",
+  addWhereHint: "Pesquisa a morada ou usa “Perto de mim” se estiveres no local.",
   addOptional: "Opcional",
   addWebsite: "Site oficial",
   addNote: "Mensagem para a autora (não publicada)",
@@ -3892,7 +3892,7 @@ const pt: Dict = {
   detailNearbyAway: (km) => `a ${km}`,
   detailBack: "← Todas as piscinas perto de mim",
 
-  fbTitle: "💬 Reportar um erro ou dar a tua opinião",
+  fbTitle: "Reportar um erro ou dar a tua opinião",
   fbIntro:
     "Horário errado, piscina fechada ou em falta, uma ideia? Diz-nos — ajuda a corrigir a app e as suas fontes abertas.",
   fbKinds: {
@@ -4103,7 +4103,7 @@ const pt: Dict = {
       {
         title: "Dados pessoais recolhidos",
         paragraphs: [
-          "Nenhuns, por defeito. A app não exige conta e não recolhe dados sobre ti. Só acede à tua localização se tocares em “📍 Perto de mim”, e essa localização fica no teu navegador: serve para calcular distâncias e nunca é enviada para o nosso servidor.",
+          "Nenhuns, por defeito. A app não exige conta e não recolhe dados sobre ti. Só acede à tua localização se tocares em “Perto de mim”, e essa localização fica no teu navegador: serve para calcular distâncias e nunca é enviada para o nosso servidor.",
           "Quando escreves uma morada, o texto é enviado para serviços de pesquisa de moradas (Base Adresse Nationale para França, Photon/komoot nos restantes países) para ser convertido em coordenadas. Nada mais lhes é transmitido.",
         ],
       },
