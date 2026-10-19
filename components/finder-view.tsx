@@ -8,7 +8,8 @@ import type { Locale } from "@/lib/i18n";
 import { formatDistance, haversineKm, usesMiles } from "@/lib/geo";
 import { isInClosedPeriod, isOpenAt, weekAt } from "@/lib/opening-hours";
 import { fetchToulouseLive, isOpenNowLive, type LivePoolStatus } from "@/lib/toulouse-live";
-import { parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
+import { matchesHoursOn, parsedHours, poolDayState, weekdayOf, type DayState } from "@/lib/pool-state";
+import { currentSchoolHoliday, type SchoolHoliday } from "@/lib/school-holidays";
 import { matchesQuery } from "@/lib/search";
 import { applyContrib, closureAt, contributionCount } from "@/lib/contrib";
 import {
@@ -19,6 +20,7 @@ import {
   readFilterPreset,
   retoggle,
   type EnvFilter,
+  type HoursFilter,
   type LenFilter,
   type OpenFilter,
 } from "@/lib/filters";
@@ -70,6 +72,7 @@ interface Filters {
   env: EnvFilter;
   len: LenFilter;
   open: OpenFilter;
+  hours: HoursFilter;
   /** null = pas de filtre favoris ; sinon les ids à garder. */
   favorites: string[] | null;
 }
@@ -125,6 +128,19 @@ function applyFilters(
     .filter((pool) => passesOpen(pool, f.open, live?.get(pool.id), now, locale));
 }
 
+/** Horaires jugés sur aujourd'hui pour la liste et la carte ; la frise juge jour par jour. */
+function applyHoursToday(
+  pools: PoolWithDistance[],
+  hours: HoursFilter,
+  live: Map<string, LivePoolStatus> | null,
+  now: Date,
+  locale: Locale,
+): PoolWithDistance[] {
+  if (hours === "all") return pools;
+  const today = weekdayOf(now);
+  return pools.filter((p) => matchesHoursOn(p, live?.get(p.id), today, true, now, hours, locale));
+}
+
 // Paramètres d'URL (raccourcis du lanceur, liens partagés) : inconnus au rendu
 // serveur, lus à l'hydratation sans décalage grâce à useSyncExternalStore.
 const noSubscribe = (): (() => void) => () => {};
@@ -162,10 +178,12 @@ export function FinderView() {
   const [envChoice, setEnvFilter] = useState<EnvFilter | null>(null);
   const [lenChoice, setLenFilter] = useState<LenFilter | null>(null);
   const [openChoice, setOpenFilter] = useState<OpenFilter | null>(null);
+  const [hoursChoice, setHoursFilter] = useState<HoursFilter | null>(null);
   const [favChoice, setFavoritesOnly] = useState<boolean | null>(null);
   const envFilter = envChoice ?? preset.env;
   const lenFilter = lenChoice ?? preset.len;
   const openFilter = openChoice ?? preset.open;
+  const hoursFilter = hoursChoice ?? preset.hours;
   const favoritesOnly = favChoice ?? preset.fav;
   const [query, setQuery] = useState("");
   const favorites = useFavorites();
@@ -177,6 +195,7 @@ export function FinderView() {
   const [savedAddresses, setSavedAddresses] = useState<UserLocation[] | null>(null);
   // Statut du jour en direct (piscines de Toulouse), superposé aux données OSM.
   const [live, setLive] = useState<Map<string, LivePoolStatus> | null>(null);
+  const [holiday, setHoliday] = useState<{ poolId: string; value: SchoolHoliday | null } | null>(null);
 
   const hasFavorites = favorites.length > 0;
   // « Favoris » actif mais plus aucune ★ : le filtre devient inactif (dérivé au
@@ -321,14 +340,15 @@ export function FinderView() {
       env: envFilter,
       len: lenFilter,
       open: openFilter,
+      hours: hoursFilter,
       favorites: effectiveFavOnly ? favorites : null,
     }),
-    [envFilter, lenFilter, openFilter, effectiveFavOnly, favorites],
+    [envFilter, lenFilter, openFilter, hoursFilter, effectiveFavOnly, favorites],
   );
 
   // La recherche par nom remplace tous les filtres : on nomme une piscine
   // précise, on veut la voir. Les ★ remontent en tête, puis la distance.
-  const displayed: PoolWithDistance[] = useMemo(() => {
+  const sorted: PoolWithDistance[] = useMemo(() => {
     const kept = searching
       ? inRadius.filter((p) => matchesQuery(p, query))
       : applyFilters(inRadius, filters, live, now, locale);
@@ -338,7 +358,35 @@ export function FinderView() {
       return fa - fb || a.distanceKm - b.distanceKm;
     });
   }, [inRadius, searching, query, filters, live, now, locale, favorites]);
+  const displayed = useMemo(
+    () => (searching ? sorted : applyHoursToday(sorted, hoursFilter, live, now, locale)),
+    [sorted, searching, hoursFilter, live, now, locale],
+  );
 
+  // Vacances autour de la piscine la plus proche (sa région, pas la position de l'utilisateur).
+  const nearestPool = nearest?.pool ?? null;
+  useEffect(() => {
+    if (!nearestPool) return;
+    let cancelled = false;
+    currentSchoolHoliday(nearestPool, locale).then((value) => {
+      if (!cancelled) setHoliday({ poolId: nearestPool.id, value });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [nearestPool, locale]);
+  const currentHoliday = holiday && holiday.poolId === nearestPool?.id ? holiday.value : null;
+
+  // 0 résultat : combien de piscines du rayon n'ont simplement pas la donnée filtrée.
+  const missingDataCount =
+    searching || effectiveFavOnly
+      ? 0
+      : inRadius.filter(
+          (p) =>
+            ((openFilter !== "all" || hoursFilter !== "all") && !p.hours && !live?.has(p.id)) ||
+            (lenFilter !== "all" && !p.lens?.length) ||
+            (envFilter !== "all" && !p.env),
+        ).length;
   const center = useMemo<[number, number] | null>(
     () => (location ? [location.lat, location.lon] : null),
     [location],
@@ -357,17 +405,19 @@ export function FinderView() {
    * chercher un 50 m quand toutes ses ★ font 25 m, c'est chercher une autre
    * piscine que les siennes.
    */
-  const clickFilter = (change: { env?: EnvFilter; len?: LenFilter; open?: OpenFilter }) => {
+  const clickFilter = (change: { env?: EnvFilter; len?: LenFilter; open?: OpenFilter; hours?: HoursFilter }) => {
     const next: Filters = { ...filters, ...change };
     if (
       effectiveFavOnly &&
-      applyFilters(inRadius, { ...next, favorites }, live, now, locale).length === 0
+      applyHoursToday(applyFilters(inRadius, { ...next, favorites }, live, now, locale), next.hours, live, now, locale)
+        .length === 0
     ) {
       setFavoritesOnly(false);
     }
     if (change.env !== undefined) setEnvFilter(change.env);
     if (change.len !== undefined) setLenFilter(change.len);
     if (change.open !== undefined) setOpenFilter(change.open);
+    if (change.hours !== undefined) setHoursFilter(change.hours);
     resetList();
   };
 
@@ -379,6 +429,7 @@ export function FinderView() {
       setEnvFilter("all");
       setLenFilter("all");
       setOpenFilter("all");
+      setHoursFilter("all");
     }
     resetList();
   };
@@ -647,6 +698,28 @@ export function FinderView() {
             </div>
           </div>
 
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label={dict.hoursAria}>
+            <ChipLabel>{dict.hoursFilterLabel}</ChipLabel>
+            <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
+              {(
+                [
+                  ["all", dict.openAll],
+                  ["early", dict.hoursEarly],
+                  ["noon", dict.hoursNoon],
+                  ["late", dict.hoursLate],
+                ] as Array<[HoursFilter, string]>
+              ).map(([key, label]) => (
+                <Chip
+                  key={key}
+                  selected={hoursFilter === key}
+                  onClick={() => clickFilter({ hours: retoggle(hoursFilter, key) })}
+                >
+                  {label}
+                </Chip>
+              ))}
+            </div>
+          </div>
+
           {hasFavorites && (
             <div className="flex flex-wrap items-center gap-2" role="group" aria-label={dict.favAria}>
               <ChipLabel>{dict.favLabel}</ChipLabel>
@@ -712,6 +785,21 @@ export function FinderView() {
 
       {location && center && (
         <>
+          {currentHoliday && (
+            <p className="rounded-2xl bg-amber-100/45 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-300/60 dark:bg-amber-400/10 dark:text-amber-100 dark:ring-white/15">
+              {dict.holidayBanner(
+                currentHoliday.name,
+                currentHoliday.lastDay
+                  ? new Intl.DateTimeFormat(dict.intlLocale, {
+                      weekday: "long",
+                      day: "numeric",
+                      month: "long",
+                      timeZone: "UTC",
+                    }).format(new Date(`${currentHoliday.lastDay}T00:00:00Z`))
+                  : null,
+              )}
+            </p>
+          )}
           <p className="text-sm text-slate-600 dark:text-slate-300" aria-live="polite">
             {index === null || loadingPools
               ? dict.loadingPools
@@ -727,10 +815,39 @@ export function FinderView() {
                         : dict.noneInRadius
                 : dict.countLine(displayed.length, radius.label, location.label)}
           </p>
+          {!searching && hoursFilter !== "all" && displayed.length > 0 && (
+            <p className="text-xs text-slate-500 dark:text-slate-400">{dict.hoursKnownOnly}</p>
+          )}
+          {displayed.length === 0 && !loadingPools && missingDataCount > 0 && (
+            <div className="rounded-2xl bg-violet-100/45 px-4 py-3 text-sm text-violet-900 ring-1 ring-violet-300/60 dark:bg-violet-400/10 dark:text-violet-100 dark:ring-white/15">
+              <p>
+                <PencilIcon className="mr-1 inline-block h-[1.15em] w-[1.15em] overflow-hidden align-[-0.225em]" />
+                {dict.missingDataHint(missingDataCount)}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setEnvFilter("all");
+                  setLenFilter("all");
+                  setOpenFilter("all");
+                  setHoursFilter("all");
+                  resetList();
+                }}
+                className="mt-2 rounded-full bg-white px-3 py-1 text-xs font-medium text-violet-800 shadow-sm transition-colors hover:bg-fuchsia-100 dark:bg-white/10 dark:text-violet-100 dark:hover:bg-fuchsia-400/20"
+              >
+                {dict.showAllInRadius}
+              </button>
+            </div>
+          )}
 
-          {displayed.length > 0 && (
+          {(searching ? displayed : sorted).length > 0 && (
             <CollapsibleSection title={dict.sectionTimeline} storageKey="pf:bloc-timeline">
-              <WeekTimeline pools={displayed} live={live} isFavorite={isFavorite} />
+              <WeekTimeline
+                pools={searching ? displayed : sorted}
+                live={live}
+                isFavorite={isFavorite}
+                hours={searching ? "all" : hoursFilter}
+              />
             </CollapsibleSection>
           )}
 

@@ -1,4 +1,5 @@
 import type { Locale } from "./i18n";
+import { matchesHours, type HoursFilter } from "./filters";
 import {
   isInClosedPeriod,
   parseOpeningHours,
@@ -121,4 +122,24 @@ export function rangesForDay(
   if (!parsed) return { ranges: [], state: "unknown" };
   if (isInClosedPeriod(parsed.closedPeriods, now)) return { ranges: [], state: "seasonal" };
   return { ranges: weekAt(parsed, date)[weekday], state: "known" };
+}
+
+/**
+ * Filtre horaires sur un jour : exige des horaires connus. Planning de
+ * vacances connu à côté de la semaine type : l'un ou l'autre suffit.
+ */
+export function matchesHoursOn(
+  pool: Pool,
+  live: LivePoolStatus | null | undefined,
+  weekday: number,
+  isToday: boolean,
+  now: Date,
+  hours: HoursFilter,
+  locale: Locale = "fr",
+): boolean {
+  if (hours === "all") return true;
+  const { ranges, state } = rangesForDay(pool, live, weekday, isToday, now, locale);
+  if (state !== "known") return false;
+  const holiday = live && isToday ? undefined : parsedHours(pool, locale)?.holidayWeek?.[weekday];
+  return matchesHours(ranges, hours) || (holiday !== undefined && matchesHours(holiday, hours));
 }

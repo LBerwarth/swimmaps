@@ -105,6 +105,13 @@ export interface Dict {
   openNowShort: string;
   openToday: string;
   openTodayShort: string;
+  hoursFilterLabel: string;
+  hoursAria: string;
+  hoursEarly: string;
+  hoursNoon: string;
+  hoursLate: string;
+  hoursKnownOnly: string;
+  holidayBanner: (name: string, until: string | null) => string;
   favLabel: string;
   favAria: string;
   favAll: string;
@@ -140,6 +147,8 @@ export interface Dict {
   noneInRadiusNear: (km: string) => string;
   noneFavorite: string;
   noneFilters: string;
+  missingDataHint: (n: number) => string;
+  showAllInRadius: string;
   countLine: (n: number, radius: string, label: string) => string;
   showMore: (n: number) => string;
   mapAria: string;
@@ -443,6 +452,14 @@ const fr: Dict = {
   openNowShort: "Maint.",
   openToday: "Aujourd'hui",
   openTodayShort: "AJD",
+  hoursFilterLabel: "Horaires",
+  hoursAria: "Horaires d'ouverture",
+  hoursEarly: "Avant 9 h",
+  hoursNoon: "12–14 h",
+  hoursLate: "Après 19 h",
+  hoursKnownOnly: "Filtre horaires : seules les piscines aux horaires connus apparaissent.",
+  holidayBanner: (name, until) =>
+    `${name} : beaucoup de piscines appliquent leurs horaires de vacances${until ? ` (jusqu'au ${until})` : ""}.`,
   favLabel: "Suivies",
   favAria: "Favoris",
   favAll: "Toutes",
@@ -482,6 +499,9 @@ const fr: Dict = {
   noneFavorite:
     "Aucune piscine favorite dans ce rayon — touchez ☆ sur une piscine pour l'ajouter.",
   noneFilters: "Aucune piscine ne correspond à ces filtres dans ce rayon.",
+  missingDataHint: (n) =>
+    `${n} piscine${n > 1 ? "s" : ""} de ce rayon ${n > 1 ? "n'ont" : "n'a"} pas encore cette information. Vous y nagez ? Complétez la fiche : vous pourrez filtrer comme vous le souhaitez, et vous aiderez les autres nageurs.`,
+  showAllInRadius: "Afficher toutes les piscines du rayon",
   countLine: (n, radius, label) =>
     `${n} piscine${n > 1 ? "s" : ""} à moins de ${radius} à vol d'oiseau de ${label}.`,
   showMore: (n) => `Afficher plus (${n} restantes)`,
@@ -975,6 +995,14 @@ const en: Dict = {
   openNowShort: "Now",
   openToday: "Today",
   openTodayShort: "Today",
+  hoursFilterLabel: "Hours",
+  hoursAria: "Opening hours",
+  hoursEarly: "Before 9am",
+  hoursNoon: "12–2pm",
+  hoursLate: "After 7pm",
+  hoursKnownOnly: "Hours filter: only pools with known opening hours are shown.",
+  holidayBanner: (name, until) =>
+    `${name}: many pools switch to their school-holiday hours${until ? ` (until ${until})` : ""}.`,
   favLabel: "Starred",
   favAria: "Favourites",
   favAll: "All",
@@ -1013,6 +1041,9 @@ const en: Dict = {
   noneInRadiusNear: (km) => `No pool within this radius — the nearest one is ${km} away.`,
   noneFavorite: "No favourite pool within this radius — tap ☆ on a pool to add it.",
   noneFilters: "No pool matches these filters within this radius.",
+  missingDataHint: (n) =>
+    `${n} pool${n > 1 ? "s" : ""} in this radius ${n > 1 ? "don't" : "doesn't"} have this information yet. Do you swim there? Fill in the page: you'll be able to filter the way you want, and you'll help other swimmers too.`,
+  showAllInRadius: "Show all pools in this radius",
   countLine: (n, radius, label) =>
     `${n} pool${n > 1 ? "s" : ""} within ${radius} of ${label} (straight line).`,
   showMore: (n) => `Show more (${n} left)`,
@@ -1519,6 +1550,14 @@ const de: Dict = {
   openNowShort: "Jetzt",
   openToday: "Heute",
   openTodayShort: "Heute",
+  hoursFilterLabel: "Zeiten",
+  hoursAria: "Öffnungszeiten",
+  hoursEarly: "Vor 9 Uhr",
+  hoursNoon: "12–14 Uhr",
+  hoursLate: "Nach 19 Uhr",
+  hoursKnownOnly: "Zeitfilter: Es erscheinen nur Bäder mit bekannten Öffnungszeiten.",
+  holidayBanner: (name, until) =>
+    `${name}: Viele Bäder haben jetzt Ferienöffnungszeiten${until ? ` (bis ${until})` : ""}.`,
   favLabel: "Gemerkt",
   favAria: "Favoriten",
   favAll: "Alle",
@@ -1558,6 +1597,9 @@ const de: Dict = {
   noneFavorite:
     "Kein Favorit in diesem Umkreis — tippe auf ☆ bei einem Schwimmbad, um es hinzuzufügen.",
   noneFilters: "Kein Schwimmbad in diesem Umkreis passt zu diesen Filtern.",
+  missingDataHint: (n) =>
+    `${n} ${n > 1 ? "Bäder" : "Bad"} in diesem Umkreis ${n > 1 ? "haben" : "hat"} diese Angabe noch nicht. Du schwimmst dort? Ergänze die Seite: Dann kannst du so filtern, wie du möchtest, und hilfst auch anderen.`,
+  showAllInRadius: "Alle Bäder im Umkreis zeigen",
   countLine: (n, radius, label) =>
     `${n} Schwimmb${n > 1 ? "äder" : "ad"} im Umkreis von ${radius} (Luftlinie) um ${label}.`,
   showMore: (n) => `Mehr anzeigen (${n} weitere)`,
@@ -2064,6 +2106,14 @@ const it: Dict = {
   openNowShort: "Adesso",
   openToday: "Oggi",
   openTodayShort: "Oggi",
+  hoursFilterLabel: "Orari",
+  hoursAria: "Orari di apertura",
+  hoursEarly: "Prima delle 9",
+  hoursNoon: "12–14",
+  hoursLate: "Dopo le 19",
+  hoursKnownOnly: "Filtro orari: compaiono solo le piscine con orari noti.",
+  holidayBanner: (name, until) =>
+    `${name}: molte piscine applicano l'orario delle vacanze${until ? ` (fino al ${until})` : ""}.`,
   favLabel: "Preferite",
   favAria: "Preferiti",
   favAll: "Tutte",
@@ -2102,6 +2152,9 @@ const it: Dict = {
   noneInRadiusNear: (km) => `Nessuna piscina in questo raggio — la più vicina è a ${km}.`,
   noneFavorite: "Nessuna piscina preferita in questo raggio — tocca ☆ su una piscina per aggiungerla.",
   noneFilters: "Nessuna piscina corrisponde a questi filtri in questo raggio.",
+  missingDataHint: (n) =>
+    `${n} piscin${n > 1 ? "e" : "a"} in questo raggio non ${n > 1 ? "hanno" : "ha"} ancora questa informazione. Ci nuoti? Completa la scheda: potrai filtrare come vuoi e aiuterai anche gli altri nuotatori.`,
+  showAllInRadius: "Mostra tutte le piscine nel raggio",
   countLine: (n, radius, label) =>
     `${n} piscin${n > 1 ? "e" : "a"} entro ${radius} da ${label} (in linea d'aria).`,
   showMore: (n) => `Mostra altre (ne restano ${n})`,
@@ -2608,6 +2661,14 @@ const nl: Dict = {
   openNowShort: "Nu",
   openToday: "Vandaag",
   openTodayShort: "Vandaag",
+  hoursFilterLabel: "Tijden",
+  hoursAria: "Openingstijden",
+  hoursEarly: "Voor 9 uur",
+  hoursNoon: "12–14 uur",
+  hoursLate: "Na 19 uur",
+  hoursKnownOnly: "Tijdfilter: alleen zwembaden met bekende openingstijden worden getoond.",
+  holidayBanner: (name, until) =>
+    `${name}: veel zwembaden hanteren nu hun vakantierooster${until ? ` (tot ${until})` : ""}.`,
   favLabel: "Bewaard",
   favAria: "Favorieten",
   favAll: "Alle",
@@ -2646,6 +2707,9 @@ const nl: Dict = {
   noneInRadiusNear: (km) => `Geen zwembad binnen deze straal — het dichtstbijzijnde ligt op ${km}.`,
   noneFavorite: "Geen favoriet zwembad binnen deze straal — tik op ☆ bij een zwembad om het toe te voegen.",
   noneFilters: "Geen zwembad binnen deze straal past bij deze filters.",
+  missingDataHint: (n) =>
+    `${n} zwembad${n > 1 ? "en" : ""} in deze straal ${n > 1 ? "hebben" : "heeft"} deze informatie nog niet. Zwem je daar? Vul de pagina aan: dan kun je filteren zoals je wilt, en help je ook andere zwemmers.`,
+  showAllInRadius: "Alle zwembaden in deze straal tonen",
   countLine: (n, radius, label) =>
     `${n} zwemba${n > 1 ? "den" : "d"} binnen ${radius} van ${label} (hemelsbreed).`,
   showMore: (n) => `Meer tonen (nog ${n})`,
@@ -3152,6 +3216,14 @@ const es: Dict = {
   openNowShort: "Ahora",
   openToday: "Hoy",
   openTodayShort: "Hoy",
+  hoursFilterLabel: "Horario",
+  hoursAria: "Horario de apertura",
+  hoursEarly: "Antes de las 9",
+  hoursNoon: "12–14 h",
+  hoursLate: "Después de las 19",
+  hoursKnownOnly: "Filtro de horario: solo aparecen las piscinas con horario conocido.",
+  holidayBanner: (name, until) =>
+    `${name}: muchas piscinas aplican su horario de vacaciones${until ? ` (hasta el ${until})` : ""}.`,
   favLabel: "Favoritas",
   favAria: "Favoritas",
   favAll: "Todas",
@@ -3190,6 +3262,9 @@ const es: Dict = {
   noneInRadiusNear: (km) => `Ninguna piscina en este radio — la más cercana está a ${km}.`,
   noneFavorite: "Ninguna piscina favorita en este radio — toca ☆ en una piscina para añadirla.",
   noneFilters: "Ninguna piscina coincide con estos filtros en este radio.",
+  missingDataHint: (n) =>
+    `${n} piscina${n > 1 ? "s" : ""} de este radio aún no ${n > 1 ? "tienen" : "tiene"} esta información. ¿Nadas allí? Completa la ficha: podrás filtrar como quieras y ayudarás a otros nadadores.`,
+  showAllInRadius: "Mostrar todas las piscinas del radio",
   countLine: (n, radius, label) =>
     `${n} piscina${n > 1 ? "s" : ""} a menos de ${radius} de ${label} (en línea recta).`,
   showMore: (n) => `Ver más (quedan ${n})`,
@@ -3696,6 +3771,14 @@ const pt: Dict = {
   openNowShort: "Agora",
   openToday: "Hoje",
   openTodayShort: "Hoje",
+  hoursFilterLabel: "Horário",
+  hoursAria: "Horário de funcionamento",
+  hoursEarly: "Antes das 9h",
+  hoursNoon: "12h–14h",
+  hoursLate: "Depois das 19h",
+  hoursKnownOnly: "Filtro de horário: só aparecem piscinas com horário conhecido.",
+  holidayBanner: (name, until) =>
+    `${name}: muitas piscinas aplicam o horário de férias${until ? ` (até ${until})` : ""}.`,
   favLabel: "Favoritas",
   favAria: "Favoritas",
   favAll: "Todas",
@@ -3734,6 +3817,9 @@ const pt: Dict = {
   noneInRadiusNear: (km) => `Nenhuma piscina dentro deste raio — a mais próxima fica a ${km}.`,
   noneFavorite: "Nenhuma piscina favorita dentro deste raio — toca em ☆ numa piscina para a adicionar.",
   noneFilters: "Nenhuma piscina corresponde a estes filtros dentro deste raio.",
+  missingDataHint: (n) =>
+    `${n} piscina${n > 1 ? "s" : ""} neste raio ainda não ${n > 1 ? "têm" : "tem"} esta informação. Nada lá? Complete a ficha: poderá filtrar como quiser e ajudará outros nadadores.`,
+  showAllInRadius: "Mostrar todas as piscinas no raio",
   countLine: (n, radius, label) =>
     `${n} piscina${n > 1 ? "s" : ""} a menos de ${radius} de ${label} (em linha reta).`,
   showMore: (n) => `Ver mais (faltam ${n})`,

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import type { Pool } from "@/lib/types";
 import type { LivePoolStatus } from "@/lib/toulouse-live";
-import { parsedHours, rangesForDay, weekdayOf, type Range } from "@/lib/pool-state";
+import { matchesHoursOn, parsedHours, rangesForDay, weekdayOf, type Range } from "@/lib/pool-state";
+import type { HoursFilter } from "@/lib/filters";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { TimelineChart, type TimelineEntry } from "./timeline-chart";
 
@@ -14,11 +15,13 @@ export function WeekTimeline({
   pools,
   live,
   isFavorite,
+  hours = "all",
 }: {
   /** Piscines affichées, déjà triées (favorites en tête, puis distance). */
   pools: Pool[];
   live: Map<string, LivePoolStatus> | null;
   isFavorite: (id: string) => boolean;
+  hours?: HoursFilter;
 }) {
   const dict = useDict();
   const locale = useLocale();
@@ -37,9 +40,14 @@ export function WeekTimeline({
   const days = Array.from({ length: 7 }, (_, i) => (todayWeekday + i) % 7);
 
   const known = pools.filter((p) => parsedHours(p, locale) !== null || (live?.get(p.id) && isToday));
+  // Filtre horaires jugé sur le jour affiché.
+  const dayPools =
+    hours === "all"
+      ? known
+      : known.filter((p) => matchesHoursOn(p, live?.get(p.id), selected, isToday, now, hours, locale));
   const unknownCount = pools.length - known.length;
-  const shown = known.slice(0, MAX_ROWS);
-  const hiddenCount = known.length - shown.length;
+  const shown = dayPools.slice(0, MAX_ROWS);
+  const hiddenCount = dayPools.length - shown.length;
   const hasHolidayWeek = shown.some((p) => parsedHours(p, locale)?.holidayWeek);
 
   // « Piscine Municipale » revient de commune en commune : les homonymes
