@@ -205,6 +205,8 @@ export interface Dict {
   corrPhoneEdit: string;
   corrWebsiteAdd: string;
   corrWebsiteEdit: string;
+  corrRemoval: string;
+  removalReasons: Record<"closed" | "missing" | "private", string>;
   closedUntil: (date: string) => string;
   closureNotice: (from: string, to: string) => string;
   corrTitle: string;
@@ -548,6 +550,12 @@ const fr: Dict = {
   corrPhoneEdit: "Corriger le téléphone",
   corrWebsiteAdd: "Ajouter le site web",
   corrWebsiteEdit: "Corriger le site web",
+  corrRemoval: "Plus une piscine publique ?",
+  removalReasons: {
+    closed: "Fermée définitivement",
+    missing: "N'existe pas / fiche erronée",
+    private: "Autre établissement (hôtel, club, salle de sport, école…)",
+  },
   closedUntil: (d) => `Fermée temporairement jusqu'au ${d}`,
   closureNotice: (a, b) => `Fermeture du ${a} au ${b}`,
   corrTitle: "Une info est fausse ?",
@@ -1030,6 +1038,12 @@ const en: Dict = {
   corrPhoneEdit: "Correct phone number",
   corrWebsiteAdd: "Add website",
   corrWebsiteEdit: "Correct website",
+  corrRemoval: "No longer a public pool?",
+  removalReasons: {
+    closed: "Permanently closed",
+    missing: "Doesn't exist / wrong entry",
+    private: "Different kind of venue (hotel, club, gym, school…)",
+  },
   closedUntil: (d) => `Temporarily closed until ${d}`,
   closureNotice: (a, b) => `Closed from ${a} to ${b}`,
   corrTitle: "Something wrong?",
@@ -1527,6 +1541,12 @@ const de: Dict = {
   corrPhoneEdit: "Telefon korrigieren",
   corrWebsiteAdd: "Website hinzufügen",
   corrWebsiteEdit: "Website korrigieren",
+  corrRemoval: "Kein öffentliches Bad (mehr)?",
+  removalReasons: {
+    closed: "Dauerhaft geschlossen",
+    missing: "Existiert nicht / falscher Eintrag",
+    private: "Andere Einrichtung (Hotel, Verein, Fitnessstudio, Schule…)",
+  },
   closedUntil: (d) => `Vorübergehend geschlossen bis ${d}`,
   closureNotice: (a, b) => `Geschlossen vom ${a} bis ${b}`,
   corrTitle: "Stimmt etwas nicht?",
@@ -2023,6 +2043,12 @@ const it: Dict = {
   corrPhoneEdit: "Correggi telefono",
   corrWebsiteAdd: "Aggiungi sito web",
   corrWebsiteEdit: "Correggi sito web",
+  corrRemoval: "Non è più una piscina pubblica?",
+  removalReasons: {
+    closed: "Chiusa definitivamente",
+    missing: "Non esiste / scheda errata",
+    private: "Altro tipo di struttura (hotel, club, palestra, scuola…)",
+  },
   closedUntil: (d) => `Chiusa temporaneamente fino al ${d}`,
   closureNotice: (a, b) => `Chiusa dal ${a} al ${b}`,
   corrTitle: "Qualcosa non va?",
@@ -2519,6 +2545,12 @@ const nl: Dict = {
   corrPhoneEdit: "Telefoon corrigeren",
   corrWebsiteAdd: "Website toevoegen",
   corrWebsiteEdit: "Website corrigeren",
+  corrRemoval: "Geen openbaar zwembad (meer)?",
+  removalReasons: {
+    closed: "Definitief gesloten",
+    missing: "Bestaat niet / foutieve vermelding",
+    private: "Ander soort locatie (hotel, club, sportschool, school…)",
+  },
   closedUntil: (d) => `Tijdelijk gesloten tot ${d}`,
   closureNotice: (a, b) => `Gesloten van ${a} tot ${b}`,
   corrTitle: "Klopt er iets niet?",
@@ -3015,6 +3047,12 @@ const es: Dict = {
   corrPhoneEdit: "Corregir teléfono",
   corrWebsiteAdd: "Añadir web",
   corrWebsiteEdit: "Corregir web",
+  corrRemoval: "¿Ya no es una piscina pública?",
+  removalReasons: {
+    closed: "Cerrada definitivamente",
+    missing: "No existe / ficha errónea",
+    private: "Otro tipo de centro (hotel, club, gimnasio, colegio…)",
+  },
   closedUntil: (d) => `Cerrada temporalmente hasta el ${d}`,
   closureNotice: (a, b) => `Cerrada del ${a} al ${b}`,
   corrTitle: "¿Algo está mal?",
@@ -3511,6 +3549,12 @@ const pt: Dict = {
   corrPhoneEdit: "Corrigir telefone",
   corrWebsiteAdd: "Adicionar site",
   corrWebsiteEdit: "Corrigir site",
+  corrRemoval: "Já não é uma piscina pública?",
+  removalReasons: {
+    closed: "Encerrada definitivamente",
+    missing: "Não existe / ficha errada",
+    private: "Outro tipo de espaço (hotel, clube, ginásio, escola…)",
+  },
   closedUntil: (d) => `Fechada temporariamente até ${d}`,
   closureNotice: (a, b) => `Fechada de ${a} a ${b}`,
   corrTitle: "Algo está errado?",

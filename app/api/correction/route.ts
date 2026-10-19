@@ -14,6 +14,8 @@ import { findPool } from "@/lib/user-pools";
 
 export const runtime = "nodejs";
 
+const REMOVAL_FR = { closed: "fermée définitivement", missing: "n'existe pas", private: "pas une piscine publique" };
+
 /** Correction d'horaires ou de tarif déjà connus : en attente jusqu'à validation par l'auteure. */
 export async function POST(req: Request) {
   const db = redis();
@@ -21,7 +23,10 @@ export async function POST(req: Request) {
   if (await tooMany(db, req)) return Response.json({ error: "too_many" }, { status: 429 });
 
   const input = parseContribution(await req.json().catch(() => null));
-  if (!input || (!input.week && !input.prices && !input.free && !input.closure && !input.phone && !input.website)) {
+  if (
+    !input ||
+    (!input.week && !input.prices && !input.free && !input.closure && !input.phone && !input.website && !input.removal)
+  ) {
     return Response.json({ error: "invalid" }, { status: 400 });
   }
   const source = await findPool(input.id);
@@ -38,6 +43,7 @@ export async function POST(req: Request) {
     ...(input.closure && { closure: input.closure }),
     ...(input.phone && { phone: input.phone }),
     ...(input.website && { website: input.website }),
+    ...(input.removal && { removal: input.removal }),
     token,
     at: new Date().toISOString(),
   };
@@ -58,6 +64,7 @@ export async function POST(req: Request) {
       ...(entry.closure ? [`Fermeture temporaire : du ${entry.closure.from} au ${entry.closure.to}`] : []),
       ...(entry.phone ? [`Téléphone : ${pool.phone ?? "—"}  →  ${entry.phone}`] : []),
       ...(entry.website ? [`Site : ${pool.website ?? "—"}  →  ${entry.website}`] : []),
+      ...(entry.removal ? [`À RETIRER du site : ${REMOVAL_FR[entry.removal]}`] : []),
       "",
       `Valider ou refuser : ${SITE_URL}/api/correction/review?id=${id}&token=${token}`,
     ].join("\n"),

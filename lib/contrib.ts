@@ -15,8 +15,14 @@ export interface Contribution {
   closures?: Closure[];
   phone?: string;
   website?: string;
+  /** Signalement validé : la piscine disparaît du site. */
+  removed?: RemovalReason;
   at: string;
 }
+
+/** Fermée définitivement, inexistante, ou pas une piscine publique (hôtel, club, école…). */
+export type RemovalReason = "closed" | "missing" | "private";
+export const REMOVAL_REASONS: RemovalReason[] = ["closed", "missing", "private"];
 
 export type ContribMap = Record<string, Contribution>;
 
@@ -29,6 +35,7 @@ export interface PendingCorrection {
   closure?: Closure;
   phone?: string;
   website?: string;
+  removal?: RemovalReason;
   token: string;
   at: string;
 }
@@ -93,6 +100,7 @@ export type ContribInput = {
   closure?: Closure;
   phone?: string;
   website?: string;
+  removal?: RemovalReason;
 };
 
 const clean = (v: unknown, max: number) =>
@@ -209,7 +217,10 @@ export function parseWeek(value: unknown): WeekInput | undefined {
 
 export function parseContribution(body: unknown): ContribInput | null {
   if (typeof body !== "object" || body === null) return null;
-  const { id, env, len, week, holiday, season, prices, free, closure, phone, website } = body as Record<string, unknown>;
+  const { id, env, len, week, holiday, season, prices, free, closure, phone, website, removal } = body as Record<
+    string,
+    unknown
+  >;
   if (typeof id !== "string" || !/^[A-Za-z0-9]{2,40}$/.test(id)) return null;
   const okEnv = typeof env === "string" && (ENV_CHOICES as string[]).includes(env) ? (env as EnvChoice) : undefined;
   const okLen =
@@ -224,7 +235,10 @@ export function parseContribution(body: unknown): ContribInput | null {
   const okClosure = parseClosure(closure);
   const okPhone = parsePhone(phone);
   const okWebsite = parseWebsite(website);
-  if (!okEnv && !okLen && !okWeek && !okPrices && !okFree && !okClosure && !okPhone && !okWebsite) return null;
+  const okRemoval = (REMOVAL_REASONS as unknown[]).includes(removal) ? (removal as RemovalReason) : undefined;
+  if (!okEnv && !okLen && !okWeek && !okPrices && !okFree && !okClosure && !okPhone && !okWebsite && !okRemoval) {
+    return null;
+  }
   return {
     id,
     ...(okEnv && { env: okEnv }),
@@ -237,6 +251,7 @@ export function parseContribution(body: unknown): ContribInput | null {
     ...(okClosure && { closure: okClosure }),
     ...(okPhone && { phone: okPhone }),
     ...(okWebsite && { website: okWebsite }),
+    ...(okRemoval && { removal: okRemoval }),
   };
 }
 

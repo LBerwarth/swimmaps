@@ -101,6 +101,11 @@ describe("contributions", () => {
     expect(applyContrib(pool, { ...c, corrected: ["phone", "website"] })).toMatchObject({ phone: "+31 70 000 00 00", website: "https://example.org/" });
   });
 
+  it("accepte un signalement de retrait avec un motif connu", () => {
+    expect(parseContribution({ id: "NLN1", removal: "private" })).toEqual({ id: "NLN1", removal: "private" });
+    expect(parseContribution({ id: "NLN1", removal: "demolished" })).toBeNull();
+  });
+
   it("compte chaque information saisie et chaque piscine ajoutée", () => {
     expect(contributionCount({ A: { lens: [50], at: "" }, B: { env: "int", hours: "24/7", free: true, at: "" } }, 2)).toBe(6);
     expect(contributionCount({}, 0)).toBe(0);

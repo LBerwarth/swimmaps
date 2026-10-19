@@ -8,6 +8,8 @@ import { findPool } from "@/lib/user-pools";
 
 export const runtime = "nodejs";
 
+const REMOVAL_FR = { closed: "fermée définitivement", missing: "n'existe pas", private: "pas une piscine publique" };
+
 async function load(id: string | null, token: string | null): Promise<PendingCorrection | null> {
   const db = redis();
   if (!db || !id || !token) return null;
@@ -41,6 +43,7 @@ export async function GET(req: Request) {
   if (entry.closure) rows.push(["Fermeture temporaire", `du ${entry.closure.from} au ${entry.closure.to}`]);
   if (entry.phone) rows.push(["Téléphone actuel", pool.phone ?? "—"], ["Téléphone proposé", entry.phone]);
   if (entry.website) rows.push(["Site actuel", pool.website ?? "—"], ["Site proposé", entry.website]);
+  if (entry.removal) rows.push(["À retirer du site", REMOVAL_FR[entry.removal]]);
   return reviewForm(
     "Correction proposée",
     rows,
@@ -89,6 +92,7 @@ export async function POST(req: Request) {
     next.website = entry.website;
     corrected.add("website");
   }
+  if (entry.removal) next.removed = entry.removal;
   next.corrected = [...corrected];
   await db.hset(CONTRIB_KEY, { [source.id]: next });
   for (const l of LOCALES) revalidatePath(poolPagePath(l, source));

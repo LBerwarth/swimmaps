@@ -1,6 +1,7 @@
 import "server-only";
 import { getPoolBySlug } from "./pools-server";
-import { redis } from "./redis";
+import type { ContribMap } from "./contrib";
+import { CONTRIB_KEY, redis } from "./redis";
 import { poolSlug } from "./slug";
 import type { Pool } from "./types";
 
@@ -20,6 +21,14 @@ export async function getUserPools(): Promise<Pool[]> {
   if (!db) return [];
   const all = await db.hgetall<Record<string, Pool>>(APPROVED_KEY).catch(() => null);
   return Object.values(all ?? {});
+}
+
+/** Piscines retirées après un signalement validé (fermée, inexistante, non publique). */
+export async function getRemovedIds(): Promise<Set<string>> {
+  const db = redis();
+  if (!db) return new Set();
+  const all = await db.hgetall<ContribMap>(CONTRIB_KEY).catch(() => null);
+  return new Set(Object.entries(all ?? {}).filter(([, c]) => c.removed).map(([id]) => id));
 }
 
 /** Fiche par slug ou id : jeux de données d'abord, puis piscines ajoutées. */

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getDict, isLocale, LOCALES } from "@/lib/i18n";
 import { nearestPools } from "@/lib/pools-server";
-import { findPool } from "@/lib/user-pools";
+import { findPool, getRemovedIds } from "@/lib/user-pools";
 import { poolPagePath, poolSlug } from "@/lib/slug";
 import { SITE_URL } from "@/lib/site";
 import { formatDistance } from "@/lib/geo";
@@ -51,12 +51,14 @@ export default async function PoolPage({
   if (!isLocale(locale)) notFound();
   const pool = await findPool(slug);
   if (!pool) notFound();
+  const removed = await getRemovedIds();
+  if (removed.has(pool.id)) notFound();
   // Ancien lien (id seul) ou nom modifié : une seule URL canonique par fiche.
   if (slug !== poolSlug(pool)) permanentRedirect(poolPagePath(locale, pool));
 
   const dict = getDict(locale);
   const parsed = pool.hours ? parseOpeningHours(pool.hours, locale) : null;
-  const nearby = nearestPools(pool, 6);
+  const nearby = nearestPools(pool, 6 + removed.size).filter((p) => !removed.has(p.id)).slice(0, 6);
   const pagePath = poolPagePath(locale, pool);
   const website = pool.website;
   const directions = `https://www.google.com/maps/dir/?api=1&destination=${pool.lat},${pool.lon}`;

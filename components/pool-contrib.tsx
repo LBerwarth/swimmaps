@@ -19,6 +19,7 @@ import {
   normalizeTime,
   missingFields,
   PRICE_MAX,
+  REMOVAL_REASONS,
   weekToOsm,
   type ContribField,
   type ContribInput,
@@ -515,7 +516,7 @@ function shortDate(iso: string, locale: Locale): string {
 export function PoolCorrect({ pool }: { pool: Pool }) {
   const dict = useDict();
   const locale = useLocale();
-  const [open, setOpen] = useState<"hours" | "price" | "closure" | "phone" | "website" | null>(null);
+  const [open, setOpen] = useState<"hours" | "price" | "closure" | "phone" | "website" | "removal" | null>(null);
   const [text, setText] = useState("");
   const [pending, setPending] = useState<Pending | null>(null);
   const [busy, setBusy] = useState(false);
@@ -538,7 +539,9 @@ export function PoolCorrect({ pool }: { pool: Pool }) {
         ? pricesText(pending.prices, pool.country, dict.priceKinds)
         : pending.closure
           ? dict.closureNotice(shortDate(pending.closure.from, locale), shortDate(pending.closure.to, locale))
-          : (pending.phone ?? pending.website ?? dict.contribFree);
+          : pending.removal
+            ? dict.removalReasons[pending.removal]
+            : (pending.phone ?? pending.website ?? dict.contribFree);
 
   const send = async () => {
     if (!pending) return;
@@ -586,6 +589,9 @@ export function PoolCorrect({ pool }: { pool: Pool }) {
                   : dict.corrWebsiteAdd}
             </Chip>
           ))}
+          <Chip selected={open === "removal"} onClick={() => setOpen(open === "removal" ? null : "removal")} className={OUTLINE}>
+            {dict.corrRemoval}
+          </Chip>
         </div>
         {open === "hours" && (
           <HoursForm
@@ -593,6 +599,20 @@ export function PoolCorrect({ pool }: { pool: Pool }) {
               setPending({ week, ...(holiday && { holiday }), ...(season && { season }) })
             }
           />
+        )}
+        {open === "removal" && (
+          <div className="flex flex-wrap gap-1.5">
+            {REMOVAL_REASONS.map((reason) => (
+              <Chip
+                key={reason}
+                selected={pending?.removal === reason}
+                onClick={() => setPending({ removal: reason })}
+                className={OUTLINE}
+              >
+                {dict.removalReasons[reason]}
+              </Chip>
+            ))}
+          </div>
         )}
         {(open === "phone" || open === "website") && (
           <form

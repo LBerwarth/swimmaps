@@ -257,7 +257,10 @@ export function FinderView() {
   const contributions = useContributions();
   const userPools = useUserPools();
   const allPools = useMemo(
-    () => [...[...poolsByCountry.values()].flat(), ...userPools].map((p) => applyContrib(p, contributions[p.id])),
+    () =>
+      [...[...poolsByCountry.values()].flat(), ...userPools]
+        .filter((p) => !contributions[p.id]?.removed)
+        .map((p) => applyContrib(p, contributions[p.id])),
     [poolsByCountry, userPools, contributions],
   );
 
