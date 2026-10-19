@@ -90,6 +90,33 @@ const SUBDIVISIONS: Record<string, Record<string, string>> = {
     Namur: "BE-FR",
     "Brabant wallon": "BE-FR",
   },
+  // Grisons et Appenzell Rhodes-Intérieures absents : vacances par région ou district.
+  CH: {
+    Aargau: "CH-AG",
+    "Appenzell Ausserrhoden": "CH-AR",
+    Bern: "CH-BE",
+    "Basel-Landschaft": "CH-BL",
+    "Basel-Stadt": "CH-BS",
+    Fribourg: "CH-FR",
+    Genève: "CH-GE",
+    Glarus: "CH-GL",
+    Jura: "CH-JU",
+    Luzern: "CH-LU",
+    Neuchâtel: "CH-NE",
+    Nidwalden: "CH-NW",
+    Obwalden: "CH-OW",
+    "St. Gallen": "CH-SG",
+    Schaffhausen: "CH-SH",
+    Solothurn: "CH-SO",
+    Schwyz: "CH-SZ",
+    Thurgau: "CH-TG",
+    Ticino: "CH-TI",
+    Uri: "CH-UR",
+    Vaud: "CH-VD",
+    Valais: "CH-VS",
+    Zug: "CH-ZG",
+    Zürich: "CH-ZH",
+  },
 };
 
 /** Pays dont les vacances sont nationales chez OpenHolidays. */
@@ -136,7 +163,52 @@ const IT_CAP: Array<[string, number[]]> = [
 const BY_POSTCODE = ["ES", "IT"];
 
 export function subdivisionOf(country: string, state: string | null | undefined): string | null {
-  return (state && SUBDIVISIONS[country]?.[state]) || null;
+  if (!state) return null;
+  // Noms bilingues chez Photon (« Bern/Berne », « Valais/Wallis »).
+  for (const name of [state, ...state.split("/")]) {
+    const code = SUBDIVISIONS[country]?.[name.trim()];
+    if (code) return code;
+  }
+  return null;
+}
+
+export type NlRegion = "noord" | "midden" | "zuid";
+
+const NL_ZUID_GELDERLAND = [
+  "Arnhem", "Berg en Dal", "Beuningen", "Doesburg", "Druten", "Duiven", "Heumen", "Lingewaard",
+  "Maasdriel", "Nijmegen", "Overbetuwe", "Renkum", "Rheden", "Rozendaal", "Westervoort",
+  "West Maas en Waal", "Wijchen", "Zaltbommel", "Zevenaar",
+];
+
+/** Région de vacances d'après la page « regio's schoolvakantie » de la Rijksoverheid. */
+export function nlRegion(province: string, municipality: string, place: string): NlRegion | null {
+  switch (province) {
+    case "Drenthe":
+    case "Fryslân":
+    case "Friesland":
+    case "Groningen":
+    case "Noord-Holland":
+    case "Overijssel":
+      return "noord";
+    case "Flevoland":
+      return municipality === "Zeewolde" ? "midden" : "noord";
+    case "Utrecht":
+      // Ancienne commune d'Abcoude (Abcoude, Baambrugge), aujourd'hui De Ronde Venen.
+      return municipality === "Eemnes" || place === "Abcoude" || place === "Baambrugge" ? "noord" : "midden";
+    case "Zuid-Holland":
+      return "midden";
+    case "Gelderland":
+      if (municipality === "Hattem") return "noord";
+      if (NL_ZUID_GELDERLAND.includes(municipality) || ["Didam", "Loil", "Nieuw-Dijk", "Dodewaard"].includes(place)) return "zuid";
+      return "midden";
+    case "Noord-Brabant":
+      return municipality === "Altena" && place !== "Hank" && place !== "Dussen" ? "midden" : "zuid";
+    case "Limburg":
+    case "Zeeland":
+      return "zuid";
+    default:
+      return null;
+  }
 }
 
 export function subdivisionByPostcode(country: string, postcode: string | null | undefined): string | null {
@@ -202,6 +274,48 @@ export function pickOpenHoliday(
   return { name: name?.text ?? "", lastDay: r.endDate > r.startDate ? r.endDate : null };
 }
 
+export interface NlHolidayYear {
+  content: Array<{
+    vacations: Array<{
+      type: string;
+      regions: Array<{ region: string; startdate: string; enddate: string }>;
+    }>;
+  }>;
+}
+
+const amsterdamDay = (iso: string) => new Date(iso).toLocaleDateString("sv-SE", { timeZone: "Europe/Amsterdam" });
+
+/** Rijksoverheid : dates en UTC, jour civil lu à l'heure d'Amsterdam ; « heel Nederland » vaut pour tous. */
+export function pickNlHoliday(years: NlHolidayYear[], region: NlRegion, today: string): SchoolHoliday | null {
+  for (const vacation of years.flatMap((y) => y.content.flatMap((c) => c.vacations))) {
+    for (const r of vacation.regions) {
+      const name = r.region.trim();
+      if (name !== region && name !== "heel Nederland") continue;
+      const start = amsterdamDay(r.startdate);
+      const end = amsterdamDay(r.enddate);
+      if (start <= today && today <= end) return { name: vacation.type.trim(), lastDay: end };
+    }
+  }
+  return null;
+}
+
+async function nlHoliday(pool: Pool, today: string): Promise<SchoolHoliday | null> {
+  const place = await fetch(
+    `https://api.pdok.nl/bzk/locatieserver/search/v3_1/reverse?lat=${pool.lat}&lon=${pool.lon}&rows=1` +
+      "&fl=gemeentenaam,provincienaam,woonplaatsnaam",
+  );
+  if (!place.ok) return null;
+  const doc = ((await place.json()) as {
+    response?: { docs?: Array<{ gemeentenaam?: string; provincienaam?: string; woonplaatsnaam?: string }> };
+  }).response?.docs?.[0];
+  const region = doc ? nlRegion(doc.provincienaam ?? "", doc.gemeentenaam ?? "", doc.woonplaatsnaam ?? "") : null;
+  if (!region) return null;
+  // Proxy maison : l'API de la Rijksoverheid n'autorise pas les appels depuis le navigateur.
+  const res = await fetch("/api/holidays/nl");
+  if (!res.ok) return null;
+  return pickNlHoliday((await res.json()) as NlHolidayYear[], region, today);
+}
+
 /** Région de la piscine la plus proche (Photon), pas celle de l'utilisateur : aucune position ne sort. */
 async function photonPlace(pool: Pool): Promise<{ state: string | null; postcode: string | null }> {
   const res = await fetch(`https://photon.komoot.io/reverse?lat=${pool.lat}&lon=${pool.lon}`);
@@ -226,12 +340,13 @@ const cache = new Map<string, Promise<SchoolHoliday | null>>();
 
 /**
  * Vacances scolaires en cours autour de la piscine. FR : ministère de
- * l'Éducation nationale ; DE, AT, BE, PT, IE, ES, IT : OpenHolidays (ES, IT et
- * IE vides pour 2026/27 au 19.10.2026). GB, NL, CH : pas de source → null.
+ * l'Éducation nationale ; NL : Rijksoverheid (commune via PDOK) ; DE, AT, BE,
+ * CH, PT, IE, ES, IT : OpenHolidays (ES, IT et IE vides pour 2026/27 au
+ * 19.10.2026). GB : pas de source centrale → null.
  */
 export function currentSchoolHoliday(pool: Pool, locale: Locale, now = new Date()): Promise<SchoolHoliday | null> {
   const today = isoDay(now);
-  const regional = pool.country in SUBDIVISIONS || BY_POSTCODE.includes(pool.country);
+  const regional = pool.country in SUBDIVISIONS || BY_POSTCODE.includes(pool.country) || pool.country === "NL";
   const key = `${pool.country}:${pool.dep ?? ""}:${regional ? pool.id : ""}:${locale}:${today}`;
   let pending = cache.get(key);
   if (!pending) {
@@ -254,6 +369,7 @@ async function load(pool: Pool, locale: Locale, now: Date, today: string): Promi
     const data = (await res.json()) as { results?: MinistryRecord[] };
     return pickMinistryHoliday(data.results ?? [], now);
   }
+  if (pool.country === "NL") return nlHoliday(pool, today);
   const nationwide = NATIONWIDE.includes(pool.country);
   if (!nationwide && !(pool.country in SUBDIVISIONS) && !BY_POSTCODE.includes(pool.country)) return null;
   const subdivision = nationwide ? null : await subdivisionFor(pool);

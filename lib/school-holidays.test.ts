@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   academyOf,
+  nlRegion,
+  pickNlHoliday,
   pickMinistryHoliday,
   pickOpenHoliday,
   subdivisionByPostcode,
   subdivisionOf,
+  type NlHolidayYear,
 } from "./school-holidays";
 
 describe("academyOf", () => {
@@ -23,6 +26,65 @@ describe("subdivisionOf", () => {
   });
   it("laisse Bruxelles sans calendrier", () => {
     expect(subdivisionOf("BE", "Région de Bruxelles-Capitale - Brussels Hoofdstedelijk Gewest")).toBeNull();
+  });
+});
+
+describe("subdivisionOf (Suisse)", () => {
+  it("lit les noms bilingues de Photon", () => {
+    expect(subdivisionOf("CH", "Bern/Berne")).toBe("CH-BE");
+    expect(subdivisionOf("CH", "Valais/Wallis")).toBe("CH-VS");
+    expect(subdivisionOf("CH", "Zürich")).toBe("CH-ZH");
+  });
+  it("écarte les Grisons, découpés par région", () => {
+    expect(subdivisionOf("CH", "Graubünden/Grigioni/Grischun")).toBeNull();
+  });
+});
+
+describe("nlRegion", () => {
+  it("suit la page « regio's schoolvakantie »", () => {
+    expect(nlRegion("Noord-Holland", "Amsterdam", "Amsterdam")).toBe("noord");
+    expect(nlRegion("Flevoland", "Zeewolde", "Zeewolde")).toBe("midden");
+    expect(nlRegion("Utrecht", "De Ronde Venen", "Abcoude")).toBe("noord");
+    expect(nlRegion("Gelderland", "Nijmegen", "Nijmegen")).toBe("zuid");
+    expect(nlRegion("Gelderland", "Tiel", "Tiel")).toBe("midden");
+    expect(nlRegion("Gelderland", "Montferland", "Didam")).toBe("zuid");
+    expect(nlRegion("Gelderland", "Hattem", "Hattem")).toBe("noord");
+    expect(nlRegion("Noord-Brabant", "Altena", "Werkendam")).toBe("midden");
+    expect(nlRegion("Noord-Brabant", "Altena", "Dussen")).toBe("zuid");
+    expect(nlRegion("Limburg", "Maastricht", "Maastricht")).toBe("zuid");
+  });
+});
+
+describe("pickNlHoliday", () => {
+  const years: NlHolidayYear[] = [
+    {
+      content: [
+        {
+          vacations: [
+            {
+              type: "\n  Herfstvakantie \n",
+              regions: [
+                { region: "noord", startdate: "2026-10-10T00:00:00.000Z", enddate: "2026-10-18T21:59:00.000Z" },
+                { region: "zuid", startdate: "2026-10-17T00:00:00.000Z", enddate: "2026-10-25T22:59:00.000Z" },
+              ],
+            },
+            {
+              type: "Kerstvakantie",
+              regions: [
+                { region: "heel Nederland", startdate: "2026-12-19T00:00:00.000Z", enddate: "2027-01-03T22:59:00.000Z" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  it("prend la région demandée, jour civil d'Amsterdam", () => {
+    expect(pickNlHoliday(years, "zuid", "2026-10-19")).toEqual({ name: "Herfstvakantie", lastDay: "2026-10-25" });
+    expect(pickNlHoliday(years, "noord", "2026-10-19")).toBeNull();
+  });
+  it("applique « heel Nederland » partout", () => {
+    expect(pickNlHoliday(years, "midden", "2026-12-24")?.name).toBe("Kerstvakantie");
   });
 });
 
