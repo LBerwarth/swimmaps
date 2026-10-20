@@ -20,13 +20,8 @@ import { TipJar } from "@/components/tip-jar";
 import { HolidayBanner } from "@/components/holiday-banner";
 import { PhoneIcon } from "@/components/icons";
 
-// Fiches rendues à la demande (10 000 piscines × 3 langues) et gardées un jour.
-export const dynamicParams = true;
-export const revalidate = 86400;
-// Sans liste (même vide), Next rend chaque fiche à chaque visite, robots compris : la CPU s'envole.
-export async function generateStaticParams() {
-  return [];
-}
+// Pas d'ISR : les robots lisent chaque fiche une fois, l'ISR épuisait le quota d'écritures.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
