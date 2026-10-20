@@ -15,12 +15,15 @@ const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTC
 
 const url = `https://api.vercel.com/v1/billing/charges?teamId=${TEAM}&from=${from.toISOString()}&to=${to.toISOString()}`;
 const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-if (!res.ok) throw new Error(`API Vercel : HTTP ${res.status} ${await res.text()}`);
+const body = await res.text();
+// Début de cycle : Vercel n'a encore rien facturé et répond 404 costs_not_found.
+const noCosts = res.status === 404 && body.includes("costs_not_found");
+if (!res.ok && !noCosts) throw new Error(`API Vercel : HTTP ${res.status} ${body}`);
 
 const byProject = new Map<string, number>();
 const byService = new Map<string, number>();
 let total = 0;
-for (const line of (await res.text()).split("\n")) {
+for (const line of noCosts ? [] : body.split("\n")) {
   if (!line.trim()) continue;
   const c = JSON.parse(line);
   if (c.ChargeCategory !== "Usage") continue;
