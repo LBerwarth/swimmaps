@@ -1,0 +1,25 @@
+name: Consommation Vercel
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  usage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # En échec au-delà du seuil : GitHub envoie le mail d'échec du workflow planifié.
+      - run: npx --yes tsx scripts/vercel-usage.mts
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
