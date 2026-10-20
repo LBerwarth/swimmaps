@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import type { Pool } from "@/lib/types";
 import { formatDistance } from "@/lib/geo";
 import type { DayState } from "@/lib/pool-state";
-import { poolPagePath } from "@/lib/slug";
+import { isIndexable, poolPagePath } from "@/lib/slug";
 import { useDict, useLocale } from "@/components/locale-provider";
 import { STAR_POINTS } from "@/components/icons";
 
@@ -117,7 +117,7 @@ export function PoolMap({ center, radiusKm, pools, onSelect, isFavorite, stateOf
         .join(" · ");
       marker.bindPopup(
         `<strong>${escapeHtml(pool.name)}</strong><br>${where}<br>` +
-          `<a href="${poolPagePath(locale, pool)}" style="color:#a21caf;text-decoration:underline">${escapeHtml(dict.mapPopupDetail)}</a>`,
+          `<a href="${poolPagePath(locale, pool)}"${isIndexable(pool, locale) ? "" : ' rel="nofollow"'} style="color:#a21caf;text-decoration:underline">${escapeHtml(dict.mapPopupDetail)}</a>`,
       );
       if (onSelect) marker.on("click", () => onSelect(pool.id));
       layer.addLayer(marker);

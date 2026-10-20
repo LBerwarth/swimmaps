@@ -1,5 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { poolPagePath, poolSlug, slugify } from "./slug";
+import { isIndexable, pageLocales, poolPagePath, poolSlug, slugify } from "./slug";
+
+describe("pageLocales", () => {
+  it("langue(s) du pays + anglais, sans doublon", () => {
+    expect(pageLocales({ country: "DE" })).toEqual(["de", "en"]);
+    expect(pageLocales({ country: "CH" })).toEqual(["de", "fr", "it", "en"]);
+    expect(pageLocales({ country: "BE" })).toEqual(["fr", "nl", "en"]);
+    expect(pageLocales({ country: "GB" })).toEqual(["en"]);
+    expect(pageLocales({ country: "IE" })).toEqual(["en"]);
+  });
+});
+
+describe("isIndexable", () => {
+  it("horaires requis, puis langue de la fiche", () => {
+    expect(isIndexable({ country: "DE", hours: "Mo-Fr 08:00-20:00" })).toBe(true);
+    expect(isIndexable({ country: "DE" })).toBe(false);
+    expect(isIndexable({ country: "DE", hours: "Mo 08:00-20:00" }, "en")).toBe(true);
+    expect(isIndexable({ country: "DE", hours: "Mo 08:00-20:00" }, "pt")).toBe(false);
+  });
+});
 
 describe("slugify", () => {
   it("normalise accents, ß et ponctuation", () => {

@@ -15,7 +15,7 @@ import {
 } from "@/lib/opening-hours";
 import { formatSlotTime, toulouseUrl, type LivePoolStatus } from "@/lib/toulouse-live";
 import { parsedHours, poolDayState, type DayState } from "@/lib/pool-state";
-import { poolPagePath } from "@/lib/slug";
+import { isIndexable, poolPagePath } from "@/lib/slug";
 import { CONTRIB_ANCHOR, envKey, missingFields, nextClosure, pricesText } from "@/lib/contrib";
 import { FEEDBACK_ANCHOR } from "@/lib/feedback";
 import { toggleFavorite, useFavorites } from "@/components/use-favorites";
@@ -150,6 +150,7 @@ export function PoolCard({
     `${SEARCH_WORD[locale]} ${pool.name} ${pool.city}`,
   )}`;
   const detailHref = poolPagePath(locale, pool);
+  const detailRel = isIndexable(pool, locale) ? undefined : "nofollow";
   const phone = pool.phone?.replace(/\s/g, "");
 
   return (
@@ -179,6 +180,7 @@ export function PoolCard({
               {showDetails ? (
                 <Link
                   href={detailHref}
+                  rel={detailRel}
                   title={dict.detailLinkTitle}
                   className="underline decoration-slate-200 decoration-1 underline-offset-4 transition-colors group-hover/name:text-sky-700 group-hover/name:decoration-sky-400 dark:decoration-slate-600 dark:group-hover/name:text-sky-300"
                 >
@@ -190,6 +192,7 @@ export function PoolCard({
               {showDetails && (
                 <Link
                   href={detailHref}
+                  rel={detailRel}
                   tabIndex={-1}
                   aria-hidden="true"
                   title={dict.detailLinkTitle}
@@ -201,6 +204,7 @@ export function PoolCard({
               {showDetails && (
                 <Link
                   href={`${detailHref}#${missingFields(pool).length ? CONTRIB_ANCHOR : FEEDBACK_ANCHOR}`}
+                  rel={detailRel}
                   aria-label={dict.contribEdit(pool.name)}
                   title={dict.contribEdit(pool.name)}
                   className="ml-1 inline-block h-6 w-6 overflow-hidden rounded-lg bg-violet-500 p-[5px] align-[-0.35rem] text-white shadow-sm transition-colors hover:bg-violet-600 dark:bg-violet-700 dark:hover:bg-violet-600"

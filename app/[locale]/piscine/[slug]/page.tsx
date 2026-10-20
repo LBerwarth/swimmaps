@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getDict, isLocale, LOCALES } from "@/lib/i18n";
+import { getDict, isLocale } from "@/lib/i18n";
 import { nearestPools } from "@/lib/pools-server";
 import { findPool, getRemovedIds } from "@/lib/user-pools";
-import { poolPagePath, poolSlug } from "@/lib/slug";
+import { isIndexable, pageLocales, poolPagePath, poolSlug } from "@/lib/slug";
 import { SITE_URL } from "@/lib/site";
 import { formatDistance } from "@/lib/geo";
 import { formatPeriodBounds, parseOpeningHours, prettifyOpeningHours } from "@/lib/opening-hours";
@@ -38,8 +38,9 @@ export async function generateMetadata({
     description: dict.detailMetaDescription(pool.name, pool.city),
     alternates: {
       canonical: poolPagePath(locale, pool),
-      languages: Object.fromEntries(LOCALES.map((l) => [l, poolPagePath(l, pool)])),
+      languages: Object.fromEntries(pageLocales(pool).map((l) => [l, poolPagePath(l, pool)])),
     },
+    ...(!isIndexable(pool, locale) && { robots: { index: false, follow: true } }),
   };
 }
 
@@ -220,6 +221,7 @@ export default async function PoolPage({
             <li key={p.id}>
               <Link
                 href={poolPagePath(locale, p)}
+                rel={isIndexable(p, locale) ? undefined : "nofollow"}
                 className="block py-1.5 text-slate-500 underline underline-offset-2 hover:text-fuchsia-700 dark:text-slate-300 dark:hover:text-fuchsia-300"
               >
                 {p.name} ({p.city}) — {dict.detailNearbyAway(formatDistance(p.distanceKm, locale, p.country))}

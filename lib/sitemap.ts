@@ -1,14 +1,20 @@
 import "server-only";
 import { LOCALES, type Locale } from "./i18n";
 import { getAllPools, getIndex } from "./pools-server";
-import { poolPagePath } from "./slug";
+import { isIndexable, pageLocales, poolPagePath } from "./slug";
 import { SITE_URL } from "./site";
 import { getRemovedIds, getUserPools } from "./user-pools";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 
-function entry(path: (l: Locale) => string, locale: Locale, priority: number, lastmod?: string): string {
-  const alternates = LOCALES.map(
+function entry(
+  path: (l: Locale) => string,
+  locale: Locale,
+  priority: number,
+  lastmod?: string,
+  locales: Locale[] = LOCALES,
+): string {
+  const alternates = locales.map(
     (l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${esc(SITE_URL + path(l))}"/>`,
   ).join("");
   return `<url><loc>${esc(SITE_URL + path(locale))}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ""}<priority>${priority}</priority>${alternates}</url>`;
@@ -23,7 +29,9 @@ export async function localeSitemap(locale: Locale): Promise<string> {
     entry((l) => `/${l}/sources`, locale, 0.3),
     entry((l) => `/${l}/about`, locale, 0.4),
     entry((l) => `/${l}/privacy`, locale, 0.2),
-    ...[...getAllPools(), ...(await getUserPools())].filter((p) => !removed.has(p.id)).map((pool) => entry((l) => poolPagePath(l, pool), locale, 0.6, updated)),
+    ...[...getAllPools(), ...(await getUserPools())]
+      .filter((p) => !removed.has(p.id) && isIndexable(p, locale))
+      .map((pool) => entry((l) => poolPagePath(l, pool), locale, 0.6, updated, pageLocales(pool))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls.join("\n")}\n</urlset>\n`;
 }
