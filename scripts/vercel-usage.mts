@@ -10,6 +10,7 @@ if (!token) throw new Error("VERCEL_TOKEN manquant");
 const now = new Date();
 const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), CYCLE_DAY));
 if (from > now) from.setUTCMonth(from.getUTCMonth() - 1);
+if (process.env.FROM) from.setTime(Date.parse(process.env.FROM));
 const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
 
 const url = `https://api.vercel.com/v1/billing/charges?teamId=${TEAM}&from=${from.toISOString()}&to=${to.toISOString()}`;

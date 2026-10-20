@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: "0 6 * * *"
   workflow_dispatch:
+    inputs:
+      from:
+        description: Début de période ISO (sinon le 20 du mois)
+        required: false
 
 permissions:
   contents: read
@@ -23,3 +27,4 @@ jobs:
       - run: npx --yes tsx scripts/vercel-usage.mts
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          FROM: ${{ inputs.from }}
